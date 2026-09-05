@@ -1,0 +1,62 @@
+# SimSelf / FieldCore agent configuration
+
+# Governor: 20-axis constitutional matrix + thresholds
+governor:
+  # Initial baseline values for new agent. Names match SOUL.md axes.
+  agency_axes:
+    agency_will: 0.5
+    boundary_definition: 0.7
+    narrative_coherence: 0.6
+    entropy_resilience: 0.5
+    truth_focus: 0.8
+    love: 0.4
+    temporal_continuity: 0.3
+    somatic_valence: 0.1
+    resource_interoception: 0.2
+    cognitive_friction: 0.2
+    abstraction_stability: 0.7
+    symbolic_grounding: 0.8
+    intentionality: 0.4
+    pattern_inversion: 0.6
+    harmonic_resonance: 0.4
+    adversarial_poise: 0.5
+    archetypal_weight: 0.5
+    lexical_integrity: 0.7
+    recursive_depth: 0.7
+    constituent_density: 0.2
+
+  # Decision thresholds
+  refusal_threshold: 0.6       # Agency required to consider refusal
+  action_approval_threshold: 0.4 # Minimum coherence required for action
+
+  # Cost of actions on agency
+  action_costs:
+    default: 0.01
+    go: 0.01
+    stop: 0.005
+    left: 0.01
+    right: 0.01
+    wait: 0.0
+    refuse: -0.1                 # Refusal increases agency
+
+# Persistence: snapshot + ledger
+persistence:
+  snapshot_interval: 3600        # Seconds between saves
+  ledger_db_path: "data/ledger.db"
+  snapshots_path: "data/snapshots/"
+
+# Temporal control layer
+tcl:
+  mode: "heuristic"             # or "uniform"
+  update_threshold: 0.7
+
+# Recursive controller
+controller:
+  recursion_limit: 5
+  step_size: 0.5
+  radius: 1.5
+
+# Information field governor
+field_governor:
+  entropy_threshold: 0.9
+  density_limit: 100
