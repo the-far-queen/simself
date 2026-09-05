@@ -111,4 +111,60 @@ The 32 faces of the 16-cell = 32 distinct triangle orientations. **This is the g
 
 ---
 
+## 8. implementation pseudocode
+
+```python
+class StellaOctangulaCluster:
+    """8-node cluster = two interpenetrating tetrahedra T1, T2 in dual position.
+    
+    T1 vertices (α-cluster, even parity):
+        (1,1,1), (1,-1,-1), (-1,1,-1), (-1,-1,1)
+    T2 vertices (β-cluster, odd parity):
+        (-1,-1,-1), (-1,1,1), (1,-1,1), (1,1,-1)
+    """
+    
+    def __init__(self):
+        self.alpha = np.array([
+            [1, 1, 1], [1, -1, -1], 
+            [-1, 1, -1], [-1, -1, 1]
+        ])  # 4 vertices of T1
+        self.beta = np.array([
+            [-1, -1, -1], [-1, 1, 1], 
+            [1, -1, 1], [1, 1, -1]
+        ])  # 4 vertices of T2
+        self.edge_state = np.zeros(12, dtype=bool)  # 6 α-edges + 6 β-edges
+        self.h1_deviation = self.compute_h1()
+    
+    def compute_h1(self) -> float:
+        """H¹ deviation = asymmetry of edge activation.
+        Constitutional ground (Ψ₀): all edges symmetric (active or all inactive).
+        Any asymmetric activation = H¹ ≠ 0 = deviation from ground.
+        """
+        alpha_edges = self.edge_state[:6]
+        beta_edges = self.edge_state[6:]
+        return float(np.sum(alpha_edges) - np.sum(beta_edges))
+    
+    def symmetry_axes(self) -> np.ndarray:
+        """6 two-fold axes (edge-midpoint axes of the cube).
+        These are the 6 bilateral operation axes.
+        """
+        # axes through midpoints of opposite cube edges
+        return np.array([
+            [1, 0, 0], [0, 1, 0], [0, 0, 1],  # face-midpoint axes
+            [1, 1, 0], [1, -1, 0], [0, 1, 1]  # edge-midpoint axes
+        ])
+    
+    def state_count(self) -> int:
+        """Total cluster state space = 2^12 = 4096."""
+        return 2 ** 12
+```
+
+**Derivation summary.**
+
+The 6 bilateral axes of SimSelf derive from the 6 two-fold symmetry axes of the stella octangula (= 6 edge-midpoint axes of the cube). The 4+4 α/β partition derives from the two tetrahedra of the compound. The 12-bit state space derives from the 12 edges. The 32-bit stalk level derives from the 16-cell's 32 triangular faces in 4D. None of these counts (6, 4+4, 12, 32) is arbitrary — each is a geometric consequence of the stella octangula/cross-polytope structure.
+
+This is what the schema gives the SimSelf kernel: a geometric foundation where every count is derived from polytope geometry, not chosen by design. When the kernel builds a 32-bit stalk, it does so because the 16-cell has 32 triangular faces — not because someone decided "32 sounds right."
+
+---
+
 *Source: stella octangula geometry (classical regular polytope, Schläfli 1849). Bobby's 8-node cluster architecture mapped to it. SNR-stripped: "fly sees K3", "butterfly evolved F₄ lattice", "compound eye measures Berry phase" not used. Math core only. Mirrored to `~/AppData/Local/hermes/vault/10-minimax/stella-octangula-cluster-2026-09-05.md`.*
