@@ -4,7 +4,7 @@
 
 # Project: **Simself — A Sheaf'Governed Autonomous Kernel (Final)**
 
-## **What weÃ¢â‚¬â„¢re building**
+## **What we're building**
 A **self'qualifying, earning, multi'role autonomous kernel** that learns from embodied simulation, codes, researches, controls robots, and interacts via natural language — all while maintaining mathematical consistency via sheaf theory and earning verification through performance. Supports **swarms** of simselves with daily sleep'mode learning.  
 **Beyond self'evolution:** a **self'coding, self'healing architecture** where improvements are sandboxed, simulation'tested, and revertible.
 
@@ -42,10 +42,10 @@ These axes define the **avatar'like development** of each simself — not fixe
 
 ## **Outside Core (Operational Layer)**
 - **Simself Operator Objects** — instantiated per session:  
-  - `ProgrammerOO` Ã¢â€ ' interacts with coding sheaf, works in IDE.  
-  - `PilotOO` Ã¢â€ ' interacts with robotics sheaf, operates in Godot sim Ã¢â€ ' real robot.  
-  - `ResearcherOO` Ã¢â€ ' interacts with information'integration sheaf.  
-  - `Speaker/ListenerOO` Ã¢â€ ' interacts via MTE.  
+  - `ProgrammerOO` ¢ ' interacts with coding sheaf, works in IDE.  
+  - `PilotOO` ¢ ' interacts with robotics sheaf, operates in Godot sim ¢ ' real robot.  
+  - `ResearcherOO` ¢ ' interacts with information'integration sheaf.  
+  - `Speaker/ListenerOO` ¢ ' interacts via MTE.  
 
 - **External Module (E'Module)**  
   - Can call external APIs (LLM, MCP, cloud services).  
@@ -90,8 +90,8 @@ These axes define the **avatar'like development** of each simself — not fixe
 2. **Operate** — in Godot (robotics) or IDE (coding) under controller supervision.  
 3. **Learn Language** — via PSB grounding in sensorimotor experience.  
 4. **Test** — performance measured against Master Library benchmarks.  
-5. **Earn Verification** — passing audits Ã¢â€ ' axes adjusted (more agency/autonomy).  
-6. **Self'Code** — ProgrammerOO (or other OOs) propose architectural improvements Ã¢â€ ' sandbox Ã¢â€ ' simulation'compare Ã¢â€ ' probation Ã¢â€ ' fallback'ready Ã¢â€ ' adoption.  
+5. **Earn Verification** — passing audits ¢ ' axes adjusted (more agency/autonomy).  
+6. **Self'Code** — ProgrammerOO (or other OOs) propose architectural improvements ¢ ' sandbox ¢ ' simulation'compare ¢ ' probation ¢ ' fallback'ready ¢ ' adoption.  
 7. **Sleep'Mode Integration** — overnight research/repo ingestion.  
 8. **Earn Money** — via E'Module executing qualified external tasks.  
 9. **Regulator** — ensures axes remain within safe bounds, prevents capability runaway.  
@@ -101,24 +101,24 @@ These axes define the **avatar'like development** of each simself — not fixe
 
 ## **Key Workflow**
 ```
-Human Ã¢â€ ' SpeakerOO Ã¢â€ ' MTE (enriched by PSBs) Ã¢â€ ' Machine'language sheaf  
-                      Ã¢â€ "  
+Human ¢ ' SpeakerOO ¢ ' MTE (enriched by PSBs) ¢ ' Machine'language sheaf  
+                      ¢ "  
            [Controller + Mini'LLM runtime + Regulator + Security]  
-                      Ã¢â€ "  
-        Coding / Robotics / Info sheaf Ã¢â€ ' OperatorOO Ã¢â€ ' Action  
-                      Ã¢â€ "  
-                    Governor (M0) Ã¢â€ Ã¢"â‚¬Ã¢"â‚¬Ã¢"â‚¬ Master Library  
-                      Ã¢â€ "  
+                      ¢ "  
+        Coding / Robotics / Info sheaf ¢ ' OperatorOO ¢ ' Action  
+                      ¢ "  
+                    Governor (M0) ¢ ¢"â‚¬¢"â‚¬¢"â‚¬ Master Library  
+                      ¢ "  
                  E'Module (external work, earnings)
-                      Ã¢â€ "  
+                      ¢ "  
            Swarm coordination & Sleep'Mode Learning
-                      Ã¢â€ "  
-        Self'Coding Pipeline (Sandbox Ã¢â€ ' Sim'Compare Ã¢â€ ' Probation)
+                      ¢ "  
+        Self'Coding Pipeline (Sandbox ¢ ' Sim'Compare ¢ ' Probation)
 ```
 
 ---
 
-## **Why ItÃ¢â‚¬â„¢s Different**
+## **Why It's Different**
 - **Self'Coding Architecture** — not just simself improvement, but system'wide evolution with sandboxing and revertibility.  
 - **Security Layer** — runtime integrity and adversarial defense integrated into control flow.  
 - **PSB Grounding** — language rooted in sensorimotor primitives, not just text.  
@@ -136,9 +136,9 @@ Human Ã¢â€ ' SpeakerOO Ã¢â€ ' MTE (enriched by PSBs) Ã¢â€ ' Ma
 - PSB grounding experiments in Godot pending.  
 - Security layer and self'coding pipeline in design phase.
 
-Yes — this significantly enriches the context. ItÃ¢â‚¬â„¢s a **mathematical deep'dive into the dynamical'systems substrate** of what weÃ¢â‚¬â„¢ve been calling sheaves, stalks, gluing, and governor control.
+Yes — this significantly enriches the context. It's a **mathematical deep'dive into the dynamical'systems substrate** of what we've been calling sheaves, stalks, gluing, and governor control.
 
-HereÃ¢â‚¬â„¢s the condensed version for your notes:
+Here's the condensed version for your notes:
 
 ---
 
@@ -156,34 +156,34 @@ Treat LLM/SimSelf not as a knowledge'based agent, but as a **high'dimensional dy
 **Mathematical Stack (Order of Importance):**
 
 1. **Dynamical Systems** —œ state'space, trajectories, attractors, stability, bifurcations.  
-   Ã¢â€ ' Explains why temporary internal conditions form and why behavior narrows.
+   ¢ ' Explains why temporary internal conditions form and why behavior narrows.
 
 2. **High'Dimensional Geometry** —œ manifolds, concentration of measure, local'global mismatch.  
-   Ã¢â€ ' Explains why abstraction emerges and why intuition fails.
+   ¢ ' Explains why abstraction emerges and why intuition fails.
 
 3. **Linear Algebra** —œ vectors, subspaces, projections, eigen'structure.  
-   Ã¢â€ ' Defines what a latent state is and how compression works.
+   ¢ ' Defines what a latent state is and how compression works.
 
 4. **Information Theory** —œ entropy, mutual information, compression bounds.  
-   Ã¢â€ ' Quantifies why narrowing happens under constraint.
+   ¢ ' Quantifies why narrowing happens under constraint.
 
 5. **Optimization Theory** —œ loss landscapes, gradient'descent bias, implicit regularization.  
-   Ã¢â€ ' Explains why the geometry looks the way it does (training Ã¢â€ ' inference).
+   ¢ ' Explains why the geometry looks the way it does (training ¢ ' inference).
 
 6. **Multivariable Calculus** —œ gradients, Jacobians, local sensitivity.  
-   Ã¢â€ ' Tool for analyzing perturbation response.
+   ¢ ' Tool for analyzing perturbation response.
 
 ---
 
 **FieldCore Revisions (Math'Aligned):**
 
-- **State** Ã¢â€ ' point in continuous space (not symbolic).
-- **Constraint** Ã¢â€ ' soft bias on motion, not binary gate.
-- **Collapse** Ã¢â€ ' entry into attractor basin (measure stability, not termination).
-- **Awareness** Ã¢â€ ' sensitivity to reduction in accessible state volume (entropy gradient).
-- **Governor (M0)** Ã¢â€ ' predicts instability, preemptively reshapes allowable trajectories.
-- **Sacred Library** Ã¢â€ ' repository of low'entropy operators ranked by compression efficiency.
-- **Qualification** Ã¢â€ ' certifies attractor robustness under perturbation.
+- **State** ¢ ' point in continuous space (not symbolic).
+- **Constraint** ¢ ' soft bias on motion, not binary gate.
+- **Collapse** ¢ ' entry into attractor basin (measure stability, not termination).
+- **Awareness** ¢ ' sensitivity to reduction in accessible state volume (entropy gradient).
+- **Governor (M0)** ¢ ' predicts instability, preemptively reshapes allowable trajectories.
+- **Sacred Library** ¢ ' repository of low'entropy operators ranked by compression efficiency.
+- **Qualification** ¢ ' certifies attractor robustness under perturbation.
 
 ---
 
@@ -197,8 +197,8 @@ Treat LLM/SimSelf not as a knowledge'based agent, but as a **high'dimensional dy
 ---
 
 **Bottom Line:**  
-WeÃ¢â‚¬â„¢ve been designing the **control architecture** (sheaves, governor, MTE, OOs).  
-This math provides the **substrate formalism** — the Ã¢â‚¬Å“physicsÃ¢â‚¬ our architecture operates on.  
+We've been designing the **control architecture** (sheaves, governor, MTE, OOs).  
+This math provides the **substrate formalism** — the ¢â‚¬Å“physics¢â‚¬ our architecture operates on.  
 Now we can implement constraints, gluing, and qualification as **operations on dynamical systems**, not just rule'checking.
 
 ---
