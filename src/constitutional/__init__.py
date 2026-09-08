@@ -42,6 +42,11 @@ from .entity import EntityRecognition
 from .memory import RelationalMemory
 from .dreaming import ConstitutionalDreaming
 from .ground import GroundIntegration, ReadinessCheck
+from .consolidation_filter import (
+    StabilityConsolidationFilter,
+    STASIS, DENIED, DUPLICATE, CONSOLIDATED,
+    DEFAULT_GROUNDING_MAP,
+)
 from .simself import SimSelf
 from .harness import Harness
 from .atlas_exam import AtlasExam
