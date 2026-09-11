@@ -1,7 +1,12 @@
-# rare sinks.txt
+# rare-sinks.md — LLM failure mode at sparse intersections of meaning + recursion + abstraction
 
-**Source:** `Desktop/SimSelf/rare sinks.txt` (215 lines, 4622 bytes)
-**Extracted:** 2026-09-07 (batch ingest, autonomous)
+**Source:** `Desktop/SimSelf/rare sinks.txt` (215 lines, 4.6KB).
+**Extracted:** 2026-09-07 (batch ingest, autonomous) — verbatim.
+**Re-canonicalized:** 2026-09-11 with SimSelf cross-reference added.
+
+**Why this matters for SimSelf:** §8 identifies that LLMs are **least stable where meaning + recursion + abstraction intersect without grounding**. This is exactly the region SimSelf is designed for (state, governors, metrics, persistence). SimSelf's deterministic Python wrap with 1-bit refusal + ConstitutionalGuard sidesteps the LLM-internal alignment divergence (§5) by moving the gate outside the LLM. PSB persistence (§3 feedback-loop problem) breaks the `output_t becomes part of input_{t+1}` loop by externalizing state.
+
+---
 
 ---
 
