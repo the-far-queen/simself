@@ -68,6 +68,15 @@ from .frequency import (
     harmonic_sum,
     DEFAULT_FREQUENCY_HYPOTHESES,
 )
+from .temporal_control import TemporalController
+from .confabulation_filter import ConfabulationFilter
+from .operators import (
+    Operator,
+    CentroidOperator,
+    HolographicEncoder,
+    CausalPSB,
+)
+from .mini_llm import MiniLLM, Intent
 
 __all__ = [
     # constitution
@@ -80,6 +89,11 @@ __all__ = [
     "ResolutionOperator", "EntityRecognition", "RelationalMemory",
     "ConstitutionalDreaming", "GroundIntegration", "ReadinessCheck",
     "SimSelf", "Harness", "AtlasExam",
+    # Phase 1 ports (2026-09-12) — engineered primitives from 44-back/
+    "TemporalController",  # WHEN layer — gates expensive ops on signal quality
+    "ConfabulationFilter",  # textual feature quality filter for agent outputs
+    "Operator", "CentroidOperator", "HolographicEncoder", "CausalPSB",  # field operators
+    "MiniLLM", "Intent",  # breakthrough detection + intent proposal
     # Frequency kernel is NOT in the public surface. Import it explicitly:
     #   from constitutional.frequency import FrequencyChannel, FrequencyDynamics, ResonanceChannel
     #   from constitutional.frequency import DEFAULT_FREQUENCY_HYPOTHESES
