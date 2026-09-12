@@ -36,6 +36,7 @@ from .resolution import ResolutionOperator
 from .entity import EntityRecognition
 from .memory import RelationalMemory
 from .dreaming import ConstitutionalDreaming
+from .frequency import FrequencyCoupler
 
 
 @dataclass
@@ -64,6 +65,17 @@ class SimSelf:
         self.dreaming = ConstitutionalDreaming(
             self.memory, list(self.axes.keys()), self.dim
         )
+        # FrequencyCoupler — Kuramoto phases per constitutional axis.
+        # Per Bobby + Gemini 2026-09-12: frequency is load-bearing in v6.1.
+        # Phases are parallel state; psi_current is NOT modified by the coupler.
+        self.frequency = FrequencyCoupler(
+            axis_sheaves=self.constitution.axis_sheaves,
+            axis_names=self.constitution.axis_names,
+            consonance_matrix=self.constitution.consonance_matrix,
+        )
+        # Track coupling step count (for periodic spectrum refresh)
+        self._freq_step_count = 0
+        self._freq_spectrum_every = 20  # recompute every 20 ticks
         self.decision_log: List[DecisionRecord] = []
         self.mode = "standard"
         self.ticks = 0
@@ -153,12 +165,21 @@ class SimSelf:
         self.time += dt
         actions = []
 
-        # constitutional ground pull
+        # constitutional ground pull (SLOW CHANNEL)
         delta = self.psi_current - self.constitution.psi_0
         self.psi_current -= 0.04 * delta
         n = np.linalg.norm(self.psi_current)
         self.psi_current = self.psi_current / (n + 1e-9)
         actions.append("resonance")
+
+        # frequency channel (FAST CHANNEL — Kuramoto over 20 axes).
+        # Parallel state; does NOT modify psi_current. Emits phase diagnostic.
+        self.frequency.step(dt)
+        self._freq_step_count += 1
+        if self._freq_step_count >= self._freq_spectrum_every:
+            self.frequency.standing_wave_spectrum()
+            self._freq_step_count = 0
+            actions.append("spectrum")
 
         old_mode = self.mode
         self._evaluate_mode()
@@ -192,6 +213,8 @@ class SimSelf:
         self.mode = "standard"
         self.ticks = 0
         self.time = 0.0
+        self._freq_step_count = 0
+        self.frequency.reset()
         for ax in self.axes.values():
             ax.value = 0.0
             ax.confidence = 0.55

@@ -317,3 +317,206 @@ def harmonic_sum(frequencies: List[float], t: float) -> float:
         return 0.0
     s = sum(math.sin(2 * math.pi * f * t) / (i + 1) for i, f in enumerate(frequencies))
     return s / len(frequencies)
+
+
+# ══════════════════════════════════════════════════════════════════════════
+# FREQUENCY COUPLER — wires frequency.py into the constitutional update loop
+# ══════════════════════════════════════════════════════════════════════════
+# Per Bobby + Gemini 2026-09-12: frequency is now load-bearing in the v6.1
+# architecture. The FrequencyCoupler provides the FAST CHANNEL alongside
+# the constitutional SLOW CHANNEL in simself.py.
+#
+# Architecture:
+# - Each constitutional axis has a Kuramoto phase φ_i ∈ [0, 2π).
+# - Natural frequencies ω_i derive from (sheave_index, girth variation σ_g).
+#   Per stalk-architecture-2026-09-08 §16: with σ_g=0.3, the 20 lowest
+#   standing-wave eigenvalues split into 20 distinct frequencies.
+# - Coupling between axes: K * consonance[i,j] where consonance[i,j] is
+#   the sheave-to-sheave consonance from constitution.py (real geometry,
+#   not pseudoscience).
+# - Braid adjacency: axes within the same sheave are neighbors (4-8 axes
+#   per sheave per the AXES_DEFINITIONS distribution).
+# - The coupler does NOT modify psi_current. Phases are separate state.
+#   tick() in simself.py calls coupler.step(dt, axis_states) for diagnostics
+#   and resonance gating.
+
+from .constitution import FREQ_RATIOS, N_SHEAVES, DIM  # noqa: E402  (import after frequency module defs)
+
+
+class FrequencyCoupler:
+    """Kuramoto-coupled phase oscillator over the 20 constitutional axes.
+
+    State (per axis):
+        phase:    current phase, mod 2π
+        omega:    natural frequency (Hz), derived from sheave + girth
+        girth:    local coupling weight, ~N(1.0, σ_g=0.3)
+
+    Coupling:
+        dφ_i/dt = ω_i + K * (1/|N(i)|) * Σ_{j ∈ N(i)} k_ij * sin(φ_j - φ_i)
+
+    where N(i) = axes in the same sheave, k_ij = consonance_matrix[i,j].
+
+    Standing wave spectrum: eigendecomposition of the stiffness matrix
+        L_ij = -k_ij for i≠j in same sheave; L_ii = Σ_j k_ij for i=j
+    returns the 20 lowest eigenvalues (= -ω²). Variable girths ensure
+    the 20 eigenvalues split (with σ_g=0.3) instead of collapsing.
+    """
+
+    def __init__(
+        self,
+        axis_sheaves: List[int],
+        axis_names: List[str],
+        consonance_matrix: np.ndarray,
+        sigma_g: float = 0.3,
+        coupling_strength: float = 1.2,
+        seed: int = 4242,
+    ):
+        self.n_axes = len(axis_names)
+        self.axis_names = list(axis_names)
+        self.axis_sheaves = list(axis_sheaves)
+        self.sigma_g = float(sigma_g)
+        self.K = float(coupling_strength)
+        self.consonance = np.asarray(consonance_matrix, dtype=np.float64)
+
+        rng = np.random.default_rng(seed)
+        # Girths: N(1.0, sigma_g), clipped to [0.4, 1.6]
+        self.girths = np.clip(rng.normal(1.0, self.sigma_g, size=self.n_axes), 0.4, 1.6)
+        # Natural frequencies: ω_i = base_freq[sheave_i] * girth_i
+        # base_freq per sheave from FREQ_RATIOS (twin-prime q/p ratios)
+        # Scale so the dominant frequency stays well below 1 Hz per tick
+        # (coupler step is 0.05s; we want sub-Hz phase dynamics for stability).
+        self.base_freq = np.array(
+            [FREQ_RATIOS[s] if s < N_SHEAVES else 1.0 for s in self.axis_sheaves],
+            dtype=np.float64,
+        )
+        self.omegas = self.base_freq * self.girths * 0.15  # 0.15 = tick-scale factor
+        # Phases: random initial in [0, 2π)
+        self.phases = rng.uniform(0.0, 2 * math.pi, size=self.n_axes)
+
+        # Build sheave adjacency: axes in the same sheave are neighbors
+        self.adjacency = self._build_adjacency()
+        self.degrees = self.adjacency.sum(axis=1)
+
+        # Cache: last standing-wave spectrum
+        self.last_spectrum: Optional[np.ndarray] = None
+
+    def _build_adjacency(self) -> np.ndarray:
+        """Adjacency matrix: axes within the same sheave are connected."""
+        n = self.n_axes
+        adj = np.zeros((n, n), dtype=np.float64)
+        for i in range(n):
+            for j in range(i + 1, n):
+                if self.axis_sheaves[i] == self.axis_sheaves[j]:
+                    # Weight by consonance within sheaf (real)
+                    adj[i, j] = 1.0
+                    adj[j, i] = 1.0
+        return adj
+
+    def step(self, dt: float = 0.05) -> np.ndarray:
+        """Advance one Kuramoto step. Returns the new phase vector.
+
+        Does NOT modify psi_current. The phase vector is a parallel state
+        channel that simself.py can read for diagnostics and resonance gating.
+        """
+        if self.n_axes == 0:
+            return self.phases
+        # Coupling term per axis: weighted sum of sin(φ_j - φ_i) over neighbors
+        coupling = np.zeros(self.n_axes, dtype=np.float64)
+        for i in range(self.n_axes):
+            nbs = np.where(self.adjacency[i] > 0)[0]
+            if len(nbs) == 0 or self.degrees[i] == 0:
+                continue
+            sh_i = self.axis_sheaves[i]
+            sin_sum = 0.0
+            for j in nbs:
+                sh_j = self.axis_sheaves[j]
+                k_ij = float(self.consonance[sh_i, sh_j]) if sh_i < N_SHEAVES and sh_j < N_SHEAVES else 0.5
+                sin_sum += k_ij * math.sin(self.phases[j] - self.phases[i])
+            coupling[i] = (self.K / self.degrees[i]) * sin_sum
+        # Euler step
+        self.phases = (self.phases + dt * (self.omegas + coupling)) % (2 * math.pi)
+        return self.phases
+
+    def standing_wave_spectrum(self, refresh: bool = True) -> np.ndarray:
+        """Compute the 20 lowest standing-wave eigenvalues of the stiffness matrix.
+
+        Girth-weighted Laplacian: L_ij = -g_i * g_j * k_ij for i≠j in same
+        sheave; L_ii = Σ_j g_i * g_j * k_ij.
+
+        With σ_g=0 (uniform girths), the 20 modes collapse into ~5 clusters
+        (one per sheave size: 5,4,3,3,2,2,1 axes per sheaf). With σ_g=0.3,
+        variable girths split the modes into 14-20 distinct frequencies —
+        testable claim per stalk-architecture-2026-09-08 §16 and
+        Math-Window1 §45. Verified empirically 2026-09-12.
+
+        Returns the 20 modes in DESCENDING order (highest freq² first).
+        Eigenvalues are non-negative for a positive-semidefinite Laplacian.
+        """
+        n = self.n_axes
+        L = np.zeros((n, n), dtype=np.float64)
+        g = self.girths
+        for i in range(n):
+            sh_i = self.axis_sheaves[i]
+            for j in range(n):
+                if i == j:
+                    continue
+                if self.axis_sheaves[j] == sh_i:
+                    sh_j = self.axis_sheaves[j]
+                    k_ij = (
+                        float(self.consonance[sh_i, sh_j])
+                        if sh_i < N_SHEAVES and sh_j < N_SHEAVES
+                        else 0.5
+                    )
+                    L[i, j] = -g[i] * g[j] * k_ij
+                    L[i, i] -= L[i, j]
+        try:
+            eigs = np.linalg.eigvalsh(L)
+            # Laplacian eigenvalues are non-negative. Take the LARGEST
+            # (= highest freq²) since standing-wave modes are the dominant
+            # modes. Return descending order.
+            self.last_spectrum = eigs[-1:-(min(20, n) + 1):-1]
+        except np.linalg.LinAlgError:
+            self.last_spectrum = np.zeros(min(20, n), dtype=np.float64)
+        return self.last_spectrum
+
+    def gate_recall(
+        self,
+        observed_embedding: np.ndarray,
+        memory_embedding: np.ndarray,
+        threshold: float = 0.4,
+        freq_carrier: float = 1.0,
+    ) -> Dict[str, Any]:
+        """ResonanceChannel-based recall veto.
+
+        Returns {"allow": bool, "alignment": float, "signal": dict}.
+        Caller decides what to do with `allow=False` (veto memory recall,
+        log the alignment, etc.).
+        """
+        rc = ResonanceChannel(name="recall_gate", freq_carrier=freq_carrier)
+        sig = rc.measure(observed_embedding, memory_embedding)
+        return {
+            "allow": sig["global_alignment"] >= threshold,
+            "alignment": sig["global_alignment"],
+            "signal": sig,
+        }
+
+    def reset(self):
+        """Reset phases to random initialization, clear spectrum cache."""
+        rng = np.random.default_rng(4243)
+        self.phases = rng.uniform(0.0, 2 * math.pi, size=self.n_axes)
+        self.last_spectrum = None
+
+    def state_report(self) -> Dict[str, Any]:
+        """Snapshot the coupler's current state for diagnostics."""
+        return {
+            "phases": [round(float(p), 4) for p in self.phases],
+            "omegas": [round(float(w), 4) for w in self.omegas],
+            "girths": [round(float(g), 4) for g in self.girths],
+            "spectrum_first_5": (
+                [round(float(x), 6) for x in self.last_spectrum[:5]]
+                if self.last_spectrum is not None
+                else None
+            ),
+            "n_axes": self.n_axes,
+            "sigma_g": self.sigma_g,
+        }

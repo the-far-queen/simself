@@ -64,6 +64,7 @@ from .frequency import (
     FrequencyChannel,
     FrequencyDynamics,
     ResonanceChannel,
+    FrequencyCoupler,
     harmonic_sum,
     DEFAULT_FREQUENCY_HYPOTHESES,
 )
