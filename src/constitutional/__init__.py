@@ -51,10 +51,22 @@ from .simself import SimSelf
 from .harness import Harness
 from .atlas_exam import AtlasExam
 
-# The frequency kernel is intentionally NOT imported at package level.
-# It is opt-in: callers must `import constitutional.frequency` explicitly.
-# This is the architectural guarantee that the constitutional core stays
-# free of any frequency / Schumann / 432 / 963 / etc. dependencies.
+# The frequency kernel is intentionally NOT imported into the constitutional
+# core (simself.py, constitution.py). The core stays free of any
+# Schumann / 432 / 963 / etc. dependencies. Wiring frequency into the
+# update loop is a per-deployment decision.
+#
+# The kernel IS exported here at the package level — callers can do
+#   from constitutional import FrequencyChannel, ResonanceChannel, ...
+# without an explicit `import constitutional.frequency` path. The kernel
+# is *available* without being *required*. See frequency-architecture-2026-09-12.md.
+from .frequency import (
+    FrequencyChannel,
+    FrequencyDynamics,
+    ResonanceChannel,
+    harmonic_sum,
+    DEFAULT_FREQUENCY_HYPOTHESES,
+)
 
 __all__ = [
     # constitution
