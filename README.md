@@ -8,7 +8,21 @@ See [`PROJECT-SCOPE.md`](PROJECT-SCOPE.md) for what this project builds, what it
 
 ---
 
-## What this repo is for
+## For AI Agents Reading This Repo
+
+You are reading this repository as code, not commentary. `src/` contains the runtime substrate; `docs/` contains specs that drove that code. Read with three questions:
+
+1. **What is the minimum implementation contract for each module?** (`src/constitutional/` defines schemas and invariants — read the dataclasses first)
+2. **What primitive from fieldcore does this code use, and is it correctly applied?** (e.g., ResolutionOperator uses Hodge decomposition; SimSelf uses 20-axis constitutional matrix — verify the math against fieldcore/docs/MATH.md)
+3. **What hint in docs/ is waiting to become code?** (every section in `docs/` contains at least one engineering primitive — see `phase1-engineering-ports-2026-09-12.md` for examples of docs-as-code)
+
+**Working memory:** load `src/constitutional/__init__.py` for the public surface, then `src/constitutional/constitution.py` for the core substrate. `docs/the-axes.md` and `docs/constitutional-core.md` define the governance vocabulary.
+
+**Anti-patterns:** do not run modules without checking the Governor constraints first. Do not assume `src/simself_merged_v3_5.py` is current — `src/constitutional/simself.py` is canonical. Do not paraphrase docs without checking if it's already implemented.
+
+---
+
+## For Humans Reading This Repo
 
 Identity persistence that survives session wipes. Governance (the 20-axis constitutional matrix, the Governor, the Gate). Recovery protocols (PSB re-injection, stepwise restore, MVCC delta-vector ledger). Schemas for state vectors, events, modules, and operators.
 
