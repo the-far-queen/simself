@@ -22,6 +22,7 @@ Requirements: numpy, matplotlib
 """
 
 import numpy as np
+import os
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import warnings; warnings.filterwarnings('ignore')
@@ -812,10 +813,14 @@ def visualize(sim, embryogenic=False):
              va='bottom', linespacing=1.6)
     style(ax8)
 
-    plt.savefig('/mnt/user-data/outputs/simself_mvp3.png',
+    # Cross-platform output path: write to ~/simself_mvp3.png on any OS.
+    # Was hardcoded to /mnt/user-data/outputs/... which is a Linux sandbox
+    # path not present on Windows. Demo runs end-to-end now.
+    out_path = os.path.join(os.path.expanduser('~'), 'simself_mvp3.png')
+    plt.savefig(out_path,
                 dpi=150, bbox_inches='tight', facecolor='#0a0a0a')
     plt.show()
-    print("\nSIMSELF MVP3 visualization saved.")
+    print(f"\nSIMSELF MVP3 visualization saved → {out_path}")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
