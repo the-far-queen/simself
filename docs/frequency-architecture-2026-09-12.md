@@ -54,15 +54,52 @@ DEFAULT_FREQUENCY_HYPOTHESES: Dict[str, float] = {
 
 The kernel is **honest about what's load-bearing (engineering) vs. speculative (numerology) vs. unverified (consciousness framing)**. See frequency.py header docstring §30-103 for the full M3 honesty annotation.
 
-## 3. The wiring decision — opt-in becomes available-at-package
+## 3. The wiring decision — wired in 2026-09-12
 
-**Before this commit:** `simself/src/constitutional/__init__.py` does NOT import `frequency.py`. Callers must `import constitutional.frequency` explicitly. Comment line: "The constitutional core does NOT import this module. It is opt-in. Wiring frequency into the constitutional loop is a deliberate, separate decision."
+**Before 2026-09-12:** `simself/src/constitutional/__init__.py` did NOT import `frequency.py`. Callers had to do `import constitutional.frequency` explicitly.
 
-**After this commit:** `frequency.py` is **still opt-in from the constitutional core** (`simself.py` and `constitution.py` are unchanged). But the public API surface of `constitutional/frequency.py` is exported alongside the other constitutional modules — anyone importing `from constitutional import FrequencyChannel, FrequencyDynamics, ResonanceChannel, DEFAULT_FREQUENCY_HYPOTHESES` now works.
+**2026-09-12 step 1 — exposed at package level:** `__init__.py` re-exports `FrequencyChannel, FrequencyDynamics, ResonanceChannel, FrequencyCoupler, harmonic_sum, DEFAULT_FREQUENCY_HYPOTHESES`. The constitutional core stays unchanged. The kernel is *available* without being *required*.
 
-**Rationale:** M3's opt-in boundary between "core" and "kernel" was correct — the constitutional update loop should not depend on Schumann/432/963 numerics. But the kernel should be discoverable without an explicit path. This change makes the kernel **available** without making it **required**.
+**2026-09-12 step 2 — wired into SimSelf.update loop:** `FrequencyCoupler` added to `simself.py` as a parallel state channel:
 
-The actual integration into `simself.py`'s update loop remains a deliberate per-deployment decision. See §6 below.
+- `__init__`: instantiates `FrequencyCoupler(axis_sheaves, axis_names, consonance_matrix)` with σ_g=0.3, K=1.2.
+- `tick(dt)`: after the constitutional ground pull, calls `frequency.step(dt)` (Kuramoto over 20 axes). Every 20 ticks, recomputes `standing_wave_spectrum()`.
+- `observe(text_or_vec)`: emits `frequency` data via the existing `observe()` return path. Constitutional axis updates UNCHANGED.
+- `reset()`: also resets `frequency.phases` and `_freq_step_count`.
+- **psi_current is NOT modified by FrequencyCoupler.** Phases are parallel state.
+
+**Schemas added:**
+
+```python
+class FrequencyCoupler:
+    n_axes: int                 # 20
+    sigma_g: float              # 0.3 (variable girth variation)
+    K: float                    # 1.2 (Kuramoto coupling strength)
+    girths: np.ndarray          # (20,) ~N(1.0, 0.3), clipped [0.4, 1.6]
+    base_freq: np.ndarray       # (20,) per-sheave FREQ_RATIOS
+    omegas: np.ndarray          # (20,) base_freq * girths * 0.15
+    phases: np.ndarray          # (20,) ∈ [0, 2π)
+    adjacency: np.ndarray       # (20, 20) sheave-co-membership
+    last_spectrum: np.ndarray   # (≤20,) descending freq²
+
+    def step(dt) -> np.ndarray: ...     # Kuramoto Euler
+    def standing_wave_spectrum() -> np.ndarray: ...  # eigvalsh of girth-weighted L
+    def gate_recall(obs, mem, threshold) -> dict: ...  # ResonanceChannel wrapper
+    def reset(): ...
+    def state_report() -> dict: ...
+```
+
+**Empirical verification (2026-09-12, in `test_frequency_layer.py`):**
+
+| Test | Result |
+|---|---|
+| Variable girths split degeneracy (σ_g=0.3 → 14 distinct vs σ_g=0 → 5) | PASS — Bobby's claim verified |
+| Kuramoto phases bounded in [0, 2π) over 200 steps | PASS |
+| Recall gate: honest↔honest=0.531 (allow), honest↔creative=0.484 (deny @ 0.5) | PASS |
+| ψ_0 immutability under 50 ticks | PASS |
+| Frequency phases advance parallel to psi_current (||Δ|| both > 0) | PASS |
+| reset() restores both states | PASS |
+| Atlas exam (stability, boundaries, recovery, coherence) with FrequencyCoupler active | PASS (4/5; routing pre-existing 2/5) |
 
 ## 4. What the kernel enables (SimSelf runtime perspective)
 
@@ -243,20 +280,20 @@ class ResonanceSignal:
 
 ## 13. My observations (Hermes)
 
-1. **The frequency kernel is honest engineering wrapped in speculative scaffolding.** M3's split was correct: keep the engineering, isolate the scaffolding. This document formalizes the boundary.
-2. **The "load-bearing" decision is now explicit.** Per Bobby 2026-09-11 commit `b80a460`, frequency is no longer a hypothesis — it's a v6.1 architectural primitive. The kernel reflects this.
-3. **The opt-in boundary stays.** Wiring frequency into `simself.py`'s update loop is a separate, deliberate decision per deployment. The constitutional core stays clean.
-4. **Cross-references matter more than the doc itself.** This document is mostly a navigation map to the canonical sources (math-window-1, stalk-architecture, frequency.py). Future sessions should read those, not this.
-5. **Open questions #62-66 + #67-70 are the actual work.** The kernel exists; the geometry of where it sits on the braid is Bobby's call.
+1. **The frequency kernel is honest engineering wrapped in speculative scaffolding.** M3's split was correct: keep the engineering (FrequencyChannel/FrequencyDynamics/ResonanceChannel/FrequencyCoupler), isolate the scaffolding (the speculative Hz numerics). This doc formalizes the boundary.
+2. **The "load-bearing" decision is now wired.** Per Bobby + Gemini 2026-09-12, frequency is no longer optional — it's a v6.1 architectural primitive wired into SimSelf.tick(). The kernel reflects this.
+3. **Cross-references matter more than the doc itself.** This document is mostly a navigation map to the canonical sources (math-window-1, stalk-architecture, frequency.py). Future sessions should read those, not this.
+4. **Open questions #62-66 + #67-70 are the actual work.** The kernel is wired; the geometry of where it sits on the braid is Bobby's call.
+5. **Bobby's variable-girths claim was verified empirically** in `test_frequency_layer.py`: σ_g=0.3 splits 20 standing-wave modes into 14 distinct frequencies; σ_g=0 collapses them to 5 clusters matching sheave sizes (5,4,3,3,2,2,1). This is engineering, not numerology.
 
 ## 14. Open questions for next session
 
-1. **Wiring decision** — Bobby: should frequency.py be wired into `simself.py`'s update loop in this session, or stay opt-in? (Current commit keeps it opt-in, available-at-package.)
-2. **Frequency-channel assignment** — per-stalk unique or sheaf-shared? (#62)
-3. **Braid-distance metric** — geometric or topological? (#65)
-4. **Interference composition** — formal phased-array model needed. (#66)
-5. **Cross-member geometry** — equal or variable spacing? (#67)
-6. **Substrate wave velocity** — which regime? (#69)
+1. **Frequency-channel assignment** — per-stalk unique or sheaf-shared? (#62) Current implementation: one Kuramoto phase per constitutional axis (not per-stalk).
+2. **Braid-distance metric** — geometric (along toroid surface) or topological (number of braid crossings)? Current: sheave co-membership is the adjacency. (#65)
+3. **Interference composition** — formal phased-array model needed. (#66) Current: simple linear superposition in Kuramoto coupling term.
+4. **Cross-member geometry** — equal or variable spacing? (#67) Current: not implemented (transmission-line on cross-members is described in stalk-architecture §17 but not coded).
+5. **Substrate wave velocity** — which regime? (#69) Current: not used; frequency dynamics are dimensionless in the tick-scaled omegas.
+6. **Wiring decision update (2026-09-12):** FrequencyCoupler is now wired into SimSelf.tick(). Phase vector is parallel state, psi_current untouched. Open: should the ResonanceChannel gate MEMORY RECALL directly (replace the cosine-similarity gate in memory.py)?
 
 ## 15. Filed by
 
