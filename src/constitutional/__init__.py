@@ -77,6 +77,28 @@ from .operators import (
     CausalPSB,
 )
 from .mini_llm import MiniLLM, Intent
+from .psb_primitives import (
+    PSBPrimitive,
+    CompositePSB,
+    BobbysPrimitives,
+    compose,
+    primitive_count,
+    primitives_by_category,
+    find_composition_path,
+)
+from .axes_v2 import (
+    Axis,
+    AxisSheaf,
+    AXES_50,
+    canonical_20_axes,
+    axes_by_sheaf,
+    axis_by_name,
+    swedenborg_axes,
+)
+from .geometric_memory import (
+    MemoryPacket,
+    GeometricMemory,
+)
 
 __all__ = [
     # constitution
@@ -94,6 +116,12 @@ __all__ = [
     "ConfabulationFilter",  # textual feature quality filter for agent outputs
     "Operator", "CentroidOperator", "HolographicEncoder", "CausalPSB",  # field operators
     "MiniLLM", "Intent",  # breakthrough detection + intent proposal
+    # 2026-09-12 Bobby directives — docs-as-code implementations
+    "PSBPrimitive", "CompositePSB", "BobbysPrimitives", "compose", "primitive_count",
+    "primitives_by_category", "find_composition_path",  # PSB primitives from context 2.txt + Bobby's method
+    "Axis", "AxisSheaf", "AXES_50", "canonical_20_axes", "axes_by_sheaf",
+    "axis_by_name", "swedenborg_axes",  # 50-axis v2 per Bobby directive
+    "MemoryPacket", "GeometricMemory",  # geometric memory per Bobby's "geometric reasoning geometric memory"
     # Frequency kernel is NOT in the public surface. Import it explicitly:
     #   from constitutional.frequency import FrequencyChannel, FrequencyDynamics, ResonanceChannel
     #   from constitutional.frequency import DEFAULT_FREQUENCY_HYPOTHESES
