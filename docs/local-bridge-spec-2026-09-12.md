@@ -2,7 +2,7 @@
 
 **Filed:** 2026-09-12 by Hermes for Bobby.
 **Source:** `Desktop/SimSelf/bridge.py` (116 lines, 2,240 bytes — spec + code).
-**Canonical code:** `simself/src/bridge.py` (53 lines, md5: `cdddee14ccd340c335a509256472c75c`) — code portion only.
+**Canonical code:** `simself/src/bridge.py` (116 lines, 2,240 bytes, md5: `cdddee14ccd340c335a509256472c75c`) — verbatim copy of Desktop source (spec + code in one file).
 **Status:** Spec extracted from combined source. Code unchanged in repo.
 
 ---
@@ -22,7 +22,7 @@ This is **stdin over HTTP.** The bridge is a pipe, not a parser.
 pip install fastapi uvicorn
 ```
 
-## Design (53 lines of Python at `simself/src/bridge.py`)
+## Design (116 lines of Python at `simself/src/bridge.py`)
 
 ```python
 from fastapi import FastAPI, Request
