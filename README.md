@@ -18,7 +18,11 @@ You are reading this repository as code, not commentary. `src/` contains the run
 
 **Working memory:** load `src/constitutional/__init__.py` for the public surface, then `src/constitutional/constitution.py` for the core substrate. `docs/the-axes.md` and `docs/constitutional-core.md` define the governance vocabulary.
 
-**Anti-patterns:** do not run modules without checking the Governor constraints first. Do not assume `src/simself_merged_v3_5.py` is current — `src/constitutional/simself.py` is canonical. Do not paraphrase docs without checking if it's already implemented.
+**Anti-patterns:** do not run modules without checking the Governor constraints first. There are **two canonical `SimSelf` classes** in this repo — pick the right one:
+- `simself.SimSelf` (top-level, from `src/sim_self_core.py`) = sovereign self-model. 20-axis matrix, SpiralStage ladder, Verdict, persistence.
+- `simself.ConstitutionalSimSelf` (re-exported from `src/constitutional/simself.py`) = constitutional integrator. observe / tick / reset, holds ψ_current.
+
+Full mapping at `docs/simself-README-2026-09-13.md`. `src/simself_merged_v3_5.py` is the v3.5 demo monolith (embryogenic init), NOT canonical for new code. `src/sim_self.py` is the older Module B (curiosity-axes), NOT canonical. Do not paraphrase docs without checking if it's already implemented.
 
 ---
 
@@ -35,7 +39,9 @@ Identity persistence that survives session wipes. Governance (the 20-axis consti
 - `src/` — Python implementation: constitutional core, harness, persistence, recovery
   - `constitutional/` — 20-axis governance, M0/M1 split, the constitution
   - `harness/` — Gate (Governor-mediated tool calls), memory, planner, persistence, resources, tools
-  - top-level: `metrics.py`, `sim_self.py`, `sovereign_self.py`, `stalk.py`, `state_vector.py`, `selfcore.py`, `resilient_self_model.py`, `simself_merged.py`, `simself_merged_v2.py`, `fieldcore_unified.py`
+  - top-level: `metrics.py`, `sim_self.py` (Module B legacy), `sim_self_core.py` (canonical self-model), `simself_core_b.py` (variant), `sovereign_self.py`, `stalk.py`, `state_vector.py`, `selfcore.py`, `resilient_self_model.py`, `simself_merged.py`, `simself_merged_v2.py`, `simself_merged_v3.py`, `simself_merged_v3_5.py` (embryogenic demo), `simself_quickstart.py`, `fieldcore_unified.py`
+  - canonical `SimSelf` (top-level): `src/sim_self_core.py`
+  - canonical `ConstitutionalSimSelf`: `src/constitutional/simself.py`
 - `docs/` — design docs, schema catalogs, deployment guides (28+ files)
 - `config/` — `simself_config.yaml` — canonical Governor thresholds + 20-axis baselines
 
