@@ -20,7 +20,7 @@ Both classes share the name `SimSelf` but are **architecturally distinct**. Pick
 
 | Class | File | Lines | Role |
 |---|---|---|---|
-| `simself.SimSelf` (top-level) | `simself/src/sim_self_core.py` | 575 | **Runtime self-model.** 20-axis matrix, SpiralStage (5-stage ladder 0.3→1.0), Verdict, AxiomaticAnchors, LLMAdapter, governed_step, MainLoop, persistence (autosave + load). The "sovereign self-model." |
+| `simself.SimSelf` (top-level) | `simself/src/simself_core.py` | 575 | **Runtime self-model.** 20-axis matrix, SpiralStage (5-stage ladder 0.3→1.0), Verdict, AxiomaticAnchors, LLMAdapter, governed_step, MainLoop, persistence (autosave + load). The "sovereign self-model." |
 | `simself.constitutional.ConstitutionalSimSelf` (re-export) | `simself/src/constitutional/simself.py` | 226 | **Integrator.** Constitutional feedback loop. observe / tick / reset / why / axis_report / gate_refusal. Holds ψ_current, runs ResolutionOperator, FrequencyCoupler. |
 
 `__init__.py` re-exports both. The constitutional one is renamed to `ConstitutionalSimSelf` to avoid the name clash. Import patterns:
@@ -131,12 +131,9 @@ stability = 0.65 * mean_confidence + 0.35 * (1 - drift),  clamped [0.35, 1.0]
 
 | File | Lines | Role | Status |
 |---|---|---|---|
-| `simself/src/sim_self.py` | 157 | Module B curiosity-axes self-model. 4 axes (touch, temperature, wetness, label). | Legacy. README at `docs/sim-self.md`. |
-| `simself/src/simself_merged_v3_5.py` | 861 | v3.5 monolith with `embryogenic=True` init. cos-sim=1.000000 verified. | Used for demos, NOT canonical for new code. |
-| `simself/src/simself_merged.py`, `_v2.py`, `_v3.py` | various | Earlier monoliths. v2 = un-cleaned (has 5 frequency axes in AXES_DEFINITIONS). v3 = improved. v3.5 = embryogenic. | Historical. |
-| `simself/src/simself_core_b.py` | 306 | Variant of sim_self_core with different signatures. | Runs clean per audit. |
-| `simself/src/simself_quickstart.py` | ? | Quickstart wrapper. | Convenience. |
-| `simself/src/fieldcore_unified.py` | ? | Unified fieldcore-style simulation driver. | Demo. |
+| `simself/src/simself_core.py` | 575 | Canonical self-model: 20-axis matrix, SpiralStage, Verdict, AxiomaticAnchors, persistence | **canonical** |
+| `simself/src/simself.py` | 226 | Constitutional integrator: observe/tick / why / axis_report / gate_refusal | **canonical** |
+| `simself/src/_deleted_*` | various | Superseded monoliths (simself_merged* / simself_quickstart / sim_self legacy / simself_core_b) | **deleted, archaeology** |
 
 ## The naming convention (for future maintainers)
 

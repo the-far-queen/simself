@@ -7,7 +7,7 @@ This package provides the full SimSelf cognitive architecture — a unified
 20-axis constitutional substrate + avatar state + bridges + utilities.
 
 Main entry (constitutional / runtime):
-- sim_self_core.py: SimSelf, LLMAdapter, governed_step, AxiomaticAnchors,
+- simself_core.py: SimSelf, LLMAdapter, governed_step, AxiomaticAnchors,
                     MainLoop, SpiralStage, Verdict, CycleResult, Config
 - constitutional/: 20-axis constitutional substrate (Constitution, Resolution,
                     Memory, Dreaming, Entity, Ground, ConsolidationFilter,
@@ -43,12 +43,9 @@ Additional:
 - modulator.py: Modulator (cycle driver)
 - selfcore.py: SelfCore 1 (boundary + state + change)
 - sovereign_self.py: Sovereign self runtime
-- sim_self.py: simpler self-model
-- simself_core_b.py: alternative core B
-- simself_merged*.py: integrated monoliths (reference)
 - state_vector.py: minimal StateVector stub
 """
-from sim_self_core import (
+from simself_core import (
     SimSelf,
     LLMAdapter,
     governed_step,

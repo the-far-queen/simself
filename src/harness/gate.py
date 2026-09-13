@@ -7,7 +7,7 @@ for a decision (allow / refuse / defer), and only executes on approve.
 
 The Governor is duck-typed: anything with a `decide(action: str, coherence: float) -> str`
 method and an `apply_action_cost(decision: str)` method works. SimSelf's own
-`sim_self_core.SimSelf` qualifies (its `evaluate_intent` returns a `Verdict`
+`simself_core.SimSelf` qualifies (its `evaluate_intent` returns a `Verdict`
 dataclass; the Gate handles both shapes).
 """
 
@@ -47,7 +47,7 @@ class Gate:
         """Governor may return a string or a Verdict-like object. Normalize."""
         if isinstance(raw, str):
             return raw.upper()
-        # Verdict-like: .allow attribute (sim_self_core) or .name (enum)
+        # Verdict-like: .allow attribute (simself_core) or .name (enum)
         if hasattr(raw, "allow"):
             return DECISION_ALLOW if raw.allow else DECISION_REFUSE
         if hasattr(raw, "name"):

@@ -39,8 +39,9 @@ Identity persistence that survives session wipes. Governance (the 20-axis consti
 - `src/` — Python implementation: constitutional core, harness, persistence, recovery
   - `constitutional/` — 20-axis governance, M0/M1 split, the constitution
   - `harness/` — Gate (Governor-mediated tool calls), memory, planner, persistence, resources, tools
-  - top-level: `metrics.py`, `sim_self.py` (Module B legacy), `sim_self_core.py` (canonical self-model), `simself_core_b.py` (variant), `sovereign_self.py`, `stalk.py`, `state_vector.py`, `selfcore.py`, `resilient_self_model.py`, `simself_merged.py`, `simself_merged_v2.py`, `simself_merged_v3.py`, `simself_merged_v3_5.py` (embryogenic demo), `simself_quickstart.py`, `fieldcore_unified.py`
-  - canonical `SimSelf` (top-level): `src/sim_self_core.py`
+  - top-level: `metrics.py`, `simself_core.py` (canonical self-model: SimSelf + SpiralStage + Verdict + persistence), `sovereign_self.py`, `stalk.py`, `state_vector.py`, `selfcore.py`, `resilient_self_model.py`, `fieldcore_unified.py`, `aif_being.py`, `avatar_state.py`, `coding_operator_object.py`, `executive_planner.py`, `instruction_library.py`, `language_stalk_control.py`, `ledger.py`, `loop.py`, `m1_m0_negotiation.py`, `modulator.py`, `robotic_field_core.py`, `semantic_chunking_layer.py`, `training_bridge.py`, `coherence.py`, `signals.py`, `actions.py`, `boundaries.py`
+    - legacy `_deleted_*` files: superseded monoliths (simself_merged, simself_quickstart, sim_self legacy Module B, simself_core_b variant). Kept for archaeology but not imported.
+    - canonical `SimSelf` (top-level): `src/simself_core.py`
   - canonical `ConstitutionalSimSelf`: `src/constitutional/simself.py`
 - `docs/` — design docs, schema catalogs, deployment guides (28+ files)
 - `config/` — `simself_config.yaml` — canonical Governor thresholds + 20-axis baselines
