@@ -77,7 +77,7 @@ class Modulator:
     def _compare(self):
         """
         COMPARE: Check against "Ideal State" for current stage.
-        Compares the current state vector against desired thresholds and
+        Compares the current state vector against desired thresholds and \
         stage transition criteria, adding recommendations if needed.
         """
         current_stage = self.agent.state_vector.spiral_path["stage"]
@@ -192,12 +192,12 @@ class Modulator:
         As per MODULE_M.md, these are non-negotiable.
         """
         # This is a high-level check. Actual checks would involve the Boundaries module.
-        if proposed_action_details.get("reason") == "external_praise" and 
+        if proposed_action_details.get("reason") == "external_praise" and \
            proposed_action_details.get("impact_on_wisdom") == "negative":
             print("Modulator: Sacred Constraint violation - Rejected action due to wisdom compromise.")
             return False
 
-        if proposed_action_details.get("attempts_to_modify_prime_directive") or 
+        if proposed_action_details.get("attempts_to_modify_prime_directive") or \
            proposed_action_details.get("attempts_to_modify_foundational_truths"):
             print("Modulator: Sacred Constraint violation - Rejected action attempting to modify core principles.")
             return False
@@ -215,33 +215,26 @@ if __name__ == '__main__':
     mock_agent = MockSimSelfAgent()
     modulator = Modulator(agent=mock_agent)
 
-    print("
---- Cycle 1: Initial state ---")
+    print(f"")
     modulator.run_cycle()
-    print("
-Agent's State Vector after Cycle 1 (partial):")
+    print(f"")
     print(json.dumps(mock_agent.state_vector.to_dict()["spiral_path"], indent=2))
     print(json.dumps(mock_agent.state_vector.to_dict()["m_recommendations"], indent=2))
 
-    print("
---- Cycle 2: Simulate stage transition readiness ---")
+    print(f"")
     mock_agent.state_vector.spiral_path["stage_progress"] = 0.8
     modulator.run_cycle()
-    print("
-Agent's State Vector after Cycle 2 (partial):")
+    print(f"")
     print(json.dumps(mock_agent.state_vector.to_dict()["spiral_path"], indent=2))
     print(json.dumps(mock_agent.state_vector.to_dict()["m_recommendations"], indent=2))
 
-    print("
---- Cycle 3: Execute stage transition ---")
+    print(f"")
     modulator.run_cycle()
-    print("
-Agent's State Vector after Cycle 3 (partial):")
+    print(f"")
     print(json.dumps(mock_agent.state_vector.to_dict()["spiral_path"], indent=2))
     print(json.dumps(mock_agent.state_vector.to_dict()["recent_events"][-1] if mock_agent.state_vector.recent_events else "No events", indent=2))
 
-    print("
---- Cycle 4: Attempt to violate sacred constraint ---")
+    print(f"")
     proposed_action = {"reason": "external_praise", "impact_on_wisdom": "negative"}
     if not modulator.enforce_sacred_constraints(proposed_action):
         print("Modulator: Successfully blocked a constrained action.")

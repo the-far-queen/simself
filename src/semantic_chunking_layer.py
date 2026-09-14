@@ -95,25 +95,21 @@ if __name__ == '__main__':
     Truth is paramount in all decision-making processes, ensuring agency requires responsibility.
     """
 
-    print("
---- Chunking general text ---")
+    print(f"")
     chunks = chunker.chunk_text(long_text, domain="general")
     for i, chunk in enumerate(chunks):
-        print(f"
-Chunk {i+1} (ID: {str(chunk['id'])[:4]}):")
+        print(f"")
         print(f"  Text: {chunk['text']}")
         print(f"  Domain: {chunk['domain']}")
         print(f"  Embedding (first 3): {chunk['embedding'][:3]}...")
 
-    print("
---- Chunking robotics-focused text ---")
+    print(f"")
     robot_text = """
     The robot must grasp the tool. Ensure no collision with the environment.
     Move the end effector to the target position. Sensors provide feedback.
     """
     robot_chunks = chunker.chunk_text(robot_text, domain="robotics")
     for i, chunk in enumerate(robot_chunks):
-        print(f"
-Chunk {i+1} (ID: {str(chunk['id'])[:4]}):")
+        print(f"")
         print(f"  Text: {chunk['text']}")
         print(f"  Domain: {chunk['domain']}")

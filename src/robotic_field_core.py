@@ -127,8 +127,7 @@ if __name__ == '__main__':
     
     fieldcore = RoboticFieldCore()
     
-    print("
-1. First collapse attempt: simple command.")
+    print(f"")
     result1 = fieldcore.attempt_collapse(
         natural_language_command="grasp object",
         candidate_constraints=["object_visible"],
@@ -137,8 +136,7 @@ if __name__ == '__main__':
     )
     print(f"Result: {result1}")
 
-    print("
-2. Second collapse attempt: complex command (coffee) with missing specific constraint.")
+    print(f"")
     result2 = fieldcore.attempt_collapse(
         natural_language_command="make espresso",
         candidate_constraints=["water_available", "mug_present"],
@@ -148,13 +146,11 @@ if __name__ == '__main__':
     print(f"Result: {result2}")
     
     if not result2['success'] and 'question' in result2:
-        print(f"
-Robot asks: {result2['question']}")
+        print(f"")
         # Simulate human response: "espresso" -> user clarifies the command.
         # This interaction would feed back into the next attempt with updated constraints.
         
-    print("
-3. Third collapse attempt: coffee with specific constraints (post-human interaction).")
+    print(f"")
     result3 = fieldcore.attempt_collapse(
         natural_language_command="make espresso",
         candidate_constraints=["water_available", "mug_present", "coffee_type=espresso"],
@@ -163,8 +159,7 @@ Robot asks: {result2['question']}")
     )
     print(f"Result: {result3}")
 
-    print("
-4. Fourth collapse attempt: coffee beans with missing location.")
+    print(f"")
     result4 = fieldcore.attempt_collapse(
         natural_language_command="get coffee beans",
         candidate_constraints=[],
@@ -173,8 +168,7 @@ Robot asks: {result2['question']}")
     )
     print(f"Result: {result4}")
 
-    print("
-5. Fifth collapse attempt: coffee beans with location constraint.")
+    print(f"")
     result5 = fieldcore.attempt_collapse(
         natural_language_command="get coffee beans",
         candidate_constraints=["location_coffee_beans=pantry_top_shelf"],

@@ -42,7 +42,6 @@ Additional:
 - instruction_library.py: Action/semantic library
 - modulator.py: Modulator (cycle driver)
 - selfcore.py: SelfCore 1 (boundary + state + change)
-- sovereign_self.py: Sovereign self runtime
 - state_vector.py: minimal StateVector stub
 """
 from simself_core import (

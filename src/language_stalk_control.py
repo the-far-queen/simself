@@ -99,9 +99,9 @@ class LanguageStalk:
             self._record_failure_pattern(glue_outcome)
     
     def _reinforce_projection(self, reward: float, other_z: torch.Tensor):
-        """REINFORCE        # Store eligibility-style update"""
+        """REINFORCE: Store eligibility-style update."""
         
- trace
+        # trace (orphan word, restored as comment)
         trace_key = f"trace_{hash(other_z.cpu().numpy().tobytes())}"
         if trace_key not in self.eligibility_trace:
             self.eligibility_trace[trace_key] = self._get_current_projection().detach()

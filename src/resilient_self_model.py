@@ -280,20 +280,17 @@ if __name__ == '__main__':
     
     # Test ResilientSelfModel
     rsm = ResilientSelfModel(state_vector=mock_sv, num_axes=6)
-    print(f"
-Initial StateVector Axes: {mock_sv.swedenborgian_axes}")
+    print(f"")
     print(f"Initial coherence: {rsm.coherence_from_axes(rsm._get_axes_vector()):.2f}")
 
-    print("
-Proposing some updates:")
+    print(f"")
     rsm.propose_update({"truth_before_comfort": 0.1, "agency_requires_responsibility": 0.05}, source="beneficial")
     print(f"Coherence after 1: {rsm.coherence_from_axes(rsm._get_axes_vector()):.2f}, Emergence: {rsm.get_emergence_confidence():.2f}")
     
     rsm.propose_update({"growth_through_resistance": 0.05, "cognitive_friction": 0.02}, source="growth")
     print(f"Coherence after 2: {rsm.coherence_from_axes(rsm._get_axes_vector()):.2f}, Emergence: {rsm.get_emergence_confidence():.2f}")
 
-    print("
---- Testing WisdomLibrary ---")
+    print(f"")
     wl = WisdomLibrary(state_vector=mock_sv, mmm_threshold=0.6)
     
     entry1 = {"content": "Always prioritize truth."}
@@ -302,6 +299,5 @@ Proposing some updates:")
     entry2 = {"content": "Random noise is useful."}
     wl.append_entry(entry=entry2, situation_description="Unrelated statement.") # Should be rejected if MMM is low
     
-    print(f"
-Wisdom Library entries count: {len(wl.entries)}")
+    print(f"")
     print(f"StateVector recent events count: {len(mock_sv.recent_events)}")

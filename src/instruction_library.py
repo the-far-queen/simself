@@ -70,25 +70,21 @@ if __name__ == '__main__':
     
     library = InstructionLibrary()
     
-    print("
-Lookup 'grasp' action:")
+    print(f"")
     grasp_action = library.lookup_action('grasp')
     if grasp_action:
         print(f"  Constraints: {grasp_action['constraints']}")
         print(f"  Preconditions: {grasp_action['preconditions']}")
         print(f"  Postconditions: {grasp_action['postconditions']}")
     
-    print("
-Lookup 'make coffee' command:")
+    print(f"")
     coffee_sequence = library.lookup_semantic_command('make coffee')
     print(f"  Action sequence: {coffee_sequence}")
 
-    print("
-Adding a new action 'stir':")
+    print(f"")
     library.add_action('stir', ['container_present', 'spoon_present'], ['liquid_in_container'], ['liquid_stirred'])
     print(f"Lookup 'stir' action: {library.lookup_action('stir')}")
 
-    print("
-Adding a new semantic mapping 'prepare tea':")
+    print(f"")
     library.add_semantic_mapping('prepare tea', ['boil water', 'steep tea', 'add sugar'])
     print(f"Lookup 'prepare tea' command: {library.lookup_semantic_command('prepare tea')}")
