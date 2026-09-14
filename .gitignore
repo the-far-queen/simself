@@ -1,5 +1,50 @@
-src/distributed/__pycache__/
+# Hermes-curated gitignore for simself (2026-09-14)
+# Bobby directive: refactor clean, repair refs, dependencies. clean as we go.
 
-# secrets
-.env*
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+# Node / JS
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.tgz
+.cache/
+dist/
+.next/
+
+# Secrets — Bobby's tokens, telegram creds, etc
+.env
+.env.*
 *.telegram
+telegram_token*
+vault/50-index/.env.telegram
+
+# Bobby's runtime data — local-only
+data/
+ledger.json
+*.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+build/
+*.tsbuildinfo
+
+# Docker build context (kept locally, not in git)
+docker/*/Dockerfile
+docker/*/.dockerignore
+docker/*/build.log
