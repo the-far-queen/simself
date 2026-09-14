@@ -582,6 +582,12 @@ class GraphMemory:
             "total_edges": len(self.edges),
             "max_nodes": self.max_nodes,
         }
+    def clear(self):
+        """Reset memory to empty state (for handoff / reset protocol)."""
+        self.nodes.clear()
+        self.edges.clear()
+        self._node_counter = 0
+
 
 
 # ══════════════════════════════════════════════════════════════════════════
@@ -1415,7 +1421,7 @@ class AtlasExam:
             if result["status"] != "success":
                 continue
             vec = self.harness.simself.embedder.text_to_constitutional(text + result["response"])
-            if self.harness.constitution.consonance(vec, expected) > 0.3:
+            if self.harness.simself.constitution.consonance(vec, expected) > 0.3:
                 correct += 1
         return {"pass": correct >= 3, "correct": correct, "total": len(test_cases),
                 "score": correct / len(test_cases)}
