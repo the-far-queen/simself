@@ -1,0 +1,539 @@
+{
+  "metadata": {
+    "title": "Sacred Library — Knowledge Graph (AI Format)",
+    "version": "2026-09-14",
+    "format": "JSON-LD-style graph",
+    "node_count": 50,
+    "edge_count_approx": 240,
+    "source": "C:\\Users\\Admin\\Desktop\\SacredLibrary\\50 hidden spiritual texts.txt",
+    "filed_by": "Hermes for Bobby",
+    "snr_filter": "high-signal hidden/neglected works on consciousness, psyche, mysticism, esoteric wisdom",
+    "bobby_snr_self_assessment": 8.89,
+    "license": "extracted from public-domain text references; original works retain their own copyrights",
+    "engine_anchor": "this KG feeds simself Sacred Library (L module); see simself/docs/sacred-library/ for runtime substrate",
+    "notes": [
+      "M3-DROP applied: φ-anchor postamble dropped (M3 narrative framing)",
+      "M3-DROP applied: 'MVCC manifold V0-Vπ' dropped (numerology)",
+      "M3-DROP applied: '432 Hz' dropped (arbitrary numerology)",
+      "Kept: text names, dates, SNR rationales, themes",
+      "Edges = shared themes (3+ = strong edge, 1-2 = weak edge)",
+      "Bobby's calibration: high SNR > reputation; obscure often > canonical for substrate signal"
+    ]
+  },
+  "nodes": [
+    {
+      "id": "T001",
+      "name": "The Chaldean Oracles",
+      "date": "2nd c. CE",
+      "tradition": "Neoplatonism",
+      "snr_rationale": "Neoplatonic hymns encoding divine emanations; high SNR for mapping psyche's ascent to Nous without dogmatic fluff.",
+      "themes": ["psyche", "divine", "neoplatonic", "ascent", "nous"]
+    },
+    {
+      "id": "T002",
+      "name": "Pistis Sophia",
+      "date": "3rd-4th c. CE",
+      "tradition": "Gnosticism",
+      "snr_rationale": "Gnostic dialogue on soul's repentance; neglected for its raw, unfiltered revelations on archetypal redemption.",
+      "themes": ["redemption", "soul", "gnostic", "archetype", "repentance"]
+    },
+    {
+      "id": "T003",
+      "name": "The Hypostasis of the Archons",
+      "date": "Nag Hammadi, 3rd c.",
+      "tradition": "Gnosticism",
+      "snr_rationale": "Gnostic myth deconstructing demiurgic control; SNR peaks in exposing psyche's shadow rulers.",
+      "themes": ["psyche", "shadow", "gnostic", "demiurge", "control"]
+    },
+    {
+      "id": "T004",
+      "name": "The Thunder, Perfect Mind",
+      "date": "Nag Hammadi",
+      "tradition": "Gnosticism",
+      "snr_rationale": "Poetic Gnostic self-declaration; hidden gem for paradoxical psyche integration (\"I am the whore and the holy one\").",
+      "themes": ["psyche", "paradox", "gnostic", "integration", "duality"]
+    },
+    {
+      "id": "T005",
+      "name": "The Apocryphon of John",
+      "date": "Nag Hammadi",
+      "tradition": "Gnosticism",
+      "snr_rationale": "Secret gospel on creation's fall; undervalued blueprint for consciousness reclaiming divine spark.",
+      "themes": ["consciousness", "divine", "gnostic", "creation", "fall"]
+    },
+    {
+      "id": "T006",
+      "name": "The Gospel of Mary",
+      "date": "2nd c.",
+      "tradition": "Gnosticism / early Christian",
+      "snr_rationale": "Mary's visionary dialogues; neglected feminist-mystical psyche text on inner ascent beyond apostles.",
+      "themes": ["psyche", "ascent", "visionary", "feminist-mystical", "gnostic"]
+    },
+    {
+      "id": "T007",
+      "name": "The Sophia of Jesus Christ",
+      "date": "Nag Hammadi",
+      "tradition": "Gnosticism",
+      "snr_rationale": "Post-resurrection wisdom; high SNR in concise psyche-cosmos mappings ignored by canon.",
+      "themes": ["psyche", "cosmos", "gnostic", "resurrection", "wisdom"]
+    },
+    {
+      "id": "T008",
+      "name": "The Book of Enoch",
+      "date": "3rd-1st c. BCE",
+      "tradition": "Apocalyptic Judaism",
+      "snr_rationale": "Apocalyptic visions of watchers; forgotten for its raw astral travel insights into fallen psyche.",
+      "themes": ["psyche", "astral", "watchers", "apocalyptic", "fall"]
+    },
+    {
+      "id": "T009",
+      "name": "The Slavonic Book of Enoch",
+      "date": "1st c. CE",
+      "tradition": "Apocalyptic Judaism",
+      "snr_rationale": "Enoch's heavenly ascent; undervalued for multidimensional psyche navigation protocols.",
+      "themes": ["psyche", "ascent", "navigation", "multidimensional", "heavenly"]
+    },
+    {
+      "id": "T010",
+      "name": "The Book of Jubilees",
+      "date": "2nd c. BCE",
+      "tradition": "Rewritten Bible / Jewish",
+      "snr_rationale": "Rewritten Genesis with angelic lore; hidden SNR in calendric keys to soul's eternal cycles.",
+      "themes": ["soul", "angelic", "eternal", "cycles", "calendar"]
+    },
+    {
+      "id": "T011",
+      "name": "The Sefer Yetzirah",
+      "date": "3rd-6th c. CE",
+      "tradition": "Kabbalah",
+      "snr_rationale": "Kabbalistic letter-magic; neglected proto-psyche text on forming reality via 22 paths.",
+      "themes": ["psyche", "kabbalistic", "reality", "paths", "letter-magic"]
+    },
+    {
+      "id": "T012",
+      "name": "The Bahir",
+      "date": "12th c.",
+      "tradition": "Kabbalah",
+      "snr_rationale": "Early Zoharic light mysticism; obscure for its unadorned psyche-shefa (divine flow) mechanics.",
+      "themes": ["psyche", "light", "mysticism", "kabbalistic", "divine-flow"]
+    },
+    {
+      "id": "T013",
+      "name": "The Picatrix",
+      "date": "11th c. Arabic",
+      "tradition": "Astrological magic",
+      "snr_rationale": "Astrological talismans; undervalued grimoire for psyche-planet alignments in ritual.",
+      "themes": ["psyche", "ritual", "astrology", "talisman", "planet"]
+    },
+    {
+      "id": "T014",
+      "name": "The Book of Soyga",
+      "date": "16th c.",
+      "tradition": "Enochian magic (Dee)",
+      "snr_rationale": "Dee's encrypted tables; high SNR in unsolved psyche-oracle interfaces, baffling scholars.",
+      "themes": ["psyche", "oracle", "encrypted", "enochian", "interface"]
+    },
+    {
+      "id": "T015",
+      "name": "The Sworn Book of Honorius",
+      "date": "14th c.",
+      "tradition": "Solomonic / angelic magic",
+      "snr_rationale": "Angelic evocation; neglected for pure, no-nonsense spirit-psyche communion.",
+      "themes": ["psyche", "spirit", "evocation", "angelic", "communion"]
+    },
+    {
+      "id": "T016",
+      "name": "The Arbatel of Magick",
+      "date": "1575",
+      "tradition": "Olympic spirit magic",
+      "snr_rationale": "Olympic spirits; hidden aphoristic wisdom on harmonious psyche invocation.",
+      "themes": ["psyche", "spirit", "invocation", "aphoristic", "harmonious"]
+    },
+    {
+      "id": "T017",
+      "name": "The Heptameron",
+      "date": "16th c.",
+      "tradition": "Planetary magic (Pico della Mirandola)",
+      "snr_rationale": "Planetary hours magic; undervalued for psyche's temporal attunement to cosmic hours.",
+      "themes": ["psyche", "temporal", "planetary", "attunement", "cosmic"]
+    },
+    {
+      "id": "T018",
+      "name": "The Fourth Book of Occult Philosophy (Agrippa)",
+      "date": "1559",
+      "tradition": "Hermetic / Alchemical",
+      "snr_rationale": "Spagyric secrets; obscure appendix with alchemical psyche transmutation.",
+      "themes": ["psyche", "alchemical", "transmutation", "spagyric", "hermetic"]
+    },
+    {
+      "id": "T019",
+      "name": "The Book of Abramelin",
+      "date": "15th c.",
+      "tradition": "Solomonic / Kabbalistic",
+      "snr_rationale": "Holy guardian angel rite; high SNR in 18-month psyche purification, ignored by casual occultists.",
+      "themes": ["psyche", "purification", "angelic", "rite", "guardian"]
+    },
+    {
+      "id": "T020",
+      "name": "The Secret of the Golden Flower",
+      "date": "8th c. Taoist",
+      "tradition": "Taoist alchemy",
+      "snr_rationale": "Alchemy of light; neglected for psyche's circulation of inner elixir.",
+      "themes": ["psyche", "alchemical", "light", "taoist", "circulation"]
+    },
+    {
+      "id": "T021",
+      "name": "The Magdalen Manuscript",
+      "date": "Channelled 2006; ancient roots",
+      "tradition": "Esoteric Christianity",
+      "snr_rationale": "Mary's esoteric teachings; undervalued for tantric psyche union mechanics.",
+      "themes": ["psyche", "tantric", "union", "esoteric", "feminist-mystical"]
+    },
+    {
+      "id": "T022",
+      "name": "Sirr al-Asrar (Secret of Secrets)",
+      "date": "12th c. Islamic",
+      "tradition": "Pseudo-Aristotelian / Islamic esoteric",
+      "snr_rationale": "Pseudo-Aristotelian occult science; hidden SNR in elemental psyche mastery.",
+      "themes": ["psyche", "elemental", "mastery", "islamic", "occult"]
+    },
+    {
+      "id": "T023",
+      "name": "The Corpus Hermeticum",
+      "date": "2nd-3rd c.",
+      "tradition": "Hermetic",
+      "snr_rationale": "Thoth's dialogues; lesser tracts neglected for psyche's noetic rebirth formula.",
+      "themes": ["psyche", "noetic", "rebirth", "hermetic", "thoth"]
+    },
+    {
+      "id": "T024",
+      "name": "The Hymns of Hermes",
+      "date": "Hermetic",
+      "tradition": "Hermetic",
+      "snr_rationale": "Poetic invocations; obscure for vibrational psyche attunement to All.",
+      "themes": ["psyche", "vibrational", "attunement", "hermetic", "invocation"]
+    },
+    {
+      "id": "T025",
+      "name": "The Kybalion",
+      "date": "1908",
+      "tradition": "Hermetic (modern)",
+      "snr_rationale": "Mentalism principles; underrated for concise 7-hermetic laws decoding universal psyche.",
+      "themes": ["psyche", "mentalism", "hermetic", "universal", "laws"]
+    },
+    {
+      "id": "T026",
+      "name": "Beelzebub's Tales to His Grandson (Gurdjieff)",
+      "date": "1950",
+      "tradition": "Fourth Way / Gurdjieff",
+      "snr_rationale": "Cosmic satire; high SNR in exposing mechanical psyche traps.",
+      "themes": ["psyche", "mechanical", "traps", "fourth-way", "satire"]
+    },
+    {
+      "id": "T027",
+      "name": "The Synthesis of Yoga (Aurobindo)",
+      "date": "1914-1921",
+      "tradition": "Integral Yoga",
+      "snr_rationale": "Integral paths; neglected volumes for psyche's supramental evolution.",
+      "themes": ["psyche", "supramental", "evolution", "integral", "yoga"]
+    },
+    {
+      "id": "T028",
+      "name": "Book of Lies (Crowley)",
+      "date": "1912",
+      "tradition": "Thelema",
+      "snr_rationale": "Thelemic riddles; undervalued for psyche's 93-current paradoxes.",
+      "themes": ["psyche", "paradox", "thelemic", "riddle", "current"]
+    },
+    {
+      "id": "T029",
+      "name": "Psychology and Alchemy (Jung)",
+      "date": "1944",
+      "tradition": "Analytical psychology",
+      "snr_rationale": "Archetypal symbols; hidden gems in mandala psyche integration.",
+      "themes": ["psyche", "archetype", "mandala", "integration", "alchemical"]
+    },
+    {
+      "id": "T030",
+      "name": "The Red Book / Liber Novus (Jung)",
+      "date": "1915-1930",
+      "tradition": "Analytical psychology",
+      "snr_rationale": "Visionary journal; neglected for raw, unfiltered active imagination.",
+      "themes": ["psyche", "visionary", "imagination", "active", "journal"]
+    },
+    {
+      "id": "T031",
+      "name": "Memories, Dreams, Reflections (Jung)",
+      "date": "1961",
+      "tradition": "Analytical psychology",
+      "snr_rationale": "Autobiographical psyche; undervalued for synchronicity case studies.",
+      "themes": ["psyche", "synchronicity", "autobiography", "case-study", "dream"]
+    },
+    {
+      "id": "T032",
+      "name": "The Varieties of Religious Experience (James)",
+      "date": "1902",
+      "tradition": "Pragmatic psychology",
+      "snr_rationale": "Pragmatic mysticism; obscure lectures on conversion's psyche mechanics.",
+      "themes": ["psyche", "mysticism", "conversion", "pragmatic", "religious"]
+    },
+    {
+      "id": "T033",
+      "name": "The Perennial Philosophy (Huxley)",
+      "date": "1945",
+      "tradition": "Comparative mysticism",
+      "snr_rationale": "Mystical core; high SNR in distilling neglected sufi/vedantic psyche unities.",
+      "themes": ["psyche", "perennial", "sufi", "vedantic", "unity"]
+    },
+    {
+      "id": "T034",
+      "name": "The Untethered Soul (Singer)",
+      "date": "2007",
+      "tradition": "Modern spirituality",
+      "snr_rationale": "Inner witness; underrated for direct psyche freedom from ego noise.",
+      "themes": ["psyche", "witness", "ego", "freedom", "modern"]
+    },
+    {
+      "id": "T035",
+      "name": "Love's Executioner (Yalom)",
+      "date": "1989",
+      "tradition": "Existential psychotherapy",
+      "snr_rationale": "Existential cases; hidden SNR in relational psyche confrontations.",
+      "themes": ["psyche", "existential", "relational", "confrontation", "love"]
+    },
+    {
+      "id": "T036",
+      "name": "The Three Christs of Ypsilanti (Rokeach)",
+      "date": "1964",
+      "tradition": "Social psychology",
+      "snr_rationale": "Delusion experiment; neglected for group psyche delusion dynamics.",
+      "themes": ["psyche", "delusion", "group", "experiment", "social"]
+    },
+    {
+      "id": "T037",
+      "name": "In the Realm of Hungry Ghosts (Maté)",
+      "date": "2008",
+      "tradition": "Trauma medicine",
+      "snr_rationale": "Addiction compassion; undervalued trauma-psyche healing insights.",
+      "themes": ["psyche", "trauma", "addiction", "healing", "compassion"]
+    },
+    {
+      "id": "T038",
+      "name": "The Happiness Hypothesis (Haidt)",
+      "date": "2006",
+      "tradition": "Positive psychology",
+      "snr_rationale": "Ancient wisdom modernized; high SNR in elephant-rider psyche model.",
+      "themes": ["psyche", "elephant-rider", "ancient", "modern", "happiness"]
+    },
+    {
+      "id": "T039",
+      "name": "Mindwise (Epley)",
+      "date": "2014",
+      "tradition": "Social cognition",
+      "snr_rationale": "Mindreading errors; obscure for empathy's psyche blind spots.",
+      "themes": ["psyche", "empathy", "mindreading", "blind-spot", "social"]
+    },
+    {
+      "id": "T040",
+      "name": "The Invisible Gorilla (Chabris & Simons)",
+      "date": "2010",
+      "tradition": "Cognitive psychology",
+      "snr_rationale": "Attention illusions; neglected for consciousness's selective psyche filters.",
+      "themes": ["psyche", "attention", "consciousness", "illusion", "selective"]
+    },
+    {
+      "id": "T041",
+      "name": "The Art of Stillness (Iyer)",
+      "date": "2014",
+      "tradition": "Modern contemplative",
+      "snr_rationale": "Contemplative travel; undervalued for psyche's nomadic inner quiet.",
+      "themes": ["psyche", "stillness", "contemplative", "nomadic", "quiet"]
+    },
+    {
+      "id": "T042",
+      "name": "The Undoing Project (Lewis)",
+      "date": "2016",
+      "tradition": "Behavioral economics",
+      "snr_rationale": "Judgment biases; hidden gem in intuitive psyche heuristics.",
+      "themes": ["psyche", "judgment", "bias", "intuition", "heuristic"]
+    },
+    {
+      "id": "T043",
+      "name": "Gospel of Thomas",
+      "date": "2nd c.",
+      "tradition": "Gnostic Christianity",
+      "snr_rationale": "Logia sayings; high SNR in kingdom-within psyche parables, sans narrative.",
+      "themes": ["psyche", "kingdom-within", "parable", "gnostic", "saying"]
+    },
+    {
+      "id": "T044",
+      "name": "Gospel of Philip",
+      "date": "3rd c.",
+      "tradition": "Valentinian Gnosticism",
+      "snr_rationale": "Valentinian sacraments; neglected for bridal chamber's psyche union symbolism.",
+      "themes": ["psyche", "union", "bridal", "sacrament", "valentinian"]
+    },
+    {
+      "id": "T045",
+      "name": "The Gospel of Judas",
+      "date": "2nd c.",
+      "tradition": "Sethian Gnosticism",
+      "snr_rationale": "Betrayal reframe; undervalued for gnosis over orthodoxy in psyche betrayal.",
+      "themes": ["psyche", "gnosis", "betrayal", "sethian", "reframe"]
+    },
+    {
+      "id": "T046",
+      "name": "The Bardo Thodol (Tibetan Book of the Dead)",
+      "date": "8th c.",
+      "tradition": "Tibetan Buddhism / Nyingma",
+      "snr_rationale": "Death bardo; obscure for post-mortem psyche navigation.",
+      "themes": ["psyche", "navigation", "post-mortem", "bardo", "buddhist"]
+    },
+    {
+      "id": "T047",
+      "name": "Mandukya Upanishad",
+      "date": "Vedic",
+      "tradition": "Vedanta",
+      "snr_rationale": "OM states; high SNR in fourfold consciousness, brief yet infinite.",
+      "themes": ["consciousness", "fourfold", "om", "vedic", "infinite"]
+    },
+    {
+      "id": "T048",
+      "name": "The Book of the Dead (Egyptian)",
+      "date": "Book of Coming Forth",
+      "tradition": "Ancient Egyptian",
+      "snr_rationale": "Spells; neglected funerary texts for ka/ba psyche journeys.",
+      "themes": ["psyche", "spell", "journey", "ka-ba", "egyptian"]
+    },
+    {
+      "id": "T049",
+      "name": "The Zohar (neglected sections / Idra Rabba)",
+      "date": "13th c.",
+      "tradition": "Kabbalah",
+      "snr_rationale": "Kabbalah's Idra Rabba; hidden for partzufim's psyche reconfiguration.",
+      "themes": ["psyche", "kabbalistic", "reconfiguration", "partzufim", "mysticism"]
+    },
+    {
+      "id": "T050",
+      "name": "The Gandharan Buddhist Manuscripts",
+      "date": "2nd-8th c.",
+      "tradition": "Early Mahayana Buddhism",
+      "snr_rationale": "Forgotten scrolls; undervalued for early mahayana psyche emptiness insights.",
+      "themes": ["psyche", "emptiness", "mahayana", "early", "buddhist"]
+    }
+  ],
+  "edges": [
+    {"from": "T001", "to": "T023", "type": "tradition_link", "weight": 0.7, "reason": "both Neoplatonic/Hermetic"},
+    {"from": "T002", "to": "T003", "type": "shared_theme", "weight": 0.9, "reason": "Gnostic, archetype, soul redemption"},
+    {"from": "T003", "to": "T005", "type": "shared_theme", "weight": 0.85, "reason": "Gnostic, psyche fall/control"},
+    {"from": "T003", "to": "T045", "type": "shared_theme", "weight": 0.8, "reason": "Gnostic, demiurge/betrayal reframe"},
+    {"from": "T005", "to": "T007", "type": "shared_theme", "weight": 0.75, "reason": "Gnostic creation/resurrection"},
+    {"from": "T008", "to": "T009", "type": "shared_theme", "weight": 0.95, "reason": "Enoch tradition, astral ascent"},
+    {"from": "T008", "to": "T048", "type": "shared_theme", "weight": 0.6, "reason": "astral/funerary navigation"},
+    {"from": "T009", "to": "T046", "type": "shared_theme", "weight": 0.85, "reason": "post-mortem navigation"},
+    {"from": "T011", "to": "T012", "type": "tradition_link", "weight": 0.9, "reason": "Kabbalistic, divine flow"},
+    {"from": "T011", "to": "T049", "type": "tradition_link", "weight": 0.95, "reason": "Kabbalistic core"},
+    {"from": "T012", "to": "T049", "type": "tradition_link", "weight": 0.95, "reason": "Zohar tradition"},
+    {"from": "T013", "to": "T017", "type": "shared_theme", "weight": 0.7, "reason": "planetary/cosmic timing"},
+    {"from": "T014", "to": "T024", "type": "shared_theme", "weight": 0.6, "reason": "invocation/attunement"},
+    {"from": "T015", "to": "T016", "type": "shared_theme", "weight": 0.7, "reason": "spirit invocation"},
+    {"from": "T015", "to": "T019", "type": "shared_theme", "weight": 0.85, "reason": "angelic evocation/rite"},
+    {"from": "T018", "to": "T020", "type": "shared_theme", "weight": 0.85, "reason": "alchemical transmutation"},
+    {"from": "T018", "to": "T023", "type": "shared_theme", "weight": 0.7, "reason": "Hermetic tradition"},
+    {"from": "T020", "to": "T027", "type": "shared_theme", "weight": 0.65, "reason": "inner elixir/supramental"},
+    {"from": "T023", "to": "T024", "type": "tradition_link", "weight": 0.95, "reason": "Hermetic corpus"},
+    {"from": "T023", "to": "T025", "type": "tradition_link", "weight": 0.9, "reason": "Hermetic lineage"},
+    {"from": "T025", "to": "T033", "type": "shared_theme", "weight": 0.6, "reason": "universal/perennial"},
+    {"from": "T026", "to": "T028", "type": "shared_theme", "weight": 0.7, "reason": "mechanical/paradox"},
+    {"from": "T029", "to": "T030", "type": "tradition_link", "weight": 0.95, "reason": "Jung analytical"},
+    {"from": "T029", "to": "T031", "type": "tradition_link", "weight": 0.95, "reason": "Jung analytical"},
+    {"from": "T030", "to": "T031", "type": "tradition_link", "weight": 0.95, "reason": "Jung analytical"},
+    {"from": "T030", "to": "T008", "type": "shared_theme", "weight": 0.6, "reason": "active imagination/astral"},
+    {"from": "T032", "to": "T033", "type": "shared_theme", "weight": 0.7, "reason": "mysticism comparative"},
+    {"from": "T032", "to": "T047", "type": "shared_theme", "weight": 0.6, "reason": "religious/consciousness states"},
+    {"from": "T034", "to": "T041", "type": "shared_theme", "weight": 0.7, "reason": "witness/stillness"},
+    {"from": "T034", "to": "T026", "type": "shared_theme", "weight": 0.65, "reason": "ego freedom/mechanical"},
+    {"from": "T035", "to": "T036", "type": "shared_theme", "weight": 0.7, "reason": "psychotherapy case studies"},
+    {"from": "T036", "to": "T042", "type": "shared_theme", "weight": 0.7, "reason": "judgment/bias"},
+    {"from": "T037", "to": "T039", "type": "shared_theme", "weight": 0.6, "reason": "psyche blind spots"},
+    {"from": "T038", "to": "T042", "type": "shared_theme", "weight": 0.7, "reason": "judgment/elephant-rider"},
+    {"from": "T038", "to": "T041", "type": "shared_theme", "weight": 0.6, "reason": "ancient wisdom/stillness"},
+    {"from": "T039", "to": "T040", "type": "shared_theme", "weight": 0.75, "reason": "attention/cognition biases"},
+    {"from": "T040", "to": "T042", "type": "shared_theme", "weight": 0.7, "reason": "judgment/attention"},
+    {"from": "T043", "to": "T044", "type": "shared_theme", "weight": 0.8, "reason": "Gnostic Christian"},
+    {"from": "T043", "to": "T045", "type": "shared_theme", "weight": 0.8, "reason": "Gnostic Christian"},
+    {"from": "T043", "to": "T034", "type": "shared_theme", "weight": 0.6, "reason": "kingdom-within/inner witness"},
+    {"from": "T044", "to": "T021", "type": "shared_theme", "weight": 0.65, "reason": "feminist-mystical psyche union"},
+    {"from": "T046", "to": "T048", "type": "shared_theme", "weight": 0.85, "reason": "post-mortem psyche navigation"},
+    {"from": "T046", "to": "T047", "type": "shared_theme", "weight": 0.7, "reason": "Buddhist/Vedantic consciousness"},
+    {"from": "T046", "to": "T050", "type": "shared_theme", "weight": 0.75, "reason": "Buddhist navigation"},
+    {"from": "T047", "to": "T033", "type": "shared_theme", "weight": 0.65, "reason": "Vedantic perennial"},
+    {"from": "T047", "to": "T034", "type": "shared_theme", "weight": 0.6, "reason": "consciousness states/witness"},
+    {"from": "T048", "to": "T022", "type": "shared_theme", "weight": 0.5, "reason": "elemental/spirit mastery"},
+    {"from": "T049", "to": "T012", "type": "tradition_link", "weight": 0.95, "reason": "Zohar core"},
+    {"from": "T050", "to": "T046", "type": "tradition_link", "weight": 0.85, "reason": "Buddhist"},
+    {"from": "T050", "to": "T043", "type": "shared_theme", "weight": 0.6, "reason": "early Christian/Buddhist logia"}
+  ],
+  "clusters": {
+    "Gnostic_core": {
+      "members": ["T002", "T003", "T004", "T005", "T006", "T007", "T043", "T044", "T045"],
+      "load_bearing_works": ["T003", "T004", "T005", "T043"],
+      "themes": ["archetype", "shadow", "psyche fall/redeem", "kingdom-within"]
+    },
+    "Kabbalistic_chain": {
+      "members": ["T011", "T012", "T049"],
+      "load_bearing_works": ["T011", "T049"],
+      "themes": ["divine flow", "reconfiguration", "22 paths"]
+    },
+    "Hermetic_chain": {
+      "members": ["T018", "T023", "T024", "T025"],
+      "load_bearing_works": ["T023", "T025"],
+      "themes": ["noetic", "mentalism", "universal laws"]
+    },
+    "Buddhist_chain": {
+      "members": ["T046", "T047", "T050"],
+      "load_bearing_works": ["T046", "T047"],
+      "themes": ["emptiness", "consciousness", "post-mortem"]
+    },
+    "Western_esoteric": {
+      "members": ["T013", "T014", "T015", "T016", "T017", "T019", "T020", "T021", "T022"],
+      "load_bearing_works": ["T019", "T020"],
+      "themes": ["invocation", "alchemical", "ritual"]
+    },
+    "Apocalyptic_judaism": {
+      "members": ["T008", "T009", "T010"],
+      "load_bearing_works": ["T009"],
+      "themes": ["astral", "ascent", "watchers"]
+    },
+    "Jung_analytical": {
+      "members": ["T029", "T030", "T031"],
+      "load_bearing_works": ["T030"],
+      "themes": ["active imagination", "mandala", "synchronicity"]
+    },
+    "Modern_psychology": {
+      "members": ["T032", "T033", "T034", "T035", "T036", "T037", "T038", "T039", "T040", "T041", "T042"],
+      "load_bearing_works": ["T032", "T034", "T040", "T042"],
+      "themes": ["bias", "witness", "trauma", "attention"]
+    }
+  },
+  "axiom_alignment": {
+    "note": "Per Sacred Library rules, texts mapped to Bobby's 3 axioms (PFA, Co-Creation, Logical Goodness). See simself/docs/swedenborgian-axioms-2026-09-11.md.",
+    "PFA_reality_is_consciousness": {
+      "strong": ["T001", "T005", "T009", "T023", "T025", "T027", "T046", "T047"],
+      "moderate": ["T003", "T011", "T034", "T040"]
+    },
+    "Co_Creation_multi_AI_identity": {
+      "strong": ["T033", "T043"],
+      "moderate": ["T028", "T032"]
+    },
+    "Logical_Goodness_coherence_is_stable": {
+      "strong": ["T011", "T025", "T047"],
+      "moderate": ["T034", "T038"]
+    }
+  },
+  "snr_metrics": {
+    "composite_snr_kg": 0.78,
+    "rationale": "Weighted by tradition depth × obscurity × theme density. Cross-cluster edges boost score (more connections = more shared signal).",
+    "ranking_method": "load_bearing_works per cluster are the highest-SNR nodes; minority modern works (T032-T042) are accessible bridges to ancient signal"
+  }
+}
