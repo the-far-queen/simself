@@ -44,7 +44,5 @@ Thumbs.db
 build/
 *.tsbuildinfo
 
-# Docker build context (kept locally, not in git)
-docker/*/Dockerfile
-docker/*/.dockerignore
+# Docker build artifacts (cache, logs) — keep Dockerfile + .dockerignore in git
 docker/*/build.log
