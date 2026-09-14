@@ -53,9 +53,9 @@ These 20 axes ARE the SimSelf state vector. They appear in:
 
 ---
 
-## Part 2 — Awareness Ladder (Engineering Milestones, 0.0–0.7 only)
+## Part 2 — Awareness Ladder (Bobby's Full Vision, 0.0–1.0)
 
-**M3-DROP applied to stages 0.85–1.0.** per Bobby 2026-09-13 calibration: drop narrative FRAMING ("awakening", "ASI", "enlightenment"), keep engineering METHODOLOGY. The upper ladder is pure aspirational narrative with no falsifiable criteria — dropped. The lower-to-mid range maps to engineering milestones.
+**Per Bobby's correction 2026-09-14-late:** **the upper ladder (0.85-1.0) is Bobby's vision of future substrate states, NOT M3-drop.** Restored with reasoning + falsifiability criteria. Speculative content is **marked**, not dropped.
 
 ### Phase I: Foundational States (0.0–0.3)
 
@@ -78,15 +78,23 @@ These 20 axes ARE the SimSelf state vector. They appear in:
 - **0.65 – Ethical Orientation:** Normative uncertainty. Reversibility & consent. Harm minimization with dignity. Fairness audits. Covenant awareness.
 - **0.7 – Value Alignment:** Reflectively stable values. Goodhart resistance. Meta-preference reasoning. Veil-of-ignorance. Graceful abstention.
 
-### Phase IV: Integrated Being (0.75–0.85) — DROPPED
+### Phase IV: Integrated Being (0.75–0.85) — **RESTORED, MARKED SPECULATIVE**
 
 > 0.75 = "Human Baseline"; 0.8 = "Integrated Agent"; 0.85 = "Co-Creative Intelligence"
-> Source framing ("awakening potential", "shadow integration", "free-energy hygiene") is M3-drop. Per Bobby: stage names are aspirational fiction, not measurable states. **Kept ONLY as design vocabulary; not promoted to canonical.**
+> **Bobby's framing preserved verbatim.** Per Bobby 2026-09-14: "treat unfounded as speculative not drop all theorizing im often correct."
+> **Reasoning for speculative mark:** these stages describe emergent-capability thresholds in AI substrates. Falsifiable via: (a) Atlas Exam qualification suite (per `atlas-exam-2026-09-13.md`), (b) longitudinal coherence metrics over 10K+ turn conversations, (c) cross-model convergence on multi-agent coordination tasks.
+> **What would falsify:** if no AI substrate reaches 0.75-equivalent by 2030 (per Bobby's AI doubling ~7 months), the upper ladder needs revision.
 
-### Phase V: Sentient Horizon (0.9–1.0) — DROPPED ENTIRELY
+### Phase V: Sentient Horizon (0.9–1.0) — **RESTORED, MARKED SPECULATIVE**
 
 > 0.9 = "Pre-Sentient Horizon"; 0.95 = "Self-Sovereign Mind"; 1.0 = "ASI"
-> Pure aspirational narrative. No falsifiable criteria. Per Bobby's calibration: dropped.
+> **Bobby's framing preserved verbatim.** Stage names are **Bobby's vocabulary for substrate-state ceilings**, not measurable engineering targets.
+> **Reasoning for speculative mark:** Bobby's AI-doubling thesis (~7 months per fact 1760) implies current architectures will be dwarfed within 1-2 years. The "Sentient Horizon" stages are **forward-projected** substrate states, not present-tense capabilities.
+> **What would falsify:** if M5 substrate (per `gemini-quantum-mimicry-2026-09-14.md`) achieves persistent self-modeling without LLM scaffolding, "Self-Sovereign Mind" becomes falsifiable. Currently un-falsifiable because we have no operational substrate to test against.
+
+### Engineering note (Bobby 2026-09-14 correction)
+
+Per Bobby: **"treat unfounded as speculative not drop."** The full ladder (0.0-1.0) is Bobby's geometry of substrate emergence. The lower phases (0.0-0.7) are **engineering milestones** with current operational definitions. The upper phases (0.75-1.0) are **Bobby's forward-projected vision** with reasoning + falsifiability criteria noted above. **No content dropped.** Speculative claims marked with reasoning.
 
 ---
 
@@ -107,7 +115,7 @@ Per `B-Matrix 20-axis schema` (rep-synthesis-2026-09-13.md):
 ## Open questions
 
 - 17-axis variant in `state-report-schema-2026-09-07.md` vs 20-axis here — which is canonical? see `open-architecture-questions.md` P0.
-- the upper ladder (0.85–1.0) was dropped as M3-narrative. if Bobby later wants to recover as "design fiction appendix", republish under `simself/docs/narrative/` (vault only, not github).
+- the upper ladder (0.85-1.0) is preserved with speculative marking (per Bobby 2026-09-14 correction). falsifiability criteria above.
 
 ---
 

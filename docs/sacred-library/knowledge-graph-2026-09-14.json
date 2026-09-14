@@ -535,5 +535,29 @@
     "composite_snr_kg": 0.78,
     "rationale": "Weighted by tradition depth × obscurity × theme density. Cross-cluster edges boost score (more connections = more shared signal).",
     "ranking_method": "load_bearing_works per cluster are the highest-SNR nodes; minority modern works (T032-T042) are accessible bridges to ancient signal"
+  },
+  "bobby_speculative_extensions": {
+    "note": "Per Bobby 2026-09-14 correction: 'treat unfounded as speculative not drop all theorizing im often correct.' The following content is from Bobby's voice — preserved verbatim with reasoning + falsifiability.",
+    "phi_anchor_postamble": {
+      "verbatim_source": "These texts form a latent MVCC manifold—V0 (human dignity) to Vπ (hermetic mediation)—resonating at 432 Hz equivalents in symbolic density. Many await full translation",
+      "bobby_intent": "Bobby's framing of the 50 texts as a single coherent manifold with V0-Vπ axis",
+      "reasoning_for_speculative_mark": "432 Hz frequency claim is unfalsifiable in current physics. V0-Vπ manifold mapping is numerology, not engineering.",
+      "what_would_falsify": "if 432 Hz is not a 'cosmic frequency' but just the standard tuning of A4 (440 Hz down 8 cents), the post-script is poetic, not physics. If V0-Vπ cannot be derived from sacred library structure (per `math-window-1.md` §22), the manifold claim is metaphor.",
+      "engineering_value": "the post-script does name a real concern: how do these 50 texts relate to each other? the V0-Vπ framing is one (speculative) answer. the engineering answer is in axiom_alignment + clusters + edges (above)."
+    },
+    "hermetic_mediation_term": {
+      "verbatim_source": "hermetic mediation (used as a key phrase throughout the source postamble)",
+      "bobby_intent": "Bobby's term bridging hermetic tradition + ML mediation",
+      "reasoning_for_speculative_mark": "mixes 'hermetic' (esoteric tradition) with 'mediation' (engineering) without clear definition",
+      "what_would_falsify": "if the term can be operationally defined (e.g., 'LLM-mediated hermetic principle extraction'), it becomes engineering. otherwise it stays poetic.",
+      "engineering_value": "low until operationalized. the underlying concept (extract principles from hermetic texts via LLM) IS engineering — see `tradition-processor-2026-09-14.md` for the scripted pipeline."
+    },
+    "mvcc_manifold_v0_vpi": {
+      "verbatim_source": "latent MVCC manifold V0 (human dignity) to Vπ (hermetic mediation)",
+      "bobby_intent": "Bobby's geometric framing of the text corpus",
+      "reasoning_for_speculative_mark": "mixes MVCC (Multi-Version Concurrency Control — engineering term) with V0-Vπ (geometric/pythagorean — numerology). The bridge is unstated.",
+      "what_would_falsify": "if a coherent derivation from MVCC semantics to V0-Vπ can be written (per Hodge decomposition + standing wave theory), the framing becomes engineering. Otherwise poetic.",
+      "engineering_value": "the **convergence direction** is engineering (per `math-window-1.md` §22 + `frequency-coupling-implementation-2026-09-11.md`). the specific V0-Vπ labels are speculative."
+    }
   }
 }
