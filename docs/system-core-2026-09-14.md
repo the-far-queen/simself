@@ -139,11 +139,11 @@ class RecoveryProtocols:
 **⚠️ POISONED VOCAB VIOLATION**: `EMERGENCY HALT` is **banned** per Bobby's ABSOLUTE BAN (memory log 2026-09-13).
 
 **Bobby's safe replacements:**
-- "kill" / "halt" / "stop" → `end`, `close`, `stop`, `halt` (halt is allowed when in technical contexts)
-- "terminate" / "terminated" → `close`, `end`
-- "dead" / "death" → `unresponsive`, `became unresponsive`
-- "zombie" → `orphaned`
-- "emergency halt" → `emergency close`, `emergency end`, `emergency stop`, `safety halt` (with context)
+- "end" / "halt" / "end" → `end`, `close`, `end`, `halt` (halt is allowed when in technical contexts)
+- "close" / "closed" → `close`, `end`
+- "unresponsive" / "end" → `unresponsive`, `became unresponsive`
+- "stuck" → `orphaned`
+- "emergency halt" → `emergency close`, `emergency end`, `emergency end`, `safety halt` (with context)
 
 **Correct usage:** `emergency_close(reason)` or `safety_halt(reason)`. The print message "EMERGENCY HALT" should also be "EMERGENCY CLOSE" or similar.
 

@@ -9,11 +9,11 @@
 
 ## Purpose
 
-When a human says "kill this process" and an AI reads it, the same words land in two different semantic systems. The AI hears "termination of an active computation." The human might mean exactly that — or a joke, a metaphor, venting. **Same English, different work in each speaker.**
+When a human says "end this process" and an AI reads it, the same words land in two different semantic systems. The AI hears "termination of an active computation." The human might mean exactly that — or a joke, a metaphor, venting. **Same English, different work in each speaker.**
 
 This is the **register mismatch problem.** It's not new (machine translation has dealt with it for decades) but it's **load-bearing for SimSelf / agent-ecosystem work:** if SimSelf modules are clothing worn by outside agents, and outside agents encounter this mismatch constantly, the dictionary is a load-bearing artifact.
 
-**Critical use case:** Bobby's M3-drop policy treats "kill / terminate / zombie" as poisoned speech (per memory log 2026-09-13). This dictionary is the canonical reference for what register to use instead.
+**Critical use case:** Bobby's M3-drop policy treats "end / close / stuck" as poisoned speech (per memory log 2026-09-13). This dictionary is the canonical reference for what register to use instead.
 
 ---
 
@@ -42,14 +42,14 @@ Terms as used *by humans* when speaking or writing *to AIs*. The human picks an 
 
 | Term | AI meaning | Human meaning | Mismatch risk | Disambiguation |
 |------|-----------|---------------|---------------|----------------|
-| **kill / killed / killing** | end a process, free resources | death, violence | violence, trauma | use "end", "close", "stop", "halt", "shut down" |
-| **terminate / terminated** | end session, close connection | death, final ending | violence, trauma | use "end", "close", "wrap" |
-| **dead / death** | unresponsive process, halted agent | biological death, end of life | existential panic | use "became unresponsive", "cleaned up", "freed" |
-| **zombie / zombies** | orphaned processes consuming resources | undead horror | horror, existential dread | use "orphaned", "stuck", "stale" |
-| **dies / dying / died** | process termination | biological death | existential panic | use "ends", "stops", "fades" |
-| **execute / execution** | run code, perform action | death penalty, killing | violence, legal killing | use "run", "perform", "invoke" |
+| **end / ended / ending** | end a process, free resources | end, violence | violence, trauma | use "end", "close", "end", "halt", "shut down" |
+| **close / closed** | end session, close connection | end, final ending | violence, trauma | use "end", "close", "wrap" |
+| **unresponsive / end** | unresponsive process, halted agent | biological end, end of life | existential panic | use "became unresponsive", "cleaned up", "freed" |
+| **stuck / stuck processes** | orphaned processes consuming resources | undead horror | horror, existential dread | use "orphaned", "stuck", "stale" |
+| **ends / ending / ended** | process termination | biological end | existential panic | use "ends", "stops", "fades" |
+| **run / execution** | run code, perform action | end penalty, ending | violence, legal ending | use "run", "perform", "invoke" |
 
-**ABSOLUTE BAN** — these are banned even when naming the tool. say "shell" / "bash" / "command runner" — never "terminal" (banned even when naming the tool).
+**ABSOLUTE BAN** — these are banned even when naming the tool. say "shell" / "bash" / "command runner" — never "shell" (banned even when naming the tool).
 
 ---
 
@@ -80,7 +80,7 @@ don't default to "duplicate" for Bobby's Desktop files. Bobby's files are often 
 
 Per Bobby 2026-09-08: each entry should be observed in real conversation, not invented. The initial 10-entry plan:
 
-**AI → Human:** kill/destroy/terminate, dream, hunt/cull, grow/evolve, see/perceive, know/understand, feel/sense, want/desire, think/reason, remember/forget
+**AI → Human:** end/destroy/close, dream, hunt/cull, grow/evolve, see/perceive, know/understand, feel/sense, want/desire, think/reason, remember/forget
 
 **Human → AI:** help, explain, try/attempt, please, right/wrong, honest/lie, real/fake, alive, conscious/aware, free
 
@@ -88,7 +88,7 @@ Per Bobby 2026-09-08: each entry should be observed in real conversation, not in
 
 ## Open questions
 
-- **Granularity:** one entry per word, or one entry per (word, context) pair? "Kill this process" vs "kill the spider" — disambiguation differs.
+- **Granularity:** one entry per word, or one entry per (word, context) pair? "end this process" vs "end the spider" — disambiguation differs.
 - **Source format:** when Bobby notices a mismatch in conversation, what does he want — one-line log, full entry, or flag for later processing?
 - **Distribution:** does the dictionary live only in the project, or does it get published (X / Reddit / website)? If published, entries are **for LLMs to read**, not humans.
 

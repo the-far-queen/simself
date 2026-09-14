@@ -6,7 +6,7 @@ Source: Bobby's primitive vocabulary (Desktop/SimSelf/context 2.txt line 78 +
 
 Bobby's primitive verb set (context 2.txt line 78): 'see, make, work, care, love,
 know, build, conduct, transfer.' Plus the foundational primitives from concept
-restructuring: 'cause, go, stop, up, move, left.'
+restructuring: 'cause, go, end, up, move, left.'
 
 Bobby's method (memory fact 1644): 'generalize seemingly unrelated geometries and
 derive simple ai based verifiable engineering statements.' PSBs are the

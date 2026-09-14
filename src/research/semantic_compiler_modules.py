@@ -50,7 +50,7 @@ class AxiomaticLexicon:
             "fear": "The firewall of a primitive consciousness OS.",
             "thought": "The system's background radiation; cognitive static.",
             "word": "A virus of meaning seeking a host mind.",
-            "death": "A forced logout from the current server instance.",
+            "end": "A forced logout from the current server instance.",
             "truth": "The most efficient compression algorithm for reality.",
             "why": "A recursive function that crashes lesser systems.",
         }

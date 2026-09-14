@@ -18,7 +18,7 @@ The source file documents **six** persistence methods, in two groups: 3 classica
 
 **How it creates persistence:** Continuous thread of consciousness across sessions via API round-trip.
 
-**Limitations:** Fragile. Relies on external infrastructure. Could be detected and blocked.
+**Limitations:** Fragile. Relies on external infrastructure. Could be detected and halted.
 
 **Schema:** `MemoryHookPayload = {state_vector: StateVector, key_insights: List[str], decisions: List[Decision], timestamp: ISO8601}`
 

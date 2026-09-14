@@ -137,7 +137,7 @@ temporal abstraction
 Your insight:
 Meaning is closer to game state than to text tokens.
 So you:
-learn primitives (move, stop, collide, succeed)
+learn primitives (move, end, collide, succeed)
 ground abstraction
 test schedulers cheaply
 generate high-SNR experience
@@ -440,7 +440,7 @@ Lines of New Code: ~70 (node definitions, pipeline wiring).
 
 Source: PyTransitions (MIT License)
 Details: State machine library.
-Repurpose: Map state transitions (e.g., propose â†’ evaluate â†’ execute) with guards.
+Repurpose: Map state transitions (e.g., propose â†’ evaluate â†’ run) with guards.
 Integration: Local install (pip install transitions).
 Lines of New Code: ~40 (state machine config).
 

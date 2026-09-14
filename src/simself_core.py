@@ -415,7 +415,7 @@ class LLMAdapter:
 # ============================================================================
 
 def governed_step(sim: SimSelf, llm: LLMAdapter, prompt: str) -> tuple[str, Verdict]:
-    """Correct control flow: propose → evaluate → execute/refuse → physics."""
+    """Correct control flow: propose → evaluate → run/refuse → physics."""
     
     proposal = llm.propose_intent(prompt)
     
@@ -487,7 +487,7 @@ class MainLoop:
         self.boundaries = BoundaryDefense()
     
     def cycle(self, external_input: Optional[Dict] = None) -> CycleResult:
-        """Execute one complete cycle."""
+        """run one complete cycle."""
         self.cycle_count += 1
         
         # 1. OBSERVE

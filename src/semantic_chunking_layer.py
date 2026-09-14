@@ -16,7 +16,7 @@ class SemanticChunker:
         self.keyword_density_threshold = keyword_density_threshold
         self.known_keywords: Dict[str, List[str]] = { # Example keywords by domain
             "general": ["coherence", "emergence", "pattern", "system", "self", "meaning", "knowledge", "truth", "ethics"],
-            "robotics": ["grasp", "move", "actuator", "sensor", "collision", "robot", "plan", "execute"],
+            "robotics": ["grasp", "move", "actuator", "sensor", "collision", "robot", "plan", "run"],
             "ethics": ["truth", "responsibility", "harm", "compassion", "value", "ethical", "moral"]
         }
         print("SemanticChunker: Initialized.")

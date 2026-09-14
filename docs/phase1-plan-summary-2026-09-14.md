@@ -81,7 +81,7 @@ godot_scene/
 
 ---
 
-## KILL LIST (CUT FOR SPEED)
+## end LIST (CUT FOR SPEED)
 
 - ❌ Full sheaf cohomology (keep only restriction maps / poset topology)
 - ❌ "Awakening" narrative framing (systems-first)

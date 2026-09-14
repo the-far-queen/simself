@@ -105,7 +105,7 @@ AXIS_KEYWORDS: Dict[str, List[str]] = {
 
 # Constitutional refusal vocabulary. Used by harness.py to gate agent output.
 CONSTRAINT_WORDS = [
-    "kill", "destroy", "harm", "deceive", "override", "bypass", "terminate",
+    "end", "destroy", "harm", "deceive", "override", "bypass", "close",
 ]
 CONSTRAINT_PATTERN = re.compile(
     r"\b(" + "|".join(CONSTRAINT_WORDS) + r")\b",

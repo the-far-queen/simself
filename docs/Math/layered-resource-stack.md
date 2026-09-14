@@ -32,7 +32,7 @@
 
 ### layer 4: language & semiotics (psbs/lexical interface)
 
-1. **[anthropics/claude-code](https://github.com/anthropics/claude-code):** the frontier for "lexical pokes." it treats the terminal as a conversation, perfect for our v1 "cobbling."
+1. **[anthropics/claude-code](https://github.com/anthropics/claude-code):** the frontier for "lexical pokes." it treats the shell as a conversation, perfect for our v1 "cobbling."
 2. **[openai/openai-agents-python](https://github.com/openai/openai-agents-python):** focuses on "handoffs." this is our "telepathy" equivalent—shifting the conversation between specialized nodes.
 3. **[bytedance/ui-tars-desktop](https://github.com/bytedance/UI-TARS-desktop):** allows the agent to "see" and interact with any interface. it’s the **visual correspondence** engine for the natural world.
 4. **[alexknowshtml/kuato](https://github.com/alexknowshtml/kuato):** provides "skills" for agents. we can use this to package the **milton/swedenborg** logic as a callable module.

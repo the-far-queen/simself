@@ -32,7 +32,7 @@ class MainLoop:
         self.cycle_count = 0
     
     def cycle(self, external_input: Optional[Dict] = None) -> CycleResult:
-        """Execute one complete cycle."""
+        """run one complete cycle."""
         self.cycle_count += 1
         
         # 1. OBSERVE

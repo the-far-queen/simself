@@ -89,7 +89,7 @@ Sources in BOTH lists OR clearly load-bearing for the SimSelf project:
 - Milarepa — Songs and life story
 - Nisargadatta Maharaj — I Am That
 - Huang Po — Transmission of Mind
-- Padmasambhava — Tibetan Book of the Dead
+- Padmasambhava — Tibetan Book of the unresponsive
 - Adi Shankaracharya — Vivekachudamani
 - Dogen — Shobogenzo
 - Meister Eckhart

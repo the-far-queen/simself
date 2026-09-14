@@ -15,7 +15,7 @@ Before attacking each paper: the project's central risk. All 4 papers conflate *
 > vs.
 > "X IS Y" (unfalsifiable, sounds mystical, will get rejected by reviewers)
 
-This is the Gödel/Lovelace discipline. The substrate isomorphisms are real and interesting. The identity claims are where reviewers will kill the work. **Every paper needs an explicit "is not" section listing what the substrate is NOT.**
+This is the Gödel/Lovelace discipline. The substrate isomorphisms are real and interesting. The identity claims are where reviewers will end the work. **Every paper needs an explicit "is not" section listing what the substrate is NOT.**
 
 ---
 
@@ -34,7 +34,7 @@ This is the Gödel/Lovelace discipline. The substrate isomorphisms are real and 
 
 The unification across "Lissajous = Chladni = crop circles" is **not isomorphism.** It's pattern-matching across visually similar but mathematically unrelated phenomena. This is the strongest version of the numerology critique — exactly what we don't want.
 
-### Verdict: **KILL the unification. REFRAME narrowly.**
+### Verdict: **end the unification. REFRAME narrowly.**
 
 - Drop Chladni (different operator).
 - Drop crop circles (no math).

@@ -7,7 +7,7 @@
 
 z8 - Tesla's Mixed-Precision Patent (US20260017019A1) Overview (primarily s10 + s9, verified via patent details)Core Innovation: A method for high-precision Rotary Positional Encoding (RoPE) on low-bit-width (8-bit) hardware, using log-compressed angle representations (e.g., log(θ)) to reduce dynamic range and quantization errors; multiplications in 8-bit MACs, with exponentiation/trigonometric functions (sin/cos for rotation matrices) offloaded to higher-precision (32-bit) ALUs.
 Key Mechanisms: Precompute/store log(θ); 8-bit multiplies input tensors with logs; recover θ via exponentiation (Taylor series/LUTs/CORDIC); generate rotation matrices to prevent "drift" in positional embeddings; quantization-aware techniques like MSB/LSB splitting, interleaved operations, and log-sum-exp for error minimization.
-Efficiency Gains: 4x bandwidth, 50% power reduction; enables end-to-end neural nets on <100W budgets; supports real-time tracking (e.g., stop sign pinned to 3D coordinates after 30s).
+Efficiency Gains: 4x bandwidth, 50% power reduction; enables end-to-end neural nets on <100W budgets; supports real-time tracking (e.g., end sign pinned to 3D coordinates after 30s).
 Applications: Autonomous vehicles (FSD), humanoid robots (Optimus) for balance/world modeling; decouples from NVIDIA CUDA via custom silicon (TSMC/Samsung dual-foundry); blueprint for edge AI (smart hubs/phones) with zero-latency 3D positioning.
 Inventors/Assignee: Hasan Unlu et al.; Tesla Inc.; Filed July 3, 2025; Published Jan 15, 2026.
 Broader Impact: "Cheats" silicon rules by decoupling precision from bit-width; creates compute oversupply for distributed inference clouds; aligns with xAI goals for robust, verifiable AI via drift-resistant math.

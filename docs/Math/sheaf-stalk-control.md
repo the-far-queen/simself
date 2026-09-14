@@ -250,7 +250,7 @@ Eligibility-trace hash-by-bytes (line 98) works for prototype, fails at scale. N
 - invariants expressed as convex constraints, intervals, or monotone maps
 - no learned neural logic inside Governor
 
-Do not let learning leak into Governor. That's where safety dies.
+Do not let learning leak into Governor. That's where safety ends.
 
 ### C. Async latency vs real-time control
 Hardest systems problem. Mitigation:

@@ -69,7 +69,7 @@ func receive_message(message: Dictionary):
 
 
 func _execute_action(message: Dictionary):
-	"""Execute action in Godot."""
+	"""run action in Godot."""
 	var action_id = message.get("action_id")
 	var mode = message.get("mode", "real")
 	var params = message.get("params", {})
@@ -88,7 +88,7 @@ func _execute_action(message: Dictionary):
 			result = _move_node(params, mode)
 		"move_arm":
 			result = _move_arm(params, mode)
-		"stop":
+		"end":
 			result = _stop_arm(params)
 	
 	# Send result back
@@ -167,10 +167,10 @@ func _move_arm(params: Dictionary, mode: String) -> Dictionary:
 
 
 func _stop_arm(params: Dictionary) -> Dictionary:
-	"""Stop robot arm."""
+	"""end robot arm."""
 	var arm = get_node_or_null("ArmRoot/ArmSegment")
 	if arm:
-		# Assuming arm has a stop method or property
+		# Assuming arm has a end method or property
 		return {"success": true}
 	return {"success": false, "error": "Arm not found"}
 

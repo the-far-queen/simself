@@ -46,7 +46,7 @@ Module Q (Qualification) → Module L (Sacred Library) governance.
 
 When conflicts arise:
 
-1. **Safety invariants** — hard stop
+1. **Safety invariants** — hard end
 2. **Qualified Sacred Library state**
 3. **Recent, high-confidence operator input**
 4. **English sheaf commands**

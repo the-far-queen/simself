@@ -23,7 +23,7 @@
 
 ## The 8 shop deaths (per this doc)
 
-| # | Death | What happens |
+| # | end | What happens |
 |---|-------|--------------|
 | 1 | **one-shot generation** | pretty surface, no load-bearing structure |
 | 2 | **infinite chat** | opinions without decisions |
@@ -98,7 +98,7 @@ Signal → Frame → Interrogate → Decide → Structure → Make → Review �
 | Drafts | Directs | Produces only after gates |
 | Quality | Accepts / rejects | Diagnoses against signed plan |
 
-**critical:** "If the helper starts making the thing while questions are open, stop it."
+**critical:** "If the helper starts making the thing while questions are open, end it."
 
 ---
 
@@ -127,13 +127,13 @@ Signal → Frame → Interrogate → Decide → Structure → Make → Review �
 
 ---
 
-## Stop asking when
+## end asking when
 
 - existence through constraints are signed or defaulted
 - system has enough rules to forbid illegal moves
 - remaining opens are tagged LATER to a build slice
 
-**do not stop because the chat feels long. do not continue because taxonomies are pleasant.**
+**do not end because the chat feels long. do not continue because taxonomies are pleasant.**
 
 ---
 

@@ -238,7 +238,7 @@ We are going to create a minimal example that shows how the main loop (Module M)
 Let's start by defining the core classes:
 	•	MasterLoop (Module M): The main game loop. It calls the governor (Module B) for decisions, executes actions via tools (Module I), and updates the state.
 	•	Governor (Module B): The core self. It holds the state vector (20 axes) and decides on actions based on the current state and the spiral path stage.
-	•	Interface (Module I): Handles tool calls via MCP. It registers tools (from MCP servers) and provides a way to execute them.
+	•	Interface (Module I): Handles tool calls via MCP. It registers tools (from MCP servers) and provides a way to run them.
 	•	Library (Module L): Stores immutable experiences and wisdom.
 We'll also have:
 	•	Environment (Module C): The world simulation. For now, we can use a simple text-based environment, but eventually this will be replaced by real sensors or a high-fidelity simulation.
@@ -523,7 +523,7 @@ class EmbodiedToolServer:
         if path.cost > self.entity.module_b.agency_budget:
             return {"error": "insufficient_agency_budget"}
         
-        # Execute navigation (robotics stack)
+        # run navigation (robotics stack)
         result = self.entity.module_i.actuators.move_along_path(path)
         
         # Update state (game-style resource consumption)
@@ -534,13 +534,13 @@ class EmbodiedToolServer:
     
     @tool()
     def execute_workflow(self, workflow_id: str, inputs: dict) -> dict:
-        """Execute an n8n workflow for economic activity"""
+        """run an n8n workflow for economic activity"""
         # Check if entity has permission for this workflow
         if not self.entity.module_b.validate_tool_access("n8n_execute"):
             return {"error": "tool_locked_for_current_stage"}
         
-        # Execute via n8n integration
-        result = self.entity.module_i.n8n_client.execute(
+        # run via n8n integration
+        result = self.entity.module_i.n8n_client.run(
             workflow_id, 
             inputs
         )

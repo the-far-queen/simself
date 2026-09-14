@@ -135,7 +135,7 @@ class TextDojoEnvironment:
         return situation
     
     def step(self, action: str) -> Dict:
-        """Execute action, return new situation"""
+        """run action, return new situation"""
         # Simple rule-based outcomes
         outcomes = {
             "ponder": "Your mind turns the paradox over, finding new angles.",
@@ -424,7 +424,7 @@ class FieldCoreAgent:
                 situation["available_actions"]
             )
             
-            # Execute action
+            # run action
             result = self.environment.step(action)
             self.interface.display_outcome(result)
             

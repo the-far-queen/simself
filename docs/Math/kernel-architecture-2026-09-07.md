@@ -88,7 +88,7 @@ This doc makes that summary engineering-precise.
 
 The flow is **simself dreams → acts → librarian audits → controller qualifies → kernel gates**:
 
-### Step 1 — SimSelf Operator acts (dream or execute)
+### Step 1 — SimSelf Operator acts (dream or run)
 
 An Operator Object picks an action. This can be:
 - **Dreaming** — internal simulation through relevant sheaf

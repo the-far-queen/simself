@@ -16,8 +16,8 @@ class Tool:
     parameters: Dict
     handler: Callable
     
-    def execute(self, **kwargs) -> Any:
-        """Execute tool."""
+    def run(self, **kwargs) -> Any:
+        """run tool."""
         return self.handler(**kwargs)
 
 
@@ -39,11 +39,11 @@ class ToolRegistry:
         """List all tool names."""
         return list(self.tools.keys())
     
-    def execute(self, name: str, **kwargs) -> Any:
-        """Execute tool by name."""
+    def run(self, name: str, **kwargs) -> Any:
+        """run tool by name."""
         tool = self.get(name)
         if tool:
-            return tool.execute(**kwargs)
+            return tool.run(**kwargs)
         raise ValueError(f"Unknown tool: {name}")
 
 

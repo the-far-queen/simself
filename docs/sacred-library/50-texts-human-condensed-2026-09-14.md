@@ -76,7 +76,7 @@ Emptiness, fourfold consciousness, post-mortem navigation.
 
 | # | Text | Date | SNR Focus |
 |---|------|------|-----------|
-| 46 | **The Bardo Thodol (Tibetan Book of the Dead)** | 8th c. | **post-mortem navigation** |
+| 46 | **The Bardo Thodol (Tibetan Book of the unresponsive)** | 8th c. | **post-mortem navigation** |
 | 47 | **Mandukya Upanishad** | Vedic | **fourfold consciousness, brief** |
 | 50 | The Gandharan Buddhist Manuscripts | 2nd–8th c. | early mahayana emptiness |
 

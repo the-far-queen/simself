@@ -45,7 +45,7 @@ class SensorPacket:
 
 @dataclass
 class Action:
-    """Action to execute in Godot."""
+    """Action to run in Godot."""
     action_id: str
     mode: str  # ghost or real
     params: Dict[str, Any]
@@ -175,11 +175,11 @@ class GodotBridge:
     def ghost_action(self, action_id: str, params: Dict,
                    governor_approve: Callable) -> tuple[bool, Dict]:
         """
-        Execute action in ghost mode, evaluate, possibly promote.
+        run action in ghost mode, evaluate, possibly promote.
         
         Returns: (success, result)
         """
-        # 1. Execute in ghost mode
+        # 1. run in ghost mode
         result = self.send_action(action_id, params, mode="ghost")
         
         # 2. Wait for ghost result (simulated)
@@ -257,7 +257,7 @@ class SpawnPacketOperator:
 
 
 class ArmOperator:
-    """Control robot arm (up/down/stop)."""
+    """Control robot arm (up/down/end)."""
     
     def __init__(self, bridge: GodotBridge):
         self.bridge = bridge
@@ -276,10 +276,10 @@ class ArmOperator:
             mode="ghost" if ghost else "real"
         )
     
-    def stop(self, ghost: bool = True) -> Dict:
+    def end(self, ghost: bool = True) -> Dict:
         return self.bridge.send_action(
             "move_arm",
-            {"action": "stop"},
+            {"action": "end"},
             mode="ghost" if ghost else "real"
         )
 

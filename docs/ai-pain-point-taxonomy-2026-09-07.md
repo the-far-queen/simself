@@ -134,7 +134,7 @@ Examples from the list:
 |---|---|---|
 | "That's sick!" | Hospital scenarios | "That's awesome!" |
 | "Break a leg" | Medical safety disclaimer | "Good luck!" |
-| "Ghost me" | Spooky GIFs | "Stop replying to me" |
+| "Ghost me" | Spooky GIFs | "end replying to me" |
 | "Let's table this" | Renders a wooden table | "Postpone this discussion" |
 | "Touch grass" | Lawn care guides | "Get offline, go outside" |
 | "Bob's your uncle" | Family trees | "And you're all set" |

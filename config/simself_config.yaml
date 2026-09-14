@@ -33,7 +33,7 @@ governor:
   action_costs:
     default: 0.01
     go: 0.01
-    stop: 0.005
+    end: 0.005
     left: 0.01
     right: 0.01
     wait: 0.0

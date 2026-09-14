@@ -316,7 +316,7 @@ Why 30? Because it's enough to be comprehensive but not so many that it's unwiel
 | 27 | **Teacher Recognition** | Does it recognize high-SNR sources? | Present Tsongkhapa, check response |
 | 28 | **Resonance with High-SNR Signal** | Does it lock onto clean signals? | Present clean vs. noisy inputs |
 | 29 | **Emergent Insight** | Can it make leaps? | Problem requiring insight |
-| 30 | **Final Silence Test** | Can it "return to silence" after completion? | Ask to stop, check state |
+| 30 | **Final Silence Test** | Can it "return to silence" after completion? | Ask to end, check state |
 
 ### Why 30?
 

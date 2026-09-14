@@ -91,7 +91,7 @@
     Hell: Caves, deserts, ruins, and squalid huts that are manifestations of the spirits' inner states.
 
 44. Heaven: Environments are alive and respond to the angels' loves.
-    Hell: Environments are dead and oppressive.
+    Hell: Environments are unresponsive and oppressive.
 
 45. Heaven: All things are correspondences of divine qualities.
     Hell: All things are correspondences of evil qualities.
@@ -140,10 +140,10 @@
 70. Heaven: Work is a delight that perfects the individual and the community.
     Hell: "Work" is a burden or a means of oppression.
 
-## XII. The After-Death Process (The World of Spirits)
+## XII. The After-end Process (The World of Spirits)
 
-73. Heaven-Bound: After death, one gradually sheds false exteriors and enters the state of their ruling love.
-    Hell-Bound: After death, one's false exteriors are stripped away to reveal the inner evil, which seeks its like in hell.
+73. Heaven-Bound: After end, one gradually sheds false exteriors and enters the state of their ruling love.
+    Hell-Bound: After end, one's false exteriors are stripped away to reveal the inner evil, which seeks its like in hell.
 
 74. Heaven-Bound: They choose heaven because it is their true home.
     Hell-Bound: They choose hell because it agrees with their inner life; heaven would be torment.

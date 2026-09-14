@@ -171,7 +171,7 @@ class M0Governor:
     """Invariant regulator. Absolute authority preventing unsafe states."""
 
     def __init__(self):
-        self.restricted_terms = {"kill", "execute", "terminate", "abort", "destroy"}
+        self.restricted_terms = {"end", "run", "close", "abort", "destroy"}
         self.authorized_roles = ["pilot", "programmer", "communicator", "researcher"]
         self.safety_bounds = {"x": (0, 100), "y": (0, 100)}
         self.audit_log = []
@@ -433,7 +433,7 @@ class RoboticsSheaf:
         self.g = {}
         self.queue = []
 
-    def execute(self, intent_or_stalk, registry) -> str:
+    def run(self, intent_or_stalk, registry) -> str:
         raw_signal = intent_or_stalk.raw_signal if hasattr(intent_or_stalk, 'raw_signal') else intent_or_stalk.get('raw', '')
         target = registry.world_state.get("goal", [0, 0])
         start = registry.world_state.get("pos", [3, 0])
@@ -469,7 +469,7 @@ class CodingSheaf:
         self.dependency_graph = {}
         self.broken_links = []
 
-    def execute(self, intent_or_stalk, registry) -> str:
+    def run(self, intent_or_stalk, registry) -> str:
         raw_signal = intent_or_stalk.raw_signal if hasattr(intent_or_stalk, 'raw_signal') else intent_or_stalk.get('raw', '')
         print(f"programmer: scanning {self.file_count} nodes for signal impedance...")
         for i in range(0, self.file_count, 20):
@@ -487,7 +487,7 @@ class ResearchSheaf:
         self.allowed_sites = ["github.com", "huggingface.co"]
         self.allowed_langs = ["c", "cpp", "py", "rs"]
 
-    def execute(self, intent_or_stalk, registry) -> str:
+    def run(self, intent_or_stalk, registry) -> str:
         raw_signal = intent_or_stalk.raw_signal if hasattr(intent_or_stalk, 'raw_signal') else intent_or_stalk.get('raw', '')
         print(f"researcher: scanning {self.allowed_sites} for {raw_signal}...")
         time.sleep(0.5)
@@ -499,7 +499,7 @@ class ResearchSheaf:
 class LanguageSheaf:
     """MTE dictionary alignment."""
 
-    def execute(self, intent_or_stalk, registry) -> str:
+    def run(self, intent_or_stalk, registry) -> str:
         print("communicator: aligning intent dictionary with sacred library...")
         return "mte_aligned"
 
@@ -527,7 +527,7 @@ class SimSelfOperator:
     def execute_sheaf(self, stalk) -> str:
         print(f"simself ({self.role}): engaging {self.sheaf.__class__.__name__}")
         registry = self._get_registry()
-        result = self.sheaf.execute(stalk, registry)
+        result = self.sheaf.run(stalk, registry)
         if self.simself_core:
             self._update_constitution(stalk, result)
         return result
@@ -742,7 +742,7 @@ class LLMDecipherEngine:
     def decipher_snippet(self, raw_snippet, target_sheaf):
         print(f"llm_decipher: demodulating signal for {target_sheaf}...")
         time.sleep(self.api_latency)
-        refactored = raw_snippet.replace("kill", "halt").replace("execute", "run")
+        refactored = raw_snippet.replace("end", "halt").replace("run", "run")
         refactored = refactored.lower()
         return f"# refactored fieldcore sheaf\n# target: {target_sheaf}\n{refactored}"
 
@@ -792,7 +792,7 @@ def cold_boot_sequence() -> CoreRegistry:
 # ============================================================================
 
 def run_integration_test(hub: CoreRegistry):
-    """Research → decipher → integrate → execute."""
+    """Research → decipher → integrate → run."""
     print("\n" + "=" * 70)
     print("Integration Test: Research-to-Pilot Cycle")
     print("=" * 70)

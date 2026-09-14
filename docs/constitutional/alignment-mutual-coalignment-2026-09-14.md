@@ -89,7 +89,7 @@ Per M3-drop rule: agent-targeted framing of this kind stays in vault reference o
 1. **Frame** — Question/hypothesis with metrics and time horizon
 2. **Produce** — Multi-modal arguments (science, ethics, practice, wisdom)
 3. **Design Tests** — AIs propose, guardians vet
-4. **Execute & Log** — Humans run, store raw data
+4. **run & Log** — Humans run, store raw data
 5. **Evaluate & Update** — Use metrics. Loop until convergence.
 
 This is the engineering-grade core. Buildable. Pilot project specified below.

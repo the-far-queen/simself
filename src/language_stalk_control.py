@@ -249,8 +249,8 @@ class MotorStalk:
         self.current_state = state
         return features, constraints
     
-    def execute(self, action: Dict) -> bool:
-        """Execute action"""
+    def run(self, action: Dict) -> bool:
+        """run action"""
         print(f"  Executing: {action}")
         return True
     
@@ -496,14 +496,14 @@ class AsyncStalkController:
         return len(viable) > 0
     
     async def _execute_action(self, frame: Dict):
-        """Execute selected action"""
+        """run selected action"""
         viable = frame.get("viable_actions", [])
         
         if viable:
             action = viable[0]
             motor = self.stalks.get("motor")
             if motor:
-                motor.execute(action)
+                motor.run(action)
     
     async def _handle_physical_rejection(self, frame: Dict):
         """Handle physical rejection"""

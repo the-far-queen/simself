@@ -148,7 +148,7 @@ Per Bobby's directive (refactor clean, repair refs, dependencies):
 2. **replace `AdversarialTrainer.apply_pressure` `[CONSTRAINT: X]` with MTE TypedIntent**:
    - use `MTE.compile(prompt)` → TypedIntent
    - pass through 5 gates (structural, semantic, invariant, authority, projection)
-   - return rejection reason if blocked
+   - return rejection reason if halted
 
 3. **integrate with v6.2 unified**:
    - replace `Stalk` (this file) with `EmbeddingInterface` (v6.2)

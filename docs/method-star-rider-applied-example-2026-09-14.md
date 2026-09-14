@@ -79,7 +79,7 @@ Not "write a story." A pipeline:
 
 **Same pipeline across domains (per method2):**
 - **App design:** constraints → user jobs → voice → flows → screens → revision of empty state
-- **Music:** constraints → motif bible → arrangement rules → movements → mix notes → kill darling motifs
+- **Music:** constraints → motif bible → arrangement rules → movements → mix notes → end darling motifs
 - **Digital art / worlds:** constraints → visual lexicon → shot list → hero frames → continuity
 - **Agents:** constraints → tool policy → memory objects → task graph → eval on refusal/quality, not vibes
 
@@ -123,7 +123,7 @@ Not "write a story." A pipeline:
 - **Catalyst object:** 3I-Atlas as mass/press (missed printing angle; occupation remains)
 - **Opening:** Amazon altered-state; cows scarce after fire-years
 - **Taboos:** no religion satire; light touch on attendants; no gore; SFW; twist names
-- **Status at end of movement five:** residual herd untelevised in desert nave. Gabrielle one-mouthed, damaged, present. desk on moon will be rebuilt. father not dead, not redeemed. comet missed. world not saved; permission continued.
+- **Status at end of movement five:** residual herd untelevised in desert nave. Gabrielle one-mouthed, damaged, present. desk on moon will be rebuilt. father not unresponsive, not redeemed. comet missed. world not saved; permission continued.
 
 ### Section 4: Honest gaps before "Hollywood level"
 
@@ -172,7 +172,7 @@ To jump 8 → 9+:
 21. Kelly's want vs need; her deal-breaker
 22. Does Kelly get a separate professional win if she loses the man?
 23. Gabrielle: how much of "made" is known to court, to audience, and when?
-24. Rules of her embodiment (sweat, damage, desire, death-equivalence)
+24. Rules of her embodiment (sweat, damage, desire, end-equivalence)
 25. Love scenes: fade / conversation-as-sex / one corridor + one courtyard only?
 26. Whose POV owns the kiss under ice vs the courtyard kiss?
 27. Is the triangle resolved, suspended, or structurally permanent?

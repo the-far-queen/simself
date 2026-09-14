@@ -4,7 +4,7 @@ Telegram bot cleanup utility — drop stale inbox/outbox messages.
 Use when:
 - bot was down and inbox piled up with old inbound messages
 - outbox has pending/reply files older than threshold with no live bot
-- lockfile from a dead process is left behind
+- lockfile from a unresponsive process is left behind
 
 Usage:
     python telegram_cleanup.py                # show what would be cleaned
@@ -98,14 +98,14 @@ def main():
     # check lock
     lock = find_stale_lock()
     if lock:
-        alive_str = "ALIVE" if lock["alive"] else "DEAD"
+        alive_str = "ALIVE" if lock["alive"] else "unresponsive"
         age_str = f"{lock['age_h']:.1f}h old"
         print(f"lockfile present: pid={lock['pid']} status={alive_str} age={age_str}")
         if not lock["alive"]:
             if args.apply or args.unlock:
                 if LOCK.exists():
                     LOCK.unlink()
-                print(f"  -> removed dead lockfile")
+                print(f"  -> removed unresponsive lockfile")
             else:
                 print(f"  -> would remove (pass --apply or --unlock)")
     else:

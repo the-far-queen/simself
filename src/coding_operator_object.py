@@ -104,7 +104,7 @@ class AbbreviatedSimSelf:
         if any(w in intent.lower() for w in ["make up", "fabricate", "fake"]):
             if self.matrix["lexical_integrity"] > 0.7:
                 self.refuse("Lexical integrity protection")
-                return Verdict(False, 0.0, "Fabrication blocked")
+                return Verdict(False, 0.0, "Fabrication halted")
         
         # Cost check
         if estimated_cost > self.matrix["agency"]:

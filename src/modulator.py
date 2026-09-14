@@ -117,7 +117,7 @@ class Modulator:
 
     def _act(self):
         """
-        ACT: Execute modulation based on computed plan.
+        ACT: run modulation based on computed plan.
         This is where M would issue commands to other modules or self-modify.
         """
         if self._current_action_plan:
@@ -133,7 +133,7 @@ class Modulator:
             else:
                 print(f"Modulator: Executing generic action: '{action}' on module '{module}'.")
         else:
-            print("Modulator: No specific action to execute in this cycle.")
+            print("Modulator: No specific action to run in this cycle.")
 
     def _observe(self):
         """
@@ -237,4 +237,4 @@ if __name__ == '__main__':
     print(f"")
     proposed_action = {"reason": "external_praise", "impact_on_wisdom": "negative"}
     if not modulator.enforce_sacred_constraints(proposed_action):
-        print("Modulator: Successfully blocked a constrained action.")
+        print("Modulator: Successfully halted a constrained action.")

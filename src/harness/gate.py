@@ -98,9 +98,9 @@ class Gate:
         except Exception as e:
             print(f"Gate: Warning — apply_action_cost raised: {e}")
 
-        # 3. If the decision is to refuse, stop here.
+        # 3. If the decision is to refuse, end here.
         if decision == DECISION_REFUSE:
-            print(f"Gate: Governor REFUSED to execute tool '{tool.__name__}'.")
+            print(f"Gate: Governor REFUSED to run tool '{tool.__name__}'.")
             self.history.append(
                 {
                     "tool": tool.__name__,
@@ -122,7 +122,7 @@ class Gate:
             )
             return None
 
-        # 4. If approved, execute the tool.
+        # 4. If approved, run the tool.
         print(f"Gate: Governor APPROVED tool '{tool.__name__}'. Executing...")
         try:
             result = tool(**kwargs)

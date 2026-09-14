@@ -61,7 +61,7 @@ Signal → Frame → Interrogate → Decide → Structure → Make → Review �
 | Drafts | Directs | Produces only after gates |
 | Quality | Accepts / rejects | Diagnoses against signed plan |
 
-**critical rule:** "If the model starts making the thing while questions are open, stop it."
+**critical rule:** "If the model starts making the thing while questions are open, end it."
 
 ---
 
@@ -143,7 +143,7 @@ SIGNED DECISIONS
   D2 ...
 DEFAULTS (human may override later)
   ...
-OPEN (blocked items)
+OPEN (halted items)
   O1 ... owner: human | needed before: slice
 CHANGE POLICY
   Changes to SIGNED items require an explicit "reopen D#."
@@ -219,7 +219,7 @@ PROPOSED NEXT SLICE:
 3. What must it never be?
 4. Platform / delivery constraints?
 5. Length / runtime / scope cap?
-6. Deadline and what "good enough" means if time dies?
+6. Deadline and what "good enough" means if time ends?
 7. Success test a stranger could apply?
 8. What already exists that we must not ignore?
 9. What is the spine if we cut 40%?
@@ -234,7 +234,7 @@ PROPOSED NEXT SLICE:
 
 ---
 
-## Anti-patterns (stop immediately)
+## Anti-patterns (end immediately)
 
 | Anti-pattern | What to do instead |
 |--------------|---------------------|
@@ -244,7 +244,7 @@ PROPOSED NEXT SLICE:
 | New vibe mid-draft overwrites spine | Reopen D# explicitly |
 | Review is only praise | Force a fault line |
 | Style questions before win condition | Put Layer G last |
-| "We'll figure world later" but generating climax | Stop; world rules are Layer E |
+| "We'll figure world later" but generating climax | end; world rules are Layer E |
 
 ---
 

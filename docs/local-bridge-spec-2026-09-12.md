@@ -91,7 +91,7 @@ fetch("http://localhost:7071/ingest", {
 });
 ```
 
-### From terminal
+### From shell
 ```bash
 curl -X POST http://localhost:7071/ingest \
     -H "Content-Type: text/plain" \
@@ -101,7 +101,7 @@ curl -X POST http://localhost:7071/ingest \
 ## IDE / Agent Side (downstream consumer)
 
 - Poll `/next` **or** subscribe internally later (HTTP/WebSocket upgrade)
-- Treat payload as **untrusted proposal** (don't execute blindly)
+- Treat payload as **untrusted proposal** (don't run blindly)
 - Run through:
   - MTE (Multi-Modal Type Embedding?)
   - Controller (constitutional axis check?)

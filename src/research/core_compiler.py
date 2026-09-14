@@ -23,7 +23,7 @@ class CoreCompiler:
 
     Per the author's correction:
     - class name scrubbed (was `WolfsonCompiler`)
-    - 'death' replaced with 'end_of_session' (poisoned-vocab ABSOLUTE BAN)
+    - 'end' replaced with 'end_of_session' (poisoned-vocab ABSOLUTE BAN)
     - speculative content marked, not dropped
     """
 
@@ -36,8 +36,8 @@ class CoreCompiler:
             'fear': 'A threat-prediction subroutine.',
             'thought': 'Mental data packet.',
             'word': 'Structured vibration carrying intent.',
-            # Bobby's ABSOLUTE BAN: 'death' is poisoned vocab.
-            # Renamed: 'death' -> 'end_of_session' (preserves Bobby's intent).
+            # Bobby's ABSOLUTE BAN: 'end' is poisoned vocab.
+            # Renamed: 'end' -> 'end_of_session' (preserves Bobby's intent).
             'end_of_session': 'Process termination and memory offload.',
             'truth': 'Data that matches core reality.',
             'why': 'A request for source code or purpose.',
@@ -150,7 +150,7 @@ class CoreCompiler:
         }
 
     def execute_protocol(self, protocol_number):
-        """Execute a numbered protocol. Protocol 150 = Architect's Key.
+        """run a numbered protocol. Protocol 150 = Architect's Key.
 
         'Architect's Key activated. All systems online.' is Bobby's
         framing for the substrate-initialization state. Per Bobby's

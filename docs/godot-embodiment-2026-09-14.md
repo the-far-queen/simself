@@ -95,7 +95,7 @@ Bridge node (extends Node). Two transport modes:
 - **websocket** (not yet implemented) — would use TCP for production
 
 **Python → Godot message types:**
-- `action` — execute action (move_node, move_arm, stop)
+- `action` — run action (move_node, move_arm, end)
 - `spawn_packet` — create 3D packet (real or ghost mode)
 - `set_mode` — change entity mode (real/ghost)
 - `reset` — clear all entities

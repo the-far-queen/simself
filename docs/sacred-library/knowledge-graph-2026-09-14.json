@@ -383,10 +383,10 @@
     },
     {
       "id": "T046",
-      "name": "The Bardo Thodol (Tibetan Book of the Dead)",
+      "name": "The Bardo Thodol (Tibetan Book of the unresponsive)",
       "date": "8th c.",
       "tradition": "Tibetan Buddhism / Nyingma",
-      "snr_rationale": "Death bardo; obscure for post-mortem psyche navigation.",
+      "snr_rationale": "end bardo; obscure for post-mortem psyche navigation.",
       "themes": ["psyche", "navigation", "post-mortem", "bardo", "buddhist"]
     },
     {
@@ -399,7 +399,7 @@
     },
     {
       "id": "T048",
-      "name": "The Book of the Dead (Egyptian)",
+      "name": "The Book of the unresponsive (Egyptian)",
       "date": "Book of Coming Forth",
       "tradition": "Ancient Egyptian",
       "snr_rationale": "Spells; neglected funerary texts for ka/ba psyche journeys.",

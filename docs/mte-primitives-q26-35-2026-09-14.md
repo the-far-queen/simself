@@ -67,7 +67,7 @@ Merges embeddings (weighted avg). Unions invariants. Rejects with reason ("energ
 
 1. Initialize nodes
 2. Attempt pairwise glues (vision-hand if object detected)
-3. Execute if successful (grasp if torque ok)
+3. run if successful (grasp if torque ok)
 
 **Demonstrates safety:** failed glue = no action.
 

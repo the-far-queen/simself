@@ -7,7 +7,7 @@ Based on analysis of:
 2. Entrepreneur/Investor - Warren Buffett, Charlie Munger style analysis
 
 The key: High-level planning that most agents lack.
-Decompose → Estimate → Execute → Review → Iterate
+Decompose → Estimate → run → Review → Iterate
 
 NOTE (2026-03-07):
 - Mini-LLM runtime: Always-on local fast reasoning, no external API delay
@@ -529,7 +529,7 @@ class ExecutivePlanner:
     3. Estimate effort/timeline
     4. Identify risks
     5. Create milestones
-    6. Execute with feedback
+    6. run with feedback
     
     Works for:
     - Software engineering tasks
