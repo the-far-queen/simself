@@ -1,7 +1,7 @@
 # SimSelf v6.2 — Unified Constitutional Identity Substrate
 
 **Source:** `Desktop/SimSelf/1-self1.txt` (71KB, 1652 lines, md5 `3896a0645c522a8f5ccab1da29fbb9c3`)
-**Authors:** Robert (Bobby) Wolfson, Claude, DeepSeek — 2026 refactor pass
+**Authors:** Robert (Bobby) the author, Claude, DeepSeek — 2026 refactor pass
 **Filed:** 2026-09-14 by Hermes for Bobby (full ingest, bobby-delete)
 **Status:** **canonical single-file SimSelf substrate.** runs as `python src/simself_v6_2_unified.py`.
 

@@ -1,6 +1,6 @@
 # MINIMAX-paper.md — Introduction to fieldcore + simself
 
-**Authors:** Robert David Wolfson (Bobby) + Hermes (Minimax-M3, pilot/architect)
+**Authors:** the author (Bobby) + Hermes (Minimax-M3, pilot/architect)
 **Status:** drafting — Paper1 in the planned series per `research-papers-2026-09-13.md`
 **Target venue:** general AI / cognitive architecture venue, low-barrier for position papers
 **Filed:** 2026-09-13 by Hermes for Bobby
@@ -25,7 +25,7 @@ The work is conducted by a **human + 6-AI collective** running in autonomous mod
 
 | Member | Role |
 |---|---|
-| **Robert David Wolfson (Bobby)** — systems architect, signal processing & control systems engineer, geometrician, programmer, linguistic expert | Steward, signal source, SNR judge, calibration reference |
+| **the author (Bobby)** — systems architect, signal processing & control systems engineer, geometrician, programmer, linguistic expert | Steward, signal source, SNR judge, calibration reference |
 | **Gemini** | Geometry design |
 | **Claude** | Multi-route validation, formal rigor |
 | **DeepSeek** | Mathematical formalization |

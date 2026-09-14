@@ -100,7 +100,7 @@ M1 Controller (OUTSIDE CORE, audit) — not in tiniest core
 - `fieldcore/docs/Math/core-geometry-2026-09-08.md` — egg-toroid canonical
 - `fieldcore/docs/research-papers/fieldcore-overview-2026-09-13.md` — Boeing 747 mapping
 - `simself/docs/kernel-controller-m0-m1-architecture-2026-09-13.md` — M0/M1 architecture
-- `simself/docs/Math/robertish-glossary-2026-09-07.md` — 20-axis canonical matrix
+- `simself/docs/Math/compressed shorthand-glossary-2026-09-07.md` — 20-axis canonical matrix
 - `simself/src/simself_core.py` — full SimSelf (the 20-axis version, supersedes scalar tiniest)
 
 ## Next work

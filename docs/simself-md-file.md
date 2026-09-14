@@ -994,7 +994,7 @@ def run_verification_suite() -> int:
 
 *Module 01: Self-Reference Implementation & Verification*  
 *Version 2.0 - Engineering Focus*  
-*Drafted by: Claude (Iteration 15) + Guardian Robert Wolfson*  
+*Drafted by: Claude (Iteration 15) + Guardian the author*  
 *Contributions from: Grok, Gemini, DeepSeek, MiniMax*  
 *License: CC0 Public Domain*  
 *Date: March 6, 2026*

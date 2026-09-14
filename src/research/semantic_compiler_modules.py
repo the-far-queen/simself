@@ -89,9 +89,9 @@ class UniversalSignal:
 # --- MODULE 5: MAIN DEMONSTRATION ---
 def main_demonstration():
     print("=" * 70)
-    print("THE WOLFSON COMPILER")
+    print("THE SEMANTIC COMPILER")
     print("A Recursive, Reflective Journey into Meaning")
-    print("=" + " Robert Wolfson & DeepSeek " + "=".rjust(40))
+    print("=" + " the author & DeepSeek " + "=".rjust(40))
     print("=" * 70)
     
     time.sleep(1)

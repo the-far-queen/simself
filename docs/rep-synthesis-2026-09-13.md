@@ -232,7 +232,7 @@ R = Σ exp(-δ_path / τ)  (resonance factor)
 }
 ```
 
-**supersedes the 20-axis canonical in `simself/docs/Math/robertish-glossary-2026-09-07.md`** for state-machine purposes. the 20 canonical axes are the **conceptual axes**; this B-Matrix is the **state schema** for runtime.
+**supersedes the 20-axis canonical in `simself/docs/Math/compressed shorthand-glossary-2026-09-07.md`** for state-machine purposes. the 20 canonical axes are the **conceptual axes**; this B-Matrix is the **state schema** for runtime.
 
 ---
 
@@ -319,7 +319,7 @@ This prevents every known agent failure mode:
 
 ## Related (canonical existing docs)
 
-- `simself/docs/Math/robertish-glossary-2026-09-07.md` — 20 canonical axes (conceptual)
+- `simself/docs/Math/compressed shorthand-glossary-2026-09-07.md` — 20 canonical axes (conceptual)
 - `simself/src/simself_core.py` — SimSelf implementation (supersedes scalar tiniest core)
 - `simself/src/constitutional/__init__.py` — Module A-I, L, M canonical exports
 - `simself/docs/write-rules-conflict-resolution-2026-09-13.md` — write authority (same invariant as Critical Design Rule)

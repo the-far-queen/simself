@@ -34,7 +34,7 @@ from dataclasses import dataclass, field
 # 1. THE CORE INVARIANT: the constitutional ground ψ₀
 # ============================================================================
 # 16-dim constitutional ground (placeholder; real ψ₀ from simself/src/constitutional/constitution.py)
-# Per robertish-glossary-2026-09-07.md: 20-axis canonical matrix
+# Per compressed shorthand-glossary-2026-09-07.md: 20-axis canonical matrix
 # Simplified to 16-dim for tiniest core; full 20-axis in simself_core.py
 #
 # ψ₀ is the GROUND STATE — the reference direction for coherence. Per math-window-1.md
@@ -147,7 +147,7 @@ def glue(s1: Sheaf, s2: Sheaf, packet_id: str) -> InfoPacket | None:
 class SimSelf:
     """Per kernel-controller-m0-m1-architecture-2026-09-13.md:
     SimSelf = the void in toroid (invariant zero). Lives in flat base. Reasoning on curve in 3D.
-    Per robertish-glossary-2026-09-07.md: 20-axis matrix supersedes this scalar version.
+    Per compressed shorthand-glossary-2026-09-07.md: 20-axis matrix supersedes this scalar version.
     This tiniest version is the scalar coherence+energy stub.
     """
 

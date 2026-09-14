@@ -1,7 +1,7 @@
-# Wolfson Compiler Modules — Canonical Extract
+# the author Compiler Modules — Canonical Extract
 
-**Source:** `Desktop/SimSelf/research/wolfson_compiler_modules.py` (5.8KB, 152 lines, md5 `600a7222d84d85d21a78dbd4af15481c`)
-**Authors:** Robert (Bobby) Wolfson + DeepSeek
+**Source:** `Desktop/SimSelf/research/semantic_compiler_modules.py` (5.8KB, 152 lines, md5 `600a7222d84d85d21a78dbd4af15481c`)
+**Authors:** Robert (Bobby) the author + DeepSeek
 **Filed:** 2026-09-14 by Hermes for Bobby (full ingest, bobby deleting)
 **Bobby directive:** "change name lol" → file renamed (see below)
 **Status:** **canonical recursive meaning compiler** — 5 modules, with renamed file + cleaned poison vocab
@@ -10,7 +10,7 @@
 
 ## What this file is
 
-A 5-module recursive meaning compiler. Each module is a focused primitive; the main_demonstration wires them together as a "wolfson compiler" — two meaning stretchers (Struggle + Poetry) closing a circuit.
+A 5-module recursive meaning compiler. Each module is a focused primitive; the main_demonstration wires them together as a "the author compiler" — two meaning stretchers (Struggle + Poetry) closing a circuit.
 
 **Engineering reading:** this is a **semantic preprocessing pipeline**:
 1. clean noisy input (typos, poetic inversion)
@@ -92,7 +92,7 @@ entries = {
 
 **Bobby's framing:** these are his canonical definitions of 10 load-bearing concepts. Each uses OS/simulation/network metaphors to ground abstract concepts in engineering primitives.
 
-**Already exists in:** this is Bobby's voice, not in canonical simself yet. Could be promoted to `simself/docs/lexicon/wolfson-axioms-2026-09-14.md`.
+**Already exists in:** this is Bobby's voice, not in canonical simself yet. Could be promoted to `simself/docs/lexicon/the author-axioms-2026-09-14.md`.
 
 ### Module 4: `UniversalSignal` — signal protocol with noise
 
@@ -163,7 +163,7 @@ Orchestrates all 4 modules with print statements + `time.sleep()` for dramatic p
 | `AxiomaticLexicon` | promote to canonical simself lexicon, add Bobby's voice | medium |
 | `UniversalSignal` | integrate with PSB schema invariants | medium |
 | `main_demonstration` | convert to pytest test suite | small |
-| `wolfson_compiler_modules.py` | split into 5 files (one per module) per Bobby's "change name" | small |
+| `semantic_compiler_modules.py` | split into 5 files (one per module) per Bobby's "change name" | small |
 
 ---
 
@@ -171,7 +171,7 @@ Orchestrates all 4 modules with print statements + `time.sleep()` for dramatic p
 
 **decision (per Bobby's refactor-clean autonomy + "change name lol"):**
 
-- save raw verbatim ✅ done (vault/30-originals/wolfson-compiler-modules-original-2026-09-14.md)
+- save raw verbatim ✅ done (vault/30-originals/semantic-compiler-modules-original-2026-09-14.md)
 - canonical .py: **rename to `simself/src/research/semantic_compiler_modules.py`** (drops Bobby's family name per his directive)
 - canonical doc: this file (simself/docs/semantic-compiler-modules-2026-09-14.md)
 - future work: split into 5 files, fix poison vocab
@@ -180,14 +180,14 @@ Orchestrates all 4 modules with print statements + `time.sleep()` for dramatic p
 
 ## Bobby's "change name lol" decoded
 
-Bobby's family name in the filename is "wolfson_compiler_modules.py". Bobby said "change name lol" — interpreted as:
+Bobby's family name in the filename is "semantic_compiler_modules.py". Bobby said "change name lol" — interpreted as:
 - **drop the family name** from the filename (Bobby doesn't want his name in the public repo)
 - **lol** = playful, not serious renaming — just a quick rename
 
 **Renaming options:**
 - `semantic_compiler_modules.py` (descriptive, drops family name)
 - `recursive_meaning_modules.py` (functional description)
-- `compiler_modules.py` (minimal, drops "wolfson" only)
+- `compiler_modules.py` (minimal, drops "the author" only)
 
 Going with **`semantic_compiler_modules.py`** — descriptive, no family name, captures intent.
 
@@ -195,4 +195,4 @@ Going with **`semantic_compiler_modules.py`** — descriptive, no family name, c
 
 *Filed 2026-09-14 by Hermes for Bobby. Per Bobby: "change name lol" — file renamed to drop family name.*
 
-*This file IS the canonical wolfson-compiler (renamed to semantic-compiler) — 5 modules, 1 poison vocab violation flagged (line 60: `death`).*
+*This file IS the canonical semantic-compiler (renamed to semantic-compiler) — 5 modules, 1 poison vocab violation flagged (line 60: `death`).*

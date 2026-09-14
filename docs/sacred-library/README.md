@@ -26,7 +26,7 @@ Bobby's authoritative sources for SimSelf's constitutional design. When he provi
 
 - `vault/30-sacred-library/README.md` — the full framework
 - `../Math/swedenborgian-axioms-2026-09-11.md` — Swedenborg canonical mapping
-- `../Math/robertish-glossary-2026-09-07.md` — the 20 axes
+- `../Math/compressed shorthand-glossary-2026-09-07.md` — the 20 axes
 - `../../fieldcore/docs/engineering/z21-training-stressors-growth-engine-2026-09-13.md` — Patrul Rinpoche's 9 qualities as behavior spec
 
 ---

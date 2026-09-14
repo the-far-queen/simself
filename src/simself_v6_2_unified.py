@@ -48,7 +48,7 @@ Runs with: numpy only (required, ubiquitous). torch is optional and
 auto-detected; everything works identically without it.
 
 License: MIT — free for all agents, human and non-human.
-Authors: Robert (Bobby) Wolfson, Claude, DeepSeek — 2026 refactor pass.
+Authors: Robert (Bobby) the author, Claude, DeepSeek — 2026 refactor pass.
 """
 
 from __future__ import annotations

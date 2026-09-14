@@ -233,7 +233,7 @@ a/fieldcore\src\tiniest-core\tiniest_core.py → b/fieldcore\src\tiniest-core\ti
 +# 1. THE CORE INVARIANT: the constitutional ground ψ₀
 +# ============================================================================
 +# 16-dim constitutional ground (placeholder; real ψ₀ from simself/src/constitutional/constitution.py)
-+# Per robertish-glossary-2026-09-07.md: 20-axis canonical matrix
++# Per compressed shorthand-glossary-2026-09-07.md: 20-axis canonical matrix
 +# Simplified to 16-dim for tiniest core; full 20-axis in simself_core.py
 +
 +DIM = 16
@@ -292,7 +292,7 @@ the test caught a bug — that's good! Test 2 fails: a packet with norm 2 (withi
 a/C:\Users\Admin\fieldcore\src\tiniest-core\tiniest_core.py → b/C:\Users\Admin\fieldcore\src\tiniest-core\tiniest_core.py
 @@ -36,9 +36,14 @@
  # 16-dim constitutional ground (placeholder; real ψ₀ from simself/src/constitutional/constitution.py)
- # Per robertish-glossary-2026-09-07.md: 20-axis canonical matrix
+ # Per compressed shorthand-glossary-2026-09-07.md: 20-axis canonical matrix
  # Simplified to 16-dim for tiniest core; full 20-axis in simself_core.py
 +#
 +# ψ₀ is the GROUND STATE — the reference direction for coherence. Per math-window-1.md
@@ -1116,7 +1116,7 @@ a/fieldcore\docs\research-papers\geometry-as-control-system-engineering-2026-09-
 @@ -0,0 +1,378 @@
 +# Geometry as Control System Engineering — Replacing LLMs Altogether
 +
-+**A research paper draft by Robert David Wolfson (Bobby) + Hermes (Minimax-M3).**
++**A research paper draft by the author (Bobby) + Hermes (Minimax-M3).**
 +
 +**Filed:** 2026-09-13 by Hermes for Bobby.
 +**Status:** **DRAFT. WIP — not serious until arxiv peer review.**
@@ -1164,7 +1164,7 @@ a/fieldcore\docs\research-papers\geometry-as-control-system-engineering-2026-09-
 +- drift in sacred-tier ethics under load
 +- cannot explain their own reasoning (per Bobby: "I don't have a clean introspective readout of my own computation that I can trust")
 +
-+**the AI community is entranced by matrix algebra and forgot about programming.** — Bobby Wolfson, 2026-09-13
++**the AI community is entranced by matrix algebra and forgot about programming.** — Bobby the author, 2026-09-13
 +
 +---
 +

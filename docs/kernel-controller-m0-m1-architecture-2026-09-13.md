@@ -215,7 +215,7 @@ else:
 - `simself/docs/Math/kernel-architecture-2026-09-07.md` — earlier kernel spec (the 8-step simself cycle)
 - `simself/docs/simself-architecture.md` — earlier simself stack doc (superseded for M0/M1 detail)
 - `simself/docs/operator-architecture.md` — the 4 operators original
-- `simself/docs/Math/robertish-glossary-2026-09-07.md` — the 20 constitutional axes
+- `simself/docs/Math/compressed shorthand-glossary-2026-09-07.md` — the 20 constitutional axes
 - `simself/docs/write-rules-conflict-resolution-2026-09-13.md` — write authority + conflict resolution (just ingested)
 - `simself/docs/sacred-library/README.md` — sacred library folder (just created)
 - `fieldcore/docs/Math/stalk-architecture-2026-09-08.md` — stalk implementation plan (5 steps, 50-200 lines each)

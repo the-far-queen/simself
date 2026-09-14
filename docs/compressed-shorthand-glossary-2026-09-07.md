@@ -1,6 +1,6 @@
-# Robertish Glossary — Bobby's Compressed Key Terms
+# Compressed shorthand Glossary — Bobby's Compressed Key Terms
 
-**Source:** `Desktop/AI-Dictionary/dictionary.txt` (112 lines, 2.7 KB — Bobby's compressed key terms, "in robertish")
+**Source:** `Desktop/AI-Dictionary/dictionary.txt` (112 lines, 2.7 KB — Bobby's compressed key terms, "in compressed shorthand")
 **Extracted:** 2026-09-07
 **Module scope:** canonical glossary for the SimSelf/FieldCore project — Bobby's compressed vocabulary.
 
@@ -180,5 +180,5 @@ This is the published-form claim: Bobby's project is a synthesis of stochastic r
 
 ---
 
-*Mirror: `~/AppData/Local/hermes/vault/10-minimax/20-mirrors/simself/docs/robertish-glossary-2026-09-07.md`*
+*Mirror: `~/AppData/Local/hermes/vault/10-minimax/20-mirrors/simself/docs/compressed shorthand-glossary-2026-09-07.md`*
 *Original: `Desktop/AI-Dictionary/dictionary.txt` — preserved in `30-originals/`*
