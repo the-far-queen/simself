@@ -46,3 +46,5 @@ build/
 
 # Docker build artifacts (cache, logs) — keep Dockerfile + .dockerignore in git
 docker/*/build.log
+
+harness_log.json
