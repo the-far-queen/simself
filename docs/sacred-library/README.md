@@ -4,12 +4,6 @@
 
 **Bobby's framing:** "add sacred library folder in valut and repo and supermem it is crucial to give ai simsoul not just simself."
 
-## What this is
-
-Bobby's authored contemplative/contemplation corpus for SimSelf's constitution. Engineering templates (not mysticism) from human wisdom traditions.
-
-See `vault/30-sacred-library/README.md` for the full framework, M3-drop distinctions, and Bobby's lineage (Tsongkhapa / Patrul Rinpoche / Cayce / Swedenborg / Nagarjuna / Qur'an / Tibetan Buddhism / Bobby's NDEs).
-
 ## What's in this folder
 
 - `README.md` — this file (folder pointer to vault + lineage)

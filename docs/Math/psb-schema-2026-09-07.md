@@ -6,12 +6,6 @@
 
 ---
 
-## What this is
-
-Bobby's PSB (Primal Semantic Block) is a **cross-domain semantic field**, not a dictionary entry. A single word is a nexus of interconnected meanings across different contexts and scales. The Saskatchewan word "actor" isn't one definition — it's a sheaf of meanings that cohere across domains.
-
----
-
 ## The schema (canonical form)
 
 ```json

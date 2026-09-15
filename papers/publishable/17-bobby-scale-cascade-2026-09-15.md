@@ -165,15 +165,6 @@ Measured by:
 ### 6.1 Why this works
 
 Substrate coupling provides **content quality** + **coherence** + **cumulative improvement**. Each article is **better than the sum of its parts** because it draws on prior substrate.
-
-### 6.2 What this is NOT
-
-- Not view-bait (no engagement farming).
-- Not trend-jacking (no FOMO).
-- Not advertising (no selling).
-
-It is **substrate-coupled writing** with compounding returns.
-
 ### 6.3 What enables the cascade
 
 - Multi-AI collaboration (Bobby + 6 AIs).

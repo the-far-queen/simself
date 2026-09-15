@@ -259,15 +259,6 @@ Every session updates graph. Meta-analysis agent prunes/refactors. Reduces token
 ### 9.1 What this is
 
 A formal specification of FieldCore's computational substrate. Runnable in Godot + Python.
-
-### 9.2 What this is NOT
-
-- Not "AGI framework."
-- Not "neural network architecture."
-- Not "AGI-complete."
-
-It is **engineering-grade operator algebra + information substrate.**
-
 ### 9.3 What this enables
 
 - Long-running AI agents.

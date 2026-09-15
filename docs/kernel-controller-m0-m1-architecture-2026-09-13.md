@@ -193,23 +193,6 @@ else:
 
 ---
 
-## What this IS
-
-- **canonical architecture** per Bobby's 2026-09-13 directive
-- **M0/M1 separation** clarified (M0 in core, M1 out of core)
-- **SimSelf as 4 operators** captured (not a separate entity — simself IS the operators)
-- **Boeing 747 model** applied (envelope protection = M0)
-- **Sacred Library as read-only** enforced (updates require full pipeline)
-- **learning loop** captured (SimSelf proposes → M0 vetoes → M1 audits → Library updates)
-
-## What this IS NOT
-
-- not complete — needs implementation per `stalk-architecture-2026-09-08.md` 5-step plan
-- not arxiv-ready — WIP until peer review
-- not contradicting existing canonical docs — supersedes partial framings only
-
----
-
 ## Related (canonical existing docs)
 
 - `simself/docs/Math/kernel-architecture-2026-09-07.md` — earlier kernel spec (the 8-step simself cycle)

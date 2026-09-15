@@ -193,20 +193,6 @@ this reframes intelligence from token-prediction (LLM paradigm) to **field-trans
 
 ---
 
-## What this IS
-
-- **research ingestion pipeline** — 4 stages, 9 routing targets, 7 implementation pieces
-- **architectural constraints** — unbounded field, out-of-core, recursive, governor-enforced
-- **the key insight** — intelligence as coherence-preserving field transformation
-
-## What this IS NOT
-
-- not duplicate (existing repo has the IMPLEMENTATION; this is the PIPELINE RATIONALE)
-- not complete — needs Phase 1+3 work
-- not arxiv-ready — WIP
-
----
-
 ## Related (canonical existing docs)
 
 - `simself/src/constitutional/geometric_memory.py` — InformationField canonical

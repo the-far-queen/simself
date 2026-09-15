@@ -6,14 +6,6 @@
 
 ---
 
-## What this is
-
-**Sheaf over the task-state manifold X.** Open sets U⊂X are local operational contexts. Stalks F_x are local latent states (vision, language, motor). Sections are assignments of latent states over regions. The global section (consistent action) exists only where local sections agree.
-
-**Gluing is the only place agency-like behavior emerges.** Everything else is auxiliary.
-
----
-
 ## 1. Overlap as fiber product (not feature intersection)
 
 For two stalks — language L, vision V — define the overlap region:

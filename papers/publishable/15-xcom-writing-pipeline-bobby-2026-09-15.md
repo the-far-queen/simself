@@ -156,15 +156,6 @@ The pipeline combines:
 - **Distillation** (clear, focused message).
 - **Multi-platform** (x.com reach).
 - **Iterative loop** (compounding improvement).
-
-### 6.2 What this is NOT
-
-- Not content marketing (no selling).
-- Not SEO gaming (no keyword stuffing).
-- Not trend-chasing (no FOMO).
-
-It is **substrate insight → public communication**.
-
 ### 6.3 Why view counts matter
 
 View counts are **objective measure** of communication effectiveness. Subjective quality is harder to measure. View counts validate the pipeline.

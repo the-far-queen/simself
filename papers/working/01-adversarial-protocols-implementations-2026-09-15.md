@@ -139,7 +139,6 @@ class AdversarialProtocol:
         cos = np.dot(pre_vec, post_vec) / (np.linalg.norm(pre_vec) * np.linalg.norm(post_vec))
         return float(1.0 - cos)
 
-
 class ProtocolRunner:
     """Run all 21 protocols in sequence."""
     
@@ -248,15 +247,6 @@ Together: 24/7 substrate development.
 ### 7.1 Why stressors work
 
 Standard training optimizes average case. Adversarial training optimizes worst case. The substrate learns to handle stress, not just normal operation.
-
-### 7.2 What this is NOT
-
-- Not adversarial in security sense.
-- Not adversarial in GAN sense.
-- Not adversarial in red-team sense.
-
-It is **structured stress** for capability development.
-
 ### 7.3 What this IS
 
 - 21 runnable protocols.

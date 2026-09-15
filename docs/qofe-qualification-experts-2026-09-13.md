@@ -180,22 +180,6 @@ at inference:
 
 ---
 
-## What this IS
-
-- **geometric audit protocol** for SimSelf expert certification
-- **4 invariant checks** (Descent, Basin, Conditioning, Constraints)
-- **stress probes**, not training data
-- **no stochasticity, no sampling** — fully deterministic
-
-## What this IS NOT
-
-- not a benchmark (doesn't measure performance — measures geometry)
-- not a stochastic process (deterministic rollout)
-- not mixed with training (certifies geometry, doesn't create it)
-- not arxiv-ready — WIP
-
----
-
 ## Related (canonical existing docs)
 
 - `simself/docs/atlas-exam-2026-09-13.md` — qualification framework (30 tests, 0/1 scoring)

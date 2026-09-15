@@ -6,14 +6,6 @@
 
 ---
 
-## What this is
-
-Bobby's compressed summary: "kernel is control sys core has M0 governor 1-bit gates topo geo then controller outside core and simself a dance between controller and simself with qualification addressed by library simself dreams and acts and if qualified entries go to controller i.e. librarian and literally control in control sys."
-
-This doc makes that summary engineering-precise.
-
----
-
 ## The full stack (top-down)
 
 ```

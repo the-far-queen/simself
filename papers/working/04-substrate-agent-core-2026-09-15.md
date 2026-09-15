@@ -72,7 +72,6 @@ class ReadStalkStateOperator(Operator):
         stalk = substrate.stalks.get(stalk_id)
         return {"state": stalk.state}
 
-
 class WriteSacredLibraryOperator(Operator):
     name = "write_sacred_library"
     inputs = {"entry": dict, "audit": dict}
@@ -194,15 +193,6 @@ If any operator is rejected, agent returns error message and logs rejection. No 
 ### 7.1 Why governed operators
 
 Free-form LLM agents can introduce rogue operators, violate sacred tier, corrupt state. Governed operators enforce **structure** before execution.
-
-### 7.2 What this is NOT
-
-- Not an LLM wrapper (the LLM is one component).
-- Not a chatbot (operators + state + audit).
-- Not an autonomous agent (governed by human input + audit).
-
-It is a **substrate-aware agent** that uses LLMs to propose operators.
-
 ### 7.3 Why this matters
 
 Substrates need **typed interfaces**. LLMs give flexibility but lose type safety. Governed operators restore type safety.

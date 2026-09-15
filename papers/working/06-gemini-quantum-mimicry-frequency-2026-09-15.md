@@ -144,15 +144,6 @@ Quantum systems have proven advantages (interference, tunneling). Mimicking thes
 - Macroscopic implementation.
 - Engineering control.
 - Computational speed.
-
-### 7.2 What this is NOT
-
-- Not actual quantum computing (we use classical waves).
-- Not superposition in the quantum sense (we use eigenmode decomposition).
-- Not tunneling (we use resonant coupling).
-
-It is **architectural mimicry** that captures useful quantum-like properties.
-
 ### 7.3 What it IS
 
 - Classical wave decomposition.
