@@ -164,11 +164,11 @@ Full audit: [`docs/code-audit-2026-09-14.md`](docs/code-audit-2026-09-14.md).
 
 ---
 
-## Research Papers (23 papers, 2026-09-15)
+## Research Papers (24 papers, 2026-09-15)
 
-Bobby Wolfson's research pipeline produced **23 papers** in this repo:
+Bobby Wolfson's research pipeline produced **24 papers** in this repo:
 
-**publishable/ (17 papers — arxiv-ready):**
+**publishable/ (18 papers — arxiv-ready):**
 
 | # | Title | Size |
 |---|-------|------|
@@ -189,6 +189,7 @@ Bobby Wolfson's research pipeline produced **23 papers** in this repo:
 | 44 | x.com Writing Pipeline | 6.4 KB |
 | 51 | SimSelf Context | 6.2 KB |
 | 52 | Bobby's Scale Cascade | 6.2 KB |
+| 67 | Operator Algebra + InfoPacket Architecture | 8.4 KB |
 
 **working/ (6 papers — drafts needing sharpening):**
 
