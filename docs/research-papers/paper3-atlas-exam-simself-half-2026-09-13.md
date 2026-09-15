@@ -51,14 +51,6 @@ Bobby is author on both. The two halves must be written in parallel. **No half m
 - Per-variant test pass/fail table.
 - Per-variant engineering property measurements (stability, robustness, frequency distinctness, recovery time, boundary preservation).
 - Correlation analysis: Pearson r between Atlas pass rate and engineering property.
-
-## What this paper IS NOT
-
-- Not a benchmark suite.
-- Not an LLM leaderboard.
-- Not a safety framework.
-- Not an alignment evaluation.
-
 ## Open questions
 
 1. **Test infrastructure location** — `simself/src/constitutional/atlas/` or `simself/tests/atlas/`?
