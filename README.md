@@ -164,9 +164,9 @@ Full audit: [`docs/code-audit-2026-09-14.md`](docs/code-audit-2026-09-14.md).
 
 ---
 
-## Research Papers (24 papers, 2026-09-15)
+## Research Papers + Proposals (24 papers + 12 proposals, 2026-09-15)
 
-Bobby Wolfson's research pipeline produced **24 papers** in this repo:
+Bobby Wolfson's research pipeline produced **36 artifacts** in this repo (24 papers + 12 proposals):
 
 **publishable/ (18 papers — arxiv-ready):**
 
@@ -201,6 +201,26 @@ Bobby Wolfson's research pipeline produced **24 papers** in this repo:
 | 45 | Substrate Agent Core: Operator Architecture |
 | 48 | Method Book Draft — Bobby's Authorship Plan |
 | 49 | Gemini Quantum-Mimicry: Frequency Fields |
+
+
+| 67 | Operator Algebra + InfoPacket Architecture | 8.4 KB |
+
+**proposals/ (12 proposals — research funding applications):**
+
+| # | Proposal | Size |
+|---|-------|------|
+| 01 | Multi-AI Chorus IDE for Substrate Engineering | 1.0 KB |
+| 02 | Godot Robot Sheaf Swarm at 100-Node Scale | 1.0 KB |
+| 03 | Sacred Library Swedenborg 50+ Axis Mapping | 1.0 KB |
+| 04 | Operator Algebra Algebraic Closure | 1.0 KB |
+| 05 | FieldCore Geometric Compute Engine | 1.0 KB |
+| 06 | SimSelf Memory Persistence Across Sessions | 1.0 KB |
+| 07 | Constitutional Substrate vs Frontier LLM Benchmarks | 1.0 KB |
+| 08 | PSB 37-Primitive Composition Coverage | 1.0 KB |
+| 09 | MTE (Machine Translation Engine) Bidirectional Loss | 1.0 KB |
+| 10 | Sacred Library Index 24 Texts | 1.0 KB |
+| 11 | Fractal Field at 4D Lattice 128³ | 1.0 KB |
+| 12 | Substrate as Living Mathematics | 1.0 KB |
 
 **Browse all:** [Desktop/RESEARCH/publishable.md](https://github.com/the-far-queen/simself/blob/main/papers/publishable/) and [working/](https://github.com/the-far-queen/simself/blob/main/papers/working/) on GitHub.
 
