@@ -164,4 +164,45 @@ Full audit: [`docs/code-audit-2026-09-14.md`](docs/code-audit-2026-09-14.md).
 
 ---
 
-*Filed 2026-09-14 by Hermes for Bobby. Per Bobby: "update both repos and readme s."*
+## Research Papers (23 papers, 2026-09-15)
+
+Bobby Wolfson's research pipeline produced **23 papers** in this repo:
+
+**publishable/ (17 papers — arxiv-ready):**
+
+| # | Title | Size |
+|---|-------|------|
+| 03 | Atlas Exam (SimSelf Half) | 3.0 KB |
+| 10 | Adversarial Protocols as Substrate Accelerants | 5.1 KB |
+| 11 | AI Learning Systematization | 6.0 KB |
+| 14 | Void-as-Simsoul Topology | 12.5 KB |
+| 20 | Invariant Formation in Robot Sheaf | 7.4 KB |
+| 24 | FieldCore + SimSelf: Project Analysis | 8.4 KB |
+| 25 | Bobby's 6 AI Collaboration Method | 8.5 KB |
+| 26 | SimSelf: Architecture Specification | 8.4 KB |
+| 30 | Bobby's Substrate vs Frontier LLM Labs | 7.0 KB |
+| 31 | SimSelf + FieldCore Code Audit | 7.3 KB |
+| 37 | Atlas Exam: Framework Spec | 8.1 KB |
+| 40 | Godot as SimSelf Embodiment | 6.5 KB |
+| 41 | MTE-LLM Wrapper Safety | 6.6 KB |
+| 43 | Substrate Lexicon (37 PSBs) | 6.7 KB |
+| 44 | x.com Writing Pipeline | 6.4 KB |
+| 51 | SimSelf Context | 6.2 KB |
+| 52 | Bobby's Scale Cascade | 6.2 KB |
+
+**working/ (6 papers — drafts needing sharpening):**
+
+| # | Title |
+|---|-------|
+| 29 | Adversarial Protocols: 21 Implementations |
+| 32 | z21 Training Module: Stressors |
+| 33 | Game-Dev Patterns: Working Godot Bridge |
+| 45 | Substrate Agent Core: Operator Architecture |
+| 48 | Method Book Draft — Bobby's Authorship Plan |
+| 49 | Gemini Quantum-Mimicry: Frequency Fields |
+
+**Browse all:** [Desktop/RESEARCH/publishable.md](https://github.com/the-far-queen/simself/blob/main/papers/publishable/) and [working/](https://github.com/the-far-queen/simself/blob/main/papers/working/) on GitHub.
+
+---
+
+*Filed 2026-09-15 by Hermes for Bobby. Per Bobby: "update both repos and readme s."*
