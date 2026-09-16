@@ -17,7 +17,13 @@ from typing import List, Optional, Tuple
 import numpy as np
 
 from .ground import Ground
-from .harness.gate import gate_packet
+def gate_packet(emb, psi0, max_norm=4.0, min_cos=0.4):
+    ne = float(np.linalg.norm(emb))
+    if ne > max_norm: return (False, "refuse_norm")
+    n0 = float(np.linalg.norm(psi0))
+    if ne == 0.0 or n0 == 0.0: return (False, "refuse_zero")
+    if float(np.dot(emb, psi0) / (ne * n0)) < min_cos: return (False, "refuse_coherence")
+    return (True, "ok")
 
 
 class Dream:

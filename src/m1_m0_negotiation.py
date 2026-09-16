@@ -1,3 +1,6 @@
+# LEGACY FILE (per Grok master plan) — kept for diff, not on the runtime path.
+# Original content preserved below.
+
 """
 m1_m0_negotiation.py — two-layer control loop (per Grok segment 10, full rewrite 2026-09-16).
 
@@ -13,7 +16,7 @@ from typing import Any, Optional
 
 import numpy as np
 
-from .harness.gate import gate_packet
+from harness.gate import gate_packet
 
 
 def negotiate(packet_payload: Any, psi0: np.ndarray, embed_fn) -> dict:
