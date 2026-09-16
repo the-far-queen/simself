@@ -1,3 +1,7 @@
+> **Moved to `notes/paper-history/` on 2026-09-16** (per Grok sharpen 2026-09-16, applied by Hermes).
+>
+> **Reason:** stale draft superseded by the 2026-09-15 version.
+
 # Paper 3 — Atlas Exam (simself-side: empirical work)
 
 **Title:** *Atlas Exam: Geometric Framework for AI Substrate Evaluation*
