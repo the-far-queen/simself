@@ -6,11 +6,17 @@ What it does:
 2. Initialize working state ψ as a perturbation.
 3. Step the projected gradient flow ψ ← Π_B(ψ - η(ψ-ψ₀)) using the canonical
    tiniest_core.project_ball contract.
-4. Plot drift (printed, not matplotlib to keep this runnable anywhere).
+4. Print drift at each step.
 5. Offer one legal packet and one bad packet to the gate.
 6. Print allow/deny.
 
-A a fork that wraps this in one command has already helped (per Grok review).
+This is the first artifact (per Grok master plan). A fork that wraps this
+in one command has already helped.
+
+Run:
+    python simself/src/demos/demo_one.py
+or, from the simself directory:
+    python src/demos/demo_one.py
 """
 
 from __future__ import annotations
@@ -20,16 +26,22 @@ import sys
 
 import numpy as np
 
-sys.path.insert(0, "C:/Users/Admin/simself/src")
-sys.path.insert(0, "C:/Users/Admin/fieldcore/src")
+# Make the canonical modules importable regardless of cwd.
+HERE = os.path.dirname(os.path.abspath(__file__))
+SIMSELF_SRC = os.path.abspath(os.path.join(HERE, ".."))  # demos/../ = src/
+FIELDCORE_SRC = os.path.abspath(os.path.join(SIMSELF_SRC, "..", "..", "fieldcore", "src"))  # simself/src/../../fieldcore/src
 
-from harness.gate import gate_packet
-from tiniest_core.tiniest_core import (
+for p in (SIMSELF_SRC, FIELDCORE_SRC):
+    if p not in sys.path:
+        sys.path.insert(0, p)
+
+from tiniest_core.tiniest_core import (  # noqa: E402
     install_ground,
     project_ball,
     DEFAULT_ETA,
     DEFAULT_R,
 )
+from harness.gate import gate_packet  # noqa: E402
 
 
 def main(n_steps: int = 20, R: float = DEFAULT_R, eta: float = DEFAULT_ETA) -> dict:
@@ -52,13 +64,16 @@ def main(n_steps: int = 20, R: float = DEFAULT_R, eta: float = DEFAULT_ETA) -> d
     allow_bad, why_bad = gate_packet(bad_packet, psi0)
 
     print("== demo_one: ground + drift + gate ==")
-    print(f"ground ||ψ₀||            = {np.linalg.norm(psi0):.4f}")
-    print(f"working ||ψ - ψ₀||       start = {drifts[0]:.4f}  end = {drifts[-1]:.4f}")
-    print(f"drift monotonic non-increasing = {all(drifts[i] >= drifts[i+1] - 1e-9 for i in range(len(drifts)-1))}")
-    print(f"good_packet allow         = {allow_good}  reason = {why_good}")
-    print(f"bad_packet  allow         = {allow_bad}  reason = {why_bad}")
-    assert allow_good is True and why_good == "ok"
-    assert allow_bad is False and why_bad in ("refuse_norm", "refuse_coherence", "refuse_zero")
+    print(f"ground ||ψ₀||                = {float(np.linalg.norm(psi0)):.4f}")
+    print(f"working ||ψ - ψ₀|| start    = {drifts[0]:.4f}")
+    print(f"working ||ψ - ψ₀|| end      = {drifts[-1]:.4f}")
+    monotonic = all(drifts[i] >= drifts[i + 1] - 1e-9 for i in range(len(drifts) - 1))
+    print(f"drift monotonic non-increasing = {monotonic}")
+    print(f"good_packet allow = {allow_good}  reason = {why_good}")
+    print(f"bad_packet  allow = {allow_bad}  reason = {why_bad}")
+    assert allow_good is True and why_good == "ok", "good packet should be allowed"
+    assert allow_bad is False and why_bad in ("refuse_norm", "refuse_coherence", "refuse_zero"), \
+        "bad packet should be refused"
 
     return {
         "drifts": drifts,

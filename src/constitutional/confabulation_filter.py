@@ -17,7 +17,7 @@ from typing import Optional
 
 import numpy as np
 
-from .harness.gate import gate_packet
+from .lexicon.ingest import gate_m0
 from .psb_primitives import classify_span, UnitType
 
 
@@ -32,5 +32,7 @@ def is_confabulation(span: str, emb: np.ndarray, psi0: np.ndarray,
     n0 = float(np.linalg.norm(psi0))
     if n == 0 or n0 == 0:
         return True
+    if n > 4.0 or n == 0.0 or n0 == 0.0:
+        return True  # confabulation if the embed is empty or huge
     cos = float(np.dot(emb, psi0) / (n * n0))
     return cos < min_cos

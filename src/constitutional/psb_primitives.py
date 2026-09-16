@@ -74,3 +74,10 @@ def coverage(sentences: List[str]) -> dict:
         "fraction": covered / n,
         "by_type": by_type,
     }
+
+
+# Alias for backward compatibility with __init__.py import.
+PRIM = PRIMITIVES
+
+# Re-export from lexicon/ingest.py for backward compatibility.
+from .lexicon.ingest import embed_bag  # noqa: E402, F401

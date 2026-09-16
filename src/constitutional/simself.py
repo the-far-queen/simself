@@ -207,7 +207,18 @@ class SimSelf:
         self.time = snapshot.get("time", 0.0)
         self.R = snapshot.get("R", self.R)
         self.eta = snapshot.get("eta", self.eta)
-        self._record("load", f"Loaded snapshot from {path}")
+        # Restore the decision_log from the snapshot's last_verdicts.
+        # load() is silent — no new record is appended for the load itself.
+        saved_verdicts = snapshot.get("last_verdicts", [])
+        self.decision_log = [
+            DecisionRecord(
+                timestamp=v.get("timestamp", 0.0),
+                kind=v.get("kind", ""),
+                description=v.get("description", ""),
+                data=v.get("data", {}),
+            )
+            for v in saved_verdicts
+        ]
 
     def dump(self, path: Optional[str] = None) -> str:
         if path is None:

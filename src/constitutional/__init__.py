@@ -1,128 +1,82 @@
 """
-constitutional — The 20-axis constitutional core, modular.
+constitutional — identity layer + governance + qualification exam.
 
-Source: `grok-self.txt` (56 KB, single file, 1258 lines) pasted by Bobby
-on 2026-08-08. Original author: Grok. M3 split into per-concern modules
-per the "SimSelf as wardrobe" principle in FieldCore.md §3.
-
-Public surface (re-exported below):
-- Constitution, ConstitutionalAxis, AXES_DEFINITIONS, CONSTRAINT_WORDS
-- embed_text, project_to_constitution, cosine, PHI, ALPHA, DIM
-- ResolutionOperator
-- EntityRecognition
-- RelationalMemory
-- ConstitutionalDreaming
-- GroundIntegration, ReadinessCheck
-- SimSelf
-- Harness
-- AtlasExam
-- FrequencyChannel, FrequencyDynamics, ResonanceChannel (frequency kernel)
+Modules:
+- constitution: Constitution, ConstitutionalAxis, embed_text, project_to_constitution.
+- ground: write-protect API for ψ₀. One-shot install, versioned revisions.
+- resolution: projected gradient step on F(ψ) = (1/2) ||ψ - ψ₀||².
+- atlas_exam: 5-item qualification exam.
+- simself: canonical SimSelf class.
+- harness: harness loop.
+- frequency: parallel state. ψ untouched.
+- psb_primitives: 6 types, coverage().
+- adversarial: 21 protocol stubs.
+- axes_v2: legacy 20-axis module (functional, not algebra-derived).
+- memory: store of constitutional memory items.
+- geometric_memory: geometric addressing.
+- consolidation_filter / confabulation_filter: gating helpers.
+- operators: identity operators (project_ball, step, commit_radius).
+- mini_llm: stub (per the project-scope).
+- temporal_control: phase 1 stub.
+- lexicon.ingest: language intake. Same gate as kernel + harness.
 """
+
 from .constitution import (
     Constitution,
     ConstitutionalAxis,
-    AXES_DEFINITIONS,
-    AXIS_KEYWORDS,
-    CONSTRAINT_WORDS,
-    CONSTRAINT_PATTERN,
+    DEFAULT_AXES,
     embed_text,
     project_to_constitution,
-    cosine,
-    PHI,
-    ALPHA,
-    DIM,
-    TWIN_PRIME_PAIRS,
-    SEIFERT_GENERA,
-    FREQ_RATIOS,
-    N_SHEAVES,
-    TEXT_EMBED_DIM,
 )
-from .resolution import ResolutionOperator
-from .entity import EntityRecognition
-from .memory import RelationalMemory
-from .dreaming import ConstitutionalDreaming
-from .ground import GroundIntegration, ReadinessCheck
-from .consolidation_filter import (
-    StabilityConsolidationFilter,
-    STASIS, DENIED, DUPLICATE, CONSOLIDATED,
-    DEFAULT_GROUNDING_MAP,
-)
+from .ground import Ground
+from .resolution import project_ball, step, resolve
+from .atlas_exam import AtlasExam
 from .simself import SimSelf
 from .harness import Harness
-from .atlas_exam import AtlasExam
-
-# The frequency kernel is intentionally NOT imported into the constitutional
-# core (simself.py, constitution.py). The core stays free of any
-# Schumann / 432 / 963 / etc. dependencies. Wiring frequency into the
-# update loop is a per-deployment decision.
-#
-# The kernel IS exported here at the package level — callers can do
-#   from constitutional import FrequencyChannel, ResonanceChannel, ...
-# without an explicit `import constitutional.frequency` path. The kernel
-# is *available* without being *required*. See frequency-architecture-2026-09-12.md.
-from .frequency import (
-    FrequencyChannel,
-    FrequencyDynamics,
-    ResonanceChannel,
-    FrequencyCoupler,
-    harmonic_sum,
-    DEFAULT_FREQUENCY_HYPOTHESES,
-)
-from .temporal_control import TemporalController
-from .confabulation_filter import ConfabulationFilter
-from .operators import (
-    Operator,
-    CentroidOperator,
-    HolographicEncoder,
-    CausalPSB,
-)
-from .mini_llm import MiniLLM, Intent
+from .frequency import FrequencyCoupler, PARAMS
 from .psb_primitives import (
-    PSBPrimitive,
-    CompositePSB,
-    BobbysPrimitives,
-    compose,
-    primitive_count,
-    primitives_by_category,
-    find_composition_path,
+    UnitType,
+    PRIM,
+    classify_span,
+    coverage,
+    embed_bag,
 )
-from .axes_v2 import (
-    Axis,
-    AxisSheaf,
-    AXES_50,
-    canonical_20_axes,
-    axes_by_sheaf,
-    axis_by_name,
-    swedenborg_axes,
+from .adversarial import (
+    ProtocolResult,
+    run_protocol,
+    PROTOCOL_STUBS,
 )
-from .geometric_memory import (
-    MemoryPacket,
-    GeometricMemory,
+from .axes_v2 import AxesV2
+from .memory import ConstitutionalMemory, MemoryItem
+from .geometric_memory import GeometricMemory, MemoryPacket
+from .consolidation_filter import should_consolidate, DEFAULT_COMMIT_RADIUS
+from .confabulation_filter import is_confabulation
+from .operators import (
+    project_ball as op_project_ball,
+    step as op_step,
+    commit_radius as op_commit_radius,
+    is_within_commit_radius,
+    DEFAULT_R as OP_DEFAULT_R,
+    DEFAULT_ETA as OP_DEFAULT_ETA,
+    DEFAULT_COMMIT_RADIUS as OP_DEFAULT_COMMIT_RADIUS,
+)
+from .lexicon.ingest import (
+    Unit, Verdict, Status,
+    gate_m0, ingest, embed_bag as ingest_embed_bag,
 )
 
 __all__ = [
-    # constitution
-    "Constitution", "ConstitutionalAxis", "AXES_DEFINITIONS", "AXIS_KEYWORDS",
-    "CONSTRAINT_WORDS", "CONSTRAINT_PATTERN",
-    "embed_text", "project_to_constitution", "cosine",
-    "PHI", "ALPHA", "DIM", "TWIN_PRIME_PAIRS", "SEIFERT_GENERA",
-    "FREQ_RATIOS", "N_SHEAVES", "TEXT_EMBED_DIM",
-    # modules
-    "ResolutionOperator", "EntityRecognition", "RelationalMemory",
-    "ConstitutionalDreaming", "GroundIntegration", "ReadinessCheck",
-    "SimSelf", "Harness", "AtlasExam",
-    # Phase 1 ports (2026-09-12) — engineered primitives from 44-back/
-    "TemporalController",  # WHEN layer — gates expensive ops on signal quality
-    "ConfabulationFilter",  # textual feature quality filter for agent outputs
-    "Operator", "CentroidOperator", "HolographicEncoder", "CausalPSB",  # field operators
-    "MiniLLM", "Intent",  # breakthrough detection + intent proposal
-    # 2026-09-12 Bobby directives — docs-as-code implementations
-    "PSBPrimitive", "CompositePSB", "BobbysPrimitives", "compose", "primitive_count",
-    "primitives_by_category", "find_composition_path",  # PSB primitives from context 2.txt + Bobby's method
-    "Axis", "AxisSheaf", "AXES_50", "canonical_20_axes", "axes_by_sheaf",
-    "axis_by_name", "swedenborg_axes",  # 50-axis v2 per Bobby directive
-    "MemoryPacket", "GeometricMemory",  # geometric memory per Bobby's "geometric reasoning geometric memory"
-    # Frequency kernel is NOT in the public surface. Import it explicitly:
-    #   from constitutional.frequency import FrequencyChannel, FrequencyDynamics, ResonanceChannel
-    #   from constitutional.frequency import DEFAULT_FREQUENCY_HYPOTHESES
+    "Constitution", "ConstitutionalAxis", "DEFAULT_AXES",
+    "embed_text", "project_to_constitution",
+    "Ground", "project_ball", "step", "resolve",
+    "AtlasExam", "SimSelf", "Harness",
+    "FrequencyCoupler", "PARAMS",
+    "UnitType", "PRIM", "classify_span", "coverage",
+    "ProtocolResult", "run_protocol", "PROTOCOL_STUBS",
+    "AxesV2", "ConstitutionalMemory", "MemoryItem",
+    "GeometricMemory", "MemoryPacket",
+    "should_consolidate", "is_confabulation",
+    "op_project_ball", "op_step", "op_commit_radius", "is_within_commit_radius",
+    "OP_DEFAULT_R", "OP_DEFAULT_ETA", "OP_DEFAULT_COMMIT_RADIUS",
+    "Unit", "Verdict", "Status", "gate_m0", "ingest", "ingest_embed_bag",
 ]

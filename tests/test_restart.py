@@ -1,24 +1,28 @@
 """
-test_restart.py — Atlas Exam Recovery test (per Grok sharpen 2026-09-16, applied by Hermes).
+test_restart.py — Atlas Exam Recovery test (per Grok master plan).
 
 The restart test is the second of the three artifacts. It exercises save/load on
 the canonical SimSelf class. When it passes, ehole is a return address in the
 runtime, not just a drawing.
-
-Uses canonical SimSelf at `simself/src/constitutional/simself.py`.
 """
 
 import os
 import json
+import sys
 import tempfile
 
 import numpy as np
 import pytest
 
 
+# Make canonical SimSelf importable.
+HERE = os.path.dirname(os.path.abspath(__file__))
+SIMSELF_SRC = os.path.abspath(os.path.join(HERE, "..", "src"))
+sys.path.insert(0, SIMSELF_SRC)
+
 try:
-    from simself.src.constitutional.simself import SimSelf
-    from simself.src.constitutional.constitution import Constitution
+    from constitutional.simself import SimSelf
+    from constitutional.constitution import Constitution
     IMPORTS_AVAILABLE = True
 except ImportError as e:
     IMPORTS_AVAILABLE = False
@@ -33,7 +37,7 @@ def _make_sim():
 @pytest.mark.skipif(not IMPORTS_AVAILABLE,
                     reason=f"canonical SimSelf import pending: {IMPORT_ERROR if not IMPORTS_AVAILABLE else ''}")
 def test_restart_round_trip():
-    """Construct → tick → dump → reload → compare ψ0, ψ, committed unit ids, verdicts."""
+    """Construct → tick → save → reload → compare ψ0, ψ, committed unit ids, verdicts."""
     with tempfile.TemporaryDirectory() as td:
         sim = _make_sim()
         for _ in range(5):
@@ -58,8 +62,10 @@ def test_restart_round_trip():
                                       err_msg="ψ0 changed across process boundary")
         np.testing.assert_allclose(sim2.psi_current, psi_pre, atol=1e-9,
                                    err_msg="ψ drifted across process boundary")
-        assert sorted(sim2.committed_unit_ids()) == units_pre,             "committed unit ids changed across process boundary"
-        assert sim2.last_verdicts() == verdicts_pre,             "last verdicts changed across process boundary"
+        assert sorted(sim2.committed_unit_ids()) == units_pre, \
+            "committed unit ids changed across process boundary"
+        assert sim2.last_verdicts() == verdicts_pre, \
+            "last verdicts changed across process boundary"
 
 
 @pytest.mark.skipif(not IMPORTS_AVAILABLE,
