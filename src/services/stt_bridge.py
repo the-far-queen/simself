@@ -45,7 +45,7 @@ INBOX = HERMES_DIR / "inbox.txt"
 OUTBOX = HERMES_DIR / "outbox.txt"
 
 # Mic device: Microphone (Realtek HD Audio Mic input) — index 6 on this box.
-DEFAULT_INPUT_DEVICE = 6
+DEFAULT_INPUT_DEVICE = 1  # Line In (Realtek HD) — Zoom H1 headphone-out
 
 # Audio params.
 SAMPLE_RATE = 16000  # Whisper expects 16kHz.
