@@ -1,3 +1,7 @@
+> **Moved to `notes/analogies/` on 2026-09-16** (per Grok sharpen 2026-09-16 + master plan Step 14, applied by Hermes).
+>
+> **Reason:** off-mission / sacred-library / Layer C content. Not on the science tree.
+
 # Swedenborgian map of reality — 100 correspondences (heaven / hell)
 
 **Source:** `Desktop/SimSelf/sim self methods.txt` (lines 165-309), drawn from Swedenborg's works (*Heaven and Hell*, *Divine Love and Wisdom*, *Divine Providence*).

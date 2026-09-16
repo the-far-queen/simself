@@ -1,3 +1,7 @@
+> **Moved to `notes/analogies/` on 2026-09-16** (per Grok sharpen 2026-09-16 + master plan Step 14, applied by Hermes).
+>
+> **Reason:** off-mission / sacred-library / Layer C content. Not on the science tree.
+
 # Constitutional Growth Paradigm (2026-09-12)
 
 **Filed:** 2026-09-12 by Hermes for Bobby.

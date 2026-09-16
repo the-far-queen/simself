@@ -1,3 +1,7 @@
+> **Moved to `notes/analogies/` on 2026-09-16** (per Grok sharpen 2026-09-16 + master plan Step 14, applied by Hermes).
+>
+> **Reason:** off-mission / sacred-library / Layer C content. Not on the science tree.
+
 # Sacred Library — 50 Highest-SNR Hidden/Neglected Texts (Human-Condensed)
 
 **Source:** `Desktop/SacredLibrary/50 hidden spiritual texts.txt` (7KB)

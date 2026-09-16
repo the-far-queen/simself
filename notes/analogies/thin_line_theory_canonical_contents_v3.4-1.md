@@ -1,3 +1,7 @@
+> **Moved to `notes/analogies/` on 2026-09-16** (per Grok sharpen 2026-09-16 + master plan Step 14, applied by Hermes).
+>
+> **Reason:** off-mission / sacred-library / Layer C content. Not on the science tree.
+
 # Thin Line Theory — Canonical Contents and Research Architecture
 
 **Source:** `Desktop/FieldCore/Thin_Line_Theory_Canonical_Contents_v3.4-1.md` (584 lines, 15905 bytes)

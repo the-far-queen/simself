@@ -1,3 +1,7 @@
+> **Moved to `notes/analogies/` on 2026-09-16** (per Grok sharpen 2026-09-16 + master plan Step 14, applied by Hermes).
+>
+> **Reason:** off-mission / sacred-library / Layer C content. Not on the science tree.
+
 # n-dim space.txt
 
 **Source:** `Desktop/FieldCore/n-dim space.txt` (201 lines, 21637 bytes)

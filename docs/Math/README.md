@@ -1,64 +1,31 @@
-# Math — SimSelf identity-layer math, schemata, and axioms
+# docs/Math — reference (Layer A only)
 
-**Filed:** 2026-09-13 by Hermes for Bobby.
+> **Full rewrite 2026-09-16** (per Grok master plan, applied by Hermes). Layer C
+> content (sacred library, Swedenborg, frequency-as-physics, untested prime
+> fractals) has been moved to `notes/analogies/`. What remains here is Layer A
+> reference material used as tools for the architecture.
 
-This folder is the **identity-layer mathematics** of SimSelf — constitutional cores, axes, schemata, axioms, and the math that defines how a self persists and reasons. Built on top of the substrate math in `fieldcore/docs/Math/`.
+## What stays
 
-## Contents
+| File | What | Used by |
+|---|---|---|
+| `axes-ladder.md` | Axes reference. | `constitutional/constitution.py` |
+| `constant.md` | Constants and parameters. | `tiniest_core.py`, `gate.py` |
+| `constitutional-core.md` | Constitutional reference. | `constitutional/simself.py` |
+| `kernel-architecture-2026-09-07.md` | Kernel architecture. | `constitutional/simself.py` |
+| `layered-resource-stack.md` | Memory layering. | `harness/persistence.py` |
+| `metrics.md` | Metrics. | `harness/metrics.py` |
+| `psb-schema-2026-09-07.md` | PSB schema (open question P0). | `constitutional/psb_primitives.py` |
+| `sheaf-stalk-control.md` | Sheaf/stalk reference. | `constitutional/stalk.py`, `stalk_control.py` |
+| `simself-axis-resolution.md` | Axis resolution. | `constitutional/resolution.py` |
 
-### Constitutional core
-- `constitutional-core.md` — the immutable constitutional ground c₀, 20 axes, harmonic-only update rule
-- `constitutional-package.md` — modular constitutional package design
-- `constitutional-growth-paradigm-2026-09-12.md` — not-built-grown thesis, 7-stage embryogenesis, future chip design
+## What left (moved to `notes/analogies/`)
 
-### Frequency architecture
-- `frequency-architecture-2026-09-12.md` — v6.1 frequency layer contract (Kuramoto + ResonanceChannel + FrequencyCoupler)
-
-### Sheaves and primitives
-- `psb-schema-2026-09-07.md` — PSB (Perceptual Schema Block) canonical schema
-- `sheaf-stalk-control.md` — sheaf-stalk control architecture
-
-### Axes and ladder
-- `the-axes.md` — the 20 constitutional axes
-- `axes-ladder.md` — 8-rung awakening ladder
-- `8-filter.md` — 8 filters for constitutional validation
-- `9-primitives.md` — 9 primitive operators
-- `simself-axis-divergence.md` — how axes diverge under perturbation
-- `simself-axis-resolution.md` — how axes converge under Resolution Operator
-
-### Swedenborgian axioms (Sacred / Emergent mapping)
-- `swedenborg-correspondences-2026-09-11.md` — 100 heaven/hell pairs → Sacred/Emergent axis pairs
-- `swedenborgian-axioms-2026-09-11.md` — 3 axioms: PFA, Co-Creation, Logical Goodness
-
-### Prime fractals and number theory
-- `prime-fractals.md` — twin prime fractals, orthogonal channels
-- `n-dim-space.md` — N-dimensional space beyond 3D
-
-### Runtime math
-- `metrics.md` — coherence, stability, resonance alignment metrics
-- `constant.md` — constitutional constants (α, η, FREQ_RATIOS, etc.)
-- `extended-thinking.md` — extended thinking layer math
-- `layered-resource-stack.md` — resource allocation math
-
-### Kernel
-- `kernel-architecture-2026-09-07.md` — kernel 8-step cycle, M0 governor 1-bit gate
-
-### Auxiliary
-- `quantum-machines.md` — quantum computational substrates (speculative, deferred)
-- `mycelium.md` — mycelial network substrate (biological analogy)
-- `copper.md` — Vanadium/Copper first noble-configuration transition metal ((23,29) pair)
-
-## Connections to other folders
-
-| Folder | Relationship |
-|---|---|
-| `fieldcore/docs/Math/` | Substrate math this identity layer builds on |
-| `../src/` | SimSelf Python implementations |
-| `../src/constitutional/frequency.py` | Frequency kernel + FrequencyCoupler |
-| `vault/10-minimax/50-index/Math-Window1-2026-09-13.md` | Canonical synthesis |
-
-## Unifying principle
-
-The constitutional ground c₀ is the unifying invariant. The 20 axes are the unifying structure. The Resolution Operator is the unifying dynamic. The Hodge harmonic mode is the only path that writes to constitutional memory.
-
-Filed by Hermes, 2026-09-13. Reorganization of previously root-level files in `docs/`.
+- `frequency-architecture-2026-09-12.md` — frequency-as-physics; frequency is now parallel state in `constitutional/frequency.py`, not a constitutional axis.
+- `n-dim-space.md` — too sprawling; superseded by `papers/publishable/17-egg-toroid-spec` (genus-1 Heegaard of S³) and `11-stalk-architecture`.
+- `prime-fractals.md` — twin-prime fractal physics (Layer C).
+- `constitutional-growth-paradigm-2026-09-12.md` — superseded.
+- `constitutional-package.md` — superseded.
+- `swedenborg-correspondences-2026-09-11.md` — sacred library, off-runtime.
+- `swedenborgian-axioms-2026-09-11.md` — sacred library, off-runtime.
+- `docs/sacred-library/` — preserved verbatim in `notes/analogies/sacred-library__*`.
