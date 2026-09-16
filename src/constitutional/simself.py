@@ -224,3 +224,72 @@ class SimSelf:
             name: {"value": round(ax.value, 4), "confidence": round(ax.confidence, 4), "sheave": ax.sheave}
             for name, ax in self.axes.items()
         }
+
+
+    # ---------------------------------------------------------------------
+    # Persistence (per Grok sharpen 2026-09-16 + master plan Step 3).
+    # save() / load() are the Atlas Recovery test surface. They are the
+    # runtime proof that ehole is a return address, not a comment.
+    # ---------------------------------------------------------------------
+    def committed_unit_ids(self) -> List[str]:
+        """Return ids of committed units (memory entries marked committed)."""
+        return [e.id for e in self.memory.entries if getattr(e, "committed", False)]
+
+    def last_verdicts(self) -> List[Dict[str, Any]]:
+        """Return the last N decision records as a JSON-friendly list."""
+        return [
+            {"kind": r.kind, "description": r.description, "data": r.data}
+            for r in self.decision_log[-20:]
+        ]
+
+    def save(self, path: str) -> None:
+        """Persist ψ0, ψ_current, committed unit ids, last verdicts to JSON."""
+        import json
+        snapshot = {
+            "version": 1,
+            "dim": self.dim,
+            "psi_0": self.constitution.psi_0.tolist(),
+            "psi_current": self.psi_current.tolist(),
+            "committed_unit_ids": self.committed_unit_ids(),
+            "last_verdicts": self.last_verdicts(),
+            "mode": self.mode,
+            "ticks": self.ticks,
+            "time": self.time,
+        }
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(snapshot, f, indent=2)
+
+    def load(self, path: str) -> None:
+        """Restore from a JSON snapshot. ψ0 is treated as immutable on load."""
+        import json
+        with open(path, "r", encoding="utf-8") as f:
+            snapshot = json.load(f)
+        # ψ0 must match the installed ground; refuse if it would be overwritten.
+        loaded_psi_0 = np.asarray(snapshot["psi_0"], dtype=np.float64)
+        if not np.allclose(loaded_psi_0, self.constitution.psi_0, atol=1e-9):
+            raise ValueError(
+                f"Refusing to overwrite installed ψ0 with snapshot's ψ0. "
+                f"||Δ||={np.linalg.norm(loaded_psi_0 - self.constitution.psi_0):.3e}. "
+                f"This would be a constitutional edit through fluency."
+            )
+        self.psi_current = np.asarray(snapshot["psi_current"], dtype=np.float64)
+        self.mode = snapshot.get("mode", "standard")
+        self.ticks = snapshot.get("ticks", 0)
+        self.time = snapshot.get("time", 0.0)
+        self._record("load", f"Loaded snapshot from {path}")
+
+    def dump(self, path: Optional[str] = None) -> str:
+        """Convenience wrapper: save() to a default path and return the path."""
+        if path is None:
+            path = f"simself_snapshot_{self.ticks:06d}.json"
+        self.save(path)
+        return path
+
+    def zero(self) -> None:
+        """Reset in-memory state to ψ0 only, simulating a fresh process."""
+        self.psi_current = self.constitution.psi_0.copy()
+        self.decision_log = []
+        self.mode = "standard"
+        self.ticks = 0
+        self.time = 0.0
+

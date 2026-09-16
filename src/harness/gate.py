@@ -55,3 +55,27 @@ def gate_packet(
 
 # Public re-export so callers can `from harness.gate import M0_Governor`.
 M0_Governor = gate_packet  # alias for symmetry with the kernel API
+
+def gated_call(
+    packet_payload,
+    psi0: np.ndarray,
+    embed_fn,
+    *,
+    max_norm: float = 4.0,
+    min_cos: float = 0.4,
+) -> dict:
+    """Single entry point for any LLM-call path (per Grok master plan Step 5).
+
+    Embeds the payload, applies the same two inequalities as M0_Governor, and
+    returns either an allow packet or a deny record. Use this from
+    coding_operator_object.py, telegram_bot.py, telegram_text_bot.py, tools.py,
+    and m1_m0_negotiation.py. Do not call the model without going through here.
+    """
+    emb = np.asarray(embed_fn(packet_payload), dtype=float)
+    allow, why = gate_packet(emb, psi0, max_norm=max_norm, min_cos=min_cos)
+    return {
+        "allow": allow,
+        "reason": why,
+        "embedding_norm": float(np.linalg.norm(emb)),
+    }
+
