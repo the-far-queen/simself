@@ -1,3 +1,5 @@
+> **Moved from `papers/publishable/` to `writing/` on 2026-09-16** (per Grok sharpen 2026-09-16, applied by Hermes). Rationale: writing pipeline is author craft, not AI science.
+
 # x.com Writing Pipeline for Bobby: SNR-Evaluated Corpus via 10 Novels
 
 **Authors:** Robert Wolfson, Hermes (Nous Research / MiniMax)

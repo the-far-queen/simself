@@ -1,3 +1,18 @@
+
+> **Defense (per Grok sharpen 2026-09-16, applied by Hermes):**
+> Current generators produce text and forget themselves. This shell keeps a
+> serializable ground ψ0, a working state ψ inside a ball, a two-check veto, and
+> lexicon units that can be refused. Geometry is the genus-1 Heegaard splitting
+> of S^3: two solid tori, one torus wall, ehole as the complementary handlebody.
+
+> **Open source is the publication method.**
+> Both repositories are public. The license is the invitation. Use the code,
+> copy it, fork it, build on it, including commercially. There is no tollbooth.
+> Clone. Run the kernel. Add a test. Open an issue with a trace. Send a pull
+> request. Independent forks are welcome.
+
+---
+
 # simself
 
 **SimSelf — persistent identity, governance, recovery. Built on fieldcore's geometric substrate.**

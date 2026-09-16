@@ -1,3 +1,23 @@
+"""DEPRECATED 2026-09-16 (per Grok sharpen 2026-09-16, applied by Hermes).
+
+This file is not the canonical SimSelf class. The canonical class is
+`constitutional/simself.py`. Both files here are preserved in
+`simself/legacy/` for diff and migration. Do not import from this path
+in new code. Existing imports should be updated to:
+
+    from simself.src.constitutional.simself import SimSelf
+
+Rationale (per Grok review of both repos 2026-09-16): the architecture
+spec at papers/publishable/08-simself-architecture-spec-2026-09-15.md
+names a single SimSelf constructor and a single tick(). Three live
+constructors with mismatched axis counts (20 vs 21) and one monolith
+that lacks save/load are not a theory of self; they are two products.
+Freezing one constructor and demoting the rest to legacy/ is the
+audit-named fix.
+
+Original content preserved below.
+"""
+
 #!/usr/bin/env python3
 """
 SIMSELF UNIFIED v6.2 — Constitutional Identity Substrate
