@@ -1,83 +1,43 @@
-# Tools — MCP-Style Capability Declarations
-
 """
-Tool/capability definitions for agent.
+tools.py — tool registry, gated (per Grok master plan Step 5).
+
+Per Batch 1 K8: every tool invocation goes through harness/gate.py. If the
+gate refuses, the tool is not called. This module is the tool surface; it does
+not own the gate.
 """
 
-from typing import Dict, List, Callable, Any
-from dataclasses import dataclass
+from __future__ import annotations
 
+from typing import Any, Callable, Dict, Optional
 
-@dataclass
-class Tool:
-    """Tool definition."""
-    name: str
-    description: str
-    parameters: Dict
-    handler: Callable
-    
-    def run(self, **kwargs) -> Any:
-        """run tool."""
-        return self.handler(**kwargs)
+try:
+    from .gate import gated_call
+    _GATE_AVAILABLE = True
+except ImportError:
+    _GATE_AVAILABLE = False
 
 
 class ToolRegistry:
-    """Registry of available tools."""
-    
+    """A small registry of tool callables, gated."""
+
     def __init__(self):
-        self.tools: Dict[str, Tool] = {}
-    
-    def register(self, tool: Tool):
-        """Register tool."""
-        self.tools[tool.name] = tool
-    
-    def get(self, name: str) -> Tool:
-        """Get tool by name."""
-        return self.tools.get(name)
-    
-    def list_tools(self) -> List[str]:
-        """List all tool names."""
-        return list(self.tools.keys())
-    
-    def run(self, name: str, **kwargs) -> Any:
-        """run tool by name."""
-        tool = self.get(name)
-        if tool:
-            return tool.run(**kwargs)
-        raise ValueError(f"Unknown tool: {name}")
+        self._tools: Dict[str, Callable] = {}
 
+    def register(self, name: str, fn: Callable):
+        self._tools[name] = fn
 
-# Example: Register tools
-def create_tools() -> ToolRegistry:
-    """Create standard toolset."""
-    registry = ToolRegistry()
-    
-    # Navigation tools
-    registry.register(Tool(
-        name="move_to",
-        description="Move to position",
-        parameters={"position": {"type": "array", "description": "[x, y, z]"}},
-        handler=lambda position: {"status": "moved", "to": position}
-    ))
-    
-    # Perception tools
-    registry.register(Tool(
-        name="scan",
-        description="Scan environment",
-        parameters={},
-        handler=lambda: {"objects": [], "position": [0, 0, 0]}
-    ))
-    
-    # Communication
-    registry.register(Tool(
-        name="say",
-        description="Speak to human",
-        parameters={"message": {"type": "string"}},
-        handler=lambda message: {"spoken": message}
-    ))
-    
-    return registry
-
-
-# Singleton
-tools = create_tools()
+    def call(self, name: str, payload: Any, psi0, embed_fn) -> dict:
+        """Invoke a tool, but only if the gate allows."""
+        if not _GATE_AVAILABLE:
+            return {"allow": False, "reason": "gate_unavailable", "tool": name}
+        verdict = gated_call(payload, psi0, embed_fn)
+        if not verdict.get("allow"):
+            return {**verdict, "tool": name, "ran": False}
+        if name not in self._tools:
+            return {"allow": False, "reason": "no_such_tool", "tool": name, "ran": False}
+        try:
+            result = self._tools[name](payload)
+            return {**verdict, "tool": name, "ran": True, "result": result}
+        except Exception as e:
+            return {"allow": False, "reason": "tool_exception", "tool": name,
+                    "ran": False, "error": str(e)}

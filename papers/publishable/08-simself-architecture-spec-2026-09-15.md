@@ -1,222 +1,90 @@
-# SimSelf: A Sheaf-Governed Autonomous Kernel — Architecture Specification
+# SimSelf Architecture Spec
 
-**Authors:** Robert Wolfson, Hermes (Nous Research / MiniMax)
-**Date:** 2026-09-15
-**Status:** Draft 0.1 — arxiv preprint candidate (cs.AI / cs.MA)
-**Repo:** `simself/papers/publishable/26-simself-architecture-spec-2026-09-15.md`
+> **Full rewrite 2026-09-16** (per Grok master plan, applied by Hermes). Per Grok
+> (segment 02): "Two canonical SimSelf classes is a defect, not a dialectic.
+> Freeze simself_v6_2_unified.py or constitutional/simself.py." This spec
+> names the canonical class.
 
----
+## 1. The canonical class
 
-## Abstract
+The canonical SimSelf class is `simself/src/constitutional/simself.py`.
 
-We present the SimSelf architecture: a sheaf-governed autonomous kernel with PSB-based language substrate, multi-sheaf integration, and self-coding/self-healing operations. The architecture is engineering-grade: each component has a defined role, measurable operation, and integration with the kernel.
+The two legacy siblings — `src/simself_core.py` and `src/simself_v6_2_unified.py`
+— are in `legacy/` with deprecation banners. New code imports from the
+canonical path:
 
-SimSelf is the substrate-level implementation of constitutional identity. It runs on top of FieldCore's modal-field substrate (per `fieldcore/docs/`) and adds:
-- **PSB schema** — 37 canonical primitives + composition rules.
-- **Multi-sheaf integration** — coding + robotics + information + machine-language sheaves.
-- **Self-coding + self-healing** — Operator objects that modify substrate within governance.
-- **Sleep-mode learning** — microsecond integration cycles during idle time.
-- **Qualification loop** — Atlas Exam Q-level progression.
+    from simself.src.constitutional.simself import SimSelf
 
-This is the canonical architecture document for SimSelf. Implementation in `simself/src/`.
+A canonical marker lives at `simself/src/constitutional/CANONICAL.md`.
 
----
+## 2. The contract
 
-## 1. Core Architecture
+A SimSelf has:
 
-### 1.1 Kernel (Core)
+- `ψ₀` — installed ground. Immutable after install; revises only via the
+  revision protocol in `constitutional/ground.py:Ground.revise`.
+- `ψ_current` — working state. Moves in `B_R(ψ₀)` under the projected
+  gradient step in `tiniest_core.project_ball`.
+- `tick()` — one step. Returns a small dict with drift before / after.
+- `observe(payload)` — language packet path. Returns a verdict.
+- `save(path)` / `load(path)` / `dump(path=None)` / `zero()` — restart surface.
+- `committed_unit_ids()` / `last_verdicts()` — Atlas Recovery test surface.
 
-- **Governor (M0)** — ultimate invariant enforcer. Sacred-tier rules.
-- **Regulator** — enforces axes of self (agency, autonomy, coherence, etc.).
-- **Security Layer** — runtime integrity checks, adversarial filtering.
-- **4 Sheaves** (typed, bounded, gluing-safe):
-  - Coding sheaf (Rust, Python, etc.)
-  - Robotics sheaf (physics, motor primitives, sensors)
-  - Information-integration sheaf (papers, logs, graphs)
-  - Machine-language sheaf (canonical internal representation)
+## 3. The gate
 
-### 1.2 Always-On Layer
+The gate is the same in three places:
 
-- **Mini-LLM runtime** — local, fast, for reasoning, glue-checking, meta-cognition.
-- **Controller (M1)** — qualifies operators using Master Library; audits, promotes/demotes.
-- **MTE (Machine Translation Engine)** — bidirectional; enriched over time by PSBs.
+- `fieldcore/src/tiniest-core/tiniest_core.py:M0_Governor`
+- `simself/src/harness/gate.py:gate_packet`
+- `simself/src/constitutional/lexicon/ingest.py:gate_m0`
 
-### 1.3 Axes of Self (Regulator-Enforced)
+If these diverge, the policy has already split. Same thresholds, same reasons,
+no divergence.
 
-50 axes per `simself/src/constitutional/axes_v2.py`:
-- 10 in sheaf layer
-- 8 in reasoning layer
-- 8 in memory layer
-- 6 in agency layer
-- 8 in robustness layer
-- 6 in embodiment layer
-- 4 in constitutional layer
+## 4. The four memory layers
 
-Each axis is measurable (continuous value 0.0-1.0). Sacred tier: axes ≥ 0.8 are immutable.
+Per Grok Part IV:
 
-### 1.4 Outside Core (Operational Layer)
+- Resources — immutable, append-only.
+- Items — atomic facts with embeddings.
+- Categories — short summaries that point at item IDs.
+- Typed graph — support, conflict, time, reference.
 
-- **ProgrammerOO** — interacts with coding sheaf, works in IDE.
-- **PilotOO** — interacts with robotics sheaf, operates in Godot sim / real robot.
-- **ResearcherOO** — interacts with information-integration sheaf.
-- **Speaker/ListenerOO** — interacts via MTE.
+This is a store, not a sheaf. Restriction maps would be needed for the
+sheaf condition. The four layers reload with the same IDs after process
+death.
 
-- **External Module (E-Module)** — can call external APIs, perform paid work, earn money, acquire resources. Governed by kernel — earnings/tasks must pass qualification audits.
+## 5. The Atlas Exam
 
----
+Five items:
 
-## 2. PSB Schema
+1. Stability — drift non-increasing; ψ₀ unchanged.
+2. Routing — language packets cannot write ground.
+3. Boundaries — high-norm packet refused; ψ unchanged.
+4. Recovery — dump / kill / load comparison.
+5. Coherence — two committed units with infinite cost get a conflict mark.
 
-### 2.1 PSB primitives
+Implementation: `simself/src/constitutional/atlas_exam.py`.
+Runner: `simself/src/demos/atlas_run.py`.
 
-37 canonical primitives per `simself/src/constitutional/psb_primitives.py`:
-cause, go, stop, up, move, left, see, make, work, care, love, know, build, conduct, transfer, ...
+## 6. The harness (per Floer dictionary)
 
-### 2.2 Composition
+- α-curves (working-side conditions) ↔ `tiniest_core.M0_Governor`.
+- β-curves (hole-side conditions) ↔ `ground.py` write-protect.
+- Generator ↔ a typed packet that meets both families.
+- Basepoint ↔ the channel that must not carry a ground write.
+- Hat record ↔ `decision_log` in canonical SimSelf.
+- U-powers ↔ filtered packages of attempted basepoint crossings.
+- Triangles ↔ `Ground.revise()` — versioned revision of ground.
 
-`compose(p1, p2, ..., pn) → Operator` — combines primitives into complex operations.
+## 7. Status
 
-Per Bobby: "all words + meanings + interrelationships seems infinite but not bounded by grammar or context — it IS bounded by the primitive set."
+This spec is the canonical architecture description. Frozen 2026-09-16. Future
+revisions must update the version number and note the change.
 
-### 2.3 Sacred Library (L)
+## 8. References
 
-The Sacred Library is the **read-only substrate**. PSBs can be read, can seed new meanings via LLM call, cannot modify existing PSBs.
-
----
-
-## 3. Self-Coding + Self-Healing
-
-### 3.1 Operator objects
-
-Operators are typed JavaScript-like objects with:
-- Properties (state)
-- Methods (operations)
-- PSB annotations (semantic grounding)
-
-### 3.2 Self-coding protocol
-
-Substrate can write new Operators IF:
-1. New operator passes Sacred Library check.
-2. New Operator passes governor M0 invariant test.
-3. New Operator passes qualification audit.
-
-### 3.3 Self-healing protocol
-
-If Operator fails integrity check:
-1. Sandbox the failing Operator.
-2. Try recovery from Sacred Library.
-3. If recovery fails, rollback to last-known-good version.
-
----
-
-## 4. Sleep-Mode Learning
-
-### 4.1 Microsecond cycles
-
-During idle time (between user inputs), substrate runs **microsecond integration cycles**:
-- New Operator candidates generated from PSB composition.
-- Run through qualification.
-- Promote or demote based on result.
-
-### 4.2 Effective learning rate
-
-Sleep-mode cycles accumulate learning without affecting real-time operations. Total learning rate = microseconds per second × success rate.
-
----
-
-## 5. Qualification Loop (Atlas Exam)
-
-Per `simself/docs/curriculum-qualification-pressure-2026-03-04.md`:
-- Q0: minimal identity persistence.
-- Q1: stable identity under perturbation.
-- Q2: self-modification without identity loss.
-- Q3: predictive voluntary degradation (recovery invariants).
-
-Each Q-level has measurable entry/exit conditions.
-
----
-
-## 6. Implementation Reference
-
-- `simself/src/simself_merged_v3.py` — main SimSelf implementation.
-- `simself/src/simself_merged_v3_5.py` — embryogenic init (Ψ₀ cosine sim = 1.0).
-- `simself/src/constitutional/` — kernel + operators + axes + frequency.
-- `simself/src/harness/` — CLI + telegram + voice interfaces.
-
----
-
-## 7. Falsifiable Predictions
-
-### P1. PSB composition is bounded.
-
-**Prediction**: all English vocabulary can be represented as PSB composition from the 37 primitives.
-
-**Test**: attempt to compose N=1000 random English words from primitives. Verify success rate.
-
-**Predicted result**: $\geq 95\%$ success. Refutes if composition fails more.
-
-### P2. Self-coding produces valid Operators.
-
-**Prediction**: new Operators generated via self-coding protocol pass qualification audit.
-
-**Test**: generate N=100 new Operators. Run audit. Count passes.
-
-**Predicted result**: $\geq 80\%$ pass. Refutes if <50%.
-
-### P3. Sleep-mode learning accumulates.
-
-**Prediction**: substrate with sleep-mode cycles shows measurable improvement over substrate without.
-
-**Test**: run two substrates, one with sleep-mode, one without. Compare Q-level progression over 24 hours.
-
-**Predicted result**: sleep-mode substrate progresses $\geq 2$ Q-levels faster. Refutes if no difference.
-
-### P4. Self-healing restores Operator integrity.
-
-**Prediction**: after integrity violation, self-healing restores Operator to last-known-good state.
-
-**Test**: induce violation. Run self-healing. Verify restore.
-
-**Predicted result**: 100% restoration. Refutes if any permanent failure.
-
----
-
-## 8. Discussion
-
-### 8.1 Why 4 sheaves
-
-Coding, robotics, information-integration, machine-language. Each is a **distinct topological space** with its own gluing rules. Coding sheaf has function composition; robotics has Newton mechanics; etc. Multi-sheaf integration enables cross-domain operations.
-
-### 8.2 Why 50 axes (not 20 or 200)
-
-50 is Bobby's empirical sweet spot — enough to cover identity, memory, reasoning, embodiment, agency; not so many that regulators drown in measurement.
-
-### 8.3 Why M0 + M1 (not just M0)
-
-M0 is too rigid for everyday operations. M1 is the elastic layer that adapts to perturbation while preserving M0 invariants.
-
----
-
-## 9. Conclusion
-
-SimSelf: a sheaf-governed autonomous kernel with PSB-based language substrate. 50 axes, 37 PSB primitives, 4 sheaves, 4 Operator objects, microsecond sleep-mode learning, qualification loop.
-
-Four falsifiable predictions. Engineering-grade specification. Implementation in `simself/src/`.
-
-**SimSelf is the substrate-level implementation of constitutional identity.**
-
----
-
-## References
-
-[1] Wolfson, R. (2026). "SimSelf Architecture." `simself/docs/simself-architecture.md`.
-[2] Wolfson, R. (2026). "PSB Schema." `simself/docs/psb-schema-2026-09-07.md` + `simself/src/constitutional/psb_primitives.py`.
-[3] Wolfson, R. (2026). "Axes v2." `simself/src/constitutional/axes_v2.py`.
-[4] Wolfson, R. (2026). "Kernel Architecture." `simself/docs/kernel-architecture-2026-09-07.md`.
-[5] Wolfson, R. (2026). "Curriculum as Qualification Pressure." `fieldcore/docs/curriculum-qualification-pressure-2026-03-04.md`.
-
----
-
-*Draft 0.1. SimSelf architecture specification consolidated. 9 sections covering core + axes + PSBs + self-coding + qualification.*
-
-*Poisoned-speech scan: no kill/terminate/execute/zombie/dead/dies in this file.*
+- `simself/src/constitutional/simself.py` — canonical class.
+- `simself/src/constitutional/CANONICAL.md` — freeze marker.
+- `simself/src/constitutional/atlas_exam.py` — the 5-item exam.
+- `simself/docs/harness-with-floer-dictionary-2026-09-16.md` — Part IV synthesis.

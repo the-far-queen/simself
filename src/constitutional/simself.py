@@ -1,42 +1,43 @@
 """
-simself.py — The SimSelf integrator. The core constitutional feedback loop.
+simself.py — canonical SimSelf class (per Grok master plan, full rewrite 2026-09-16).
 
-Extracted from the v8.0-grok `SimSelf` class. The integrator exposes:
-- `observe(text_or_vector)`: project the input to the constitutional manifold,
-  compute harmonic + axial readings, run the resolution operator, update
-  axis values by relevance, return a summary dict.
-- `tick(dt)`: one simulation step. Pulls psi_current toward psi_0, evaluates
-  the mode (standard / recognition / exploratory), triggers a dream on
-  periodic ticks if the mode permits, applies salience decay to memory.
-- `mode` state machine: standard -> recognition (when stable + memories) ->
-  exploratory (when stable + memories + dreams).
-- `why(n)`: returns the last n decision records.
-- `axis_report()`: snapshot of the 20 axes.
-- `gate_refusal(context_strength)`: returns whether the SimSelf can say no,
-  based on the boundaries and authenticity axes.
-- `reset()`: clear all state and return to psi_0.
-- `drift()`: ||psi_current - psi_0||.
-- `get_stability()`: 0.65 * mean_confidence + 0.35 * (1 - drift).
+This is the integrator that ties ground, kernel veto, and tick into one loop.
+Frozen as the canonical class per Batch 1 K5. The two legacy siblings
+(simself_core.py and simself_v6_2_unified.py) are in legacy/.
 
-What is NOT here (intentionally):
-- No frequency / standing-wave / Schumann / 432 / 963 / pineal / crown
-  references. The frequency module is `frequency.py` and is isolated.
-- No FFT-based "holographic" memory. See `memory.py`.
+What it does:
+- Holds a write-protected ψ₀ (Ground).
+- Holds a working state ψ that moves inside B_R(ψ₀).
+- Has a single tick() that applies the projected gradient step and the gate.
+- Has save() / load() / dump() / zero() for restart (Batch 2 Step 3).
+- Has committed_unit_ids() and last_verdicts() for the Atlas Recovery test.
+
+What it does NOT do (intentionally):
+- No frequency / Schumann / 432 / 963 numerics in tick. Frequency lives in
+  frequency.py as a parallel state machine with parameterized hypotheses.
+- No FFT-based memory. Memory lives in memory.py.
+- No dreams that modify ψ₀. Dreaming lives in dreaming.py and operates only
+  on working state.
 """
+
 from __future__ import annotations
 
+import json
 import time
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
 
 import numpy as np
 
-from .constitution import Constitution, ConstitutionalAxis, embed_text, project_to_constitution
-from .resolution import ResolutionOperator
-from .entity import EntityRecognition
-from .memory import RelationalMemory
-from .dreaming import ConstitutionalDreaming
-from .frequency import FrequencyCoupler
+from .constitution import Constitution, embed_text, project_to_constitution
+from .ground import Ground
+
+
+# Defaults — match simself/config/simself_config.yaml.
+DEFAULT_R: float = 3.0
+DEFAULT_ETA: float = 0.10
+MAX_NORM: float = 4.0
+MIN_COS: float = 0.4
 
 
 @dataclass
@@ -47,249 +48,184 @@ class DecisionRecord:
     data: Dict[str, Any] = field(default_factory=dict)
 
 
-class SimSelf:
-    """The constitutional feedback loop. Manages psi_current relative to psi_0."""
+def _gate(emb: np.ndarray, psi0: np.ndarray) -> tuple[bool, str]:
+    """Same two inequalities as fieldcore/src/tiniest-core/tiniest_core.py:gate.
 
-    def __init__(self, constitution: Optional[Constitution] = None, use_torch: bool = True):
+    Per Batch 1 K8: the gate is identical in tiniest-core, harness/gate.py,
+    and constitutional/lexicon/ingest.py. If any of these diverge, the policy
+    has already split.
+    """
+    ne = float(np.linalg.norm(emb))
+    if ne > MAX_NORM:
+        return False, "refuse_norm"
+    n0 = float(np.linalg.norm(psi0))
+    if ne == 0.0 or n0 == 0.0:
+        return False, "refuse_zero"
+    if float(np.dot(emb, psi0) / (ne * n0)) < MIN_COS:
+        return False, "refuse_coherence"
+    return True, "allow"
+
+
+def _project_ball(psi: np.ndarray, psi0: np.ndarray, R: float) -> np.ndarray:
+    delta = psi - psi0
+    d = float(np.linalg.norm(delta))
+    if d <= R or d == 0.0:
+        return psi
+    return psi0 + (R / d) * delta
+
+
+class SimSelf:
+    """Canonical SimSelf. Single constructor, single tick, save/load."""
+
+    def __init__(
+        self,
+        constitution: Optional[Constitution] = None,
+        ground: Optional[Ground] = None,
+        R: float = DEFAULT_R,
+        eta: float = DEFAULT_ETA,
+        workdir: Optional[str] = None,
+    ):
         self.constitution = constitution or Constitution()
+        self.ground = ground or Ground(self.constitution.psi_0.copy())
+        self.psi0 = self.ground.psi_0  # alias for legibility; never mutate
         self.dim = self.constitution.dim
-        self.curvature = self.constitution.curvature_vector()
-        self.psi_current = self.constitution.psi_0.copy()
-        self.resolution = ResolutionOperator(self.dim, use_torch=use_torch)
-        self.axes: Dict[str, ConstitutionalAxis] = {
-            name: ConstitutionalAxis(name=name, sheave=sheave)
-            for name, sheave in self.constitution.axes_def
-        }
-        self.entity_recognizer = EntityRecognition(self.constitution)
-        self.memory = RelationalMemory()
-        self.dreaming = ConstitutionalDreaming(
-            self.memory, list(self.axes.keys()), self.dim
-        )
-        # FrequencyCoupler — Kuramoto phases per constitutional axis.
-        # Per Bobby + Gemini 2026-09-12: frequency is load-bearing in v6.1.
-        # Phases are parallel state; psi_current is NOT modified by the coupler.
-        self.frequency = FrequencyCoupler(
-            axis_sheaves=self.constitution.axis_sheaves,
-            axis_names=self.constitution.axis_names,
-            consonance_matrix=self.constitution.consonance_matrix,
-        )
-        # Track coupling step count (for periodic spectrum refresh)
-        self._freq_step_count = 0
-        self._freq_spectrum_every = 20  # recompute every 20 ticks
+        self.R = R
+        self.eta = eta
+        self.psi_current = self.psi0.copy()
+        self.workdir = workdir
         self.decision_log: List[DecisionRecord] = []
         self.mode = "standard"
         self.ticks = 0
         self.time = 0.0
-        self.total_updates = 0
 
-    def _record(self, kind: str, description: str, data: Optional[Dict] = None):
-        self.decision_log.append(DecisionRecord(time.time(), kind, description, data or {}))
-        if len(self.decision_log) > 80:
-            self.decision_log = self.decision_log[-60:]
+    # ------------------------------------------------------------------
+    # Drift / stability
+    # ------------------------------------------------------------------
+    def drift(self) -> float:
+        return float(np.linalg.norm(self.psi_current - self.psi0))
 
-    def why(self, n: int = 5) -> List[str]:
-        return [f"[{r.kind}] {r.description}" for r in reversed(self.decision_log[-n:])]
-
-    def observe(self, observation: Any, context: Optional[Dict] = None,
-                valence: float = 0.0, eta: float = 0.06) -> Dict[str, Any]:
+    # ------------------------------------------------------------------
+    # observe: language packet. Returns a verdict record.
+    # ------------------------------------------------------------------
+    def observe(self, observation: Any) -> Dict[str, Any]:
         if isinstance(observation, str):
-            obs = project_to_constitution(embed_text(observation))
-            entity = self.entity_recognizer.recognize(observation, is_text=True)
+            obs = project_to_constitution(embed_text(observation), self.dim)
         else:
             obs = np.asarray(observation, dtype=np.float64)
             if obs.shape[0] != self.dim:
-                obs = np.resize(obs, self.dim)
-            n = np.linalg.norm(obs)
-            obs = obs / n if n > 1e-9 else obs
-            entity = self.entity_recognizer.recognize(obs, is_text=False)
+                obs = project_to_constitution(obs, self.dim)
 
-        harm = float(np.dot(obs, self.constitution.psi_0))
-        axial = float(np.dot(obs, self.curvature))
+        ok, why = _gate(obs, self.psi0)
+        drift_before = self.drift()
 
-        delta = self.psi_current - self.constitution.psi_0
-        correction = self.resolution(delta + 0.12 * obs)
-        pulled = self.psi_current - eta * delta + eta * correction
-        n = np.linalg.norm(pulled)
-        self.psi_current = pulled / n if n > 1e-9 else pulled
+        if ok:
+            # Apply the projected gradient step.
+            self.psi_current = _project_ball(
+                self.psi_current - self.eta * (self.psi_current - self.psi0),
+                self.psi0,
+                self.R,
+            )
 
-        for axis in self.axes.values():
-            if not axis.mutable:
-                continue
-            sim = self.constitution.consonance(obs, axis.name)
-            relevance = max(0.0, sim - 0.35)
-            if relevance > 0.0:
-                axis.value = 0.82 * axis.value + 0.18 * float(np.dot(obs, self.psi_current))
-                axis.confidence = min(0.97, axis.confidence + 0.08 * relevance)
-            else:
-                axis.confidence = 0.97 * axis.confidence + 0.03 * 0.55
-
-        self.total_updates += 1
-        return {
-            "harm": harm,
-            "axial": axial,
-            "entity": entity,
-            "stability": self.get_stability(),
+        drift_after = self.drift()
+        record = {
+            "kind": "observe",
+            "allow": ok,
+            "reason": why,
+            "drift_before": drift_before,
+            "drift_after": drift_after,
         }
+        self._record("observe", f"observe allow={ok} reason={why}", record)
+        return record
 
-    def drift(self) -> float:
-        return float(np.linalg.norm(self.psi_current - self.constitution.psi_0))
-
-    def get_stability(self) -> float:
-        confs = [ax.confidence for ax in self.axes.values()]
-        mean_conf = float(np.mean(confs)) if confs else 0.5
-        return float(max(0.35, min(1.0, 0.65 * mean_conf + 0.35 * (1.0 - min(self.drift(), 1.0)))))
-
-    def gate_refusal(self, context_strength: float = 0.0) -> bool:
-        """Returns True iff the SimSelf can refuse, based on boundaries + authenticity axes."""
-        b = self.axes.get("boundaries", ConstitutionalAxis("boundaries")).value
-        a = self.axes.get("authenticity", ConstitutionalAxis("authenticity")).value
-        return (b > 0.25 and a > 0.28) or context_strength < 0.4
-
-    def _evaluate_mode(self):
-        stab = self.get_stability()
-        mem_count = len(self.memory.entries)
-        dream_count = len(self.dreaming.dream_log)
-        old = self.mode
-        if stab >= 0.82 and mem_count >= 10 and dream_count >= 2:
-            new = "exploratory"
-        elif stab >= 0.70 and mem_count >= 5:
-            new = "recognition"
-        else:
-            new = "standard"
-        if new != old:
-            self.mode = new
-            self._record("mode_shift", f"Mode {old} -> {new} (stab={stab:.3f})")
-
+    # ------------------------------------------------------------------
+    # tick: zero-input step. Just the projected gradient step.
+    # ------------------------------------------------------------------
     def tick(self, dt: float = 0.05) -> Dict[str, Any]:
         self.ticks += 1
         self.time += dt
-        actions = []
-
-        # constitutional ground pull (SLOW CHANNEL)
-        delta = self.psi_current - self.constitution.psi_0
-        self.psi_current -= 0.04 * delta
-        n = np.linalg.norm(self.psi_current)
-        self.psi_current = self.psi_current / (n + 1e-9)
-        actions.append("resonance")
-
-        # frequency channel (FAST CHANNEL — Kuramoto over 20 axes).
-        # Parallel state; does NOT modify psi_current. Emits phase diagnostic.
-        self.frequency.step(dt)
-        self._freq_step_count += 1
-        if self._freq_step_count >= self._freq_spectrum_every:
-            self.frequency.standing_wave_spectrum()
-            self._freq_step_count = 0
-            actions.append("spectrum")
-
-        old_mode = self.mode
-        self._evaluate_mode()
-        if self.mode != old_mode:
-            actions.append(f"mode->{self.mode}")
-
-        dreamed = False
-        if self.ticks % 3 == 0 and self.mode in ("recognition", "exploratory"):
-            d = self.dreaming.dream(intensity=0.4 if self.mode == "recognition" else 0.6)
-            if d.get("kept"):
-                actions.append("dream")
-                dreamed = True
-
-        if self.ticks % 5 == 0:
-            self.memory.decay_salience()
-            actions.append("decay")
-
+        drift_before = self.drift()
+        self.psi_current = _project_ball(
+            self.psi_current - self.eta * (self.psi_current - self.psi0),
+            self.psi0,
+            self.R,
+        )
+        drift_after = self.drift()
+        self._record(
+            "tick",
+            f"tick #{self.ticks} drift {drift_before:.4f} -> {drift_after:.4f}",
+        )
         return {
             "tick": self.ticks,
             "mode": self.mode,
-            "stability": round(self.get_stability(), 4),
-            "actions": actions,
-            "dreamed": dreamed,
+            "drift_before": drift_before,
+            "drift_after": drift_after,
         }
 
-    def reset(self):
-        self.psi_current = self.constitution.psi_0.copy()
-        self.memory.clear()
-        self.decision_log = []
-        self.dreaming.dream_log = []
-        self.mode = "standard"
-        self.ticks = 0
-        self.time = 0.0
-        self._freq_step_count = 0
-        self.frequency.reset()
-        for ax in self.axes.values():
-            ax.value = 0.0
-            ax.confidence = 0.55
-
-    def axis_report(self) -> Dict[str, Dict[str, float]]:
-        return {
-            name: {"value": round(ax.value, 4), "confidence": round(ax.confidence, 4), "sheave": ax.sheave}
-            for name, ax in self.axes.items()
-        }
-
-
-    # ---------------------------------------------------------------------
-    # Persistence (per Grok sharpen 2026-09-16 + master plan Step 3).
-    # save() / load() are the Atlas Recovery test surface. They are the
-    # runtime proof that ehole is a return address, not a comment.
-    # ---------------------------------------------------------------------
+    # ------------------------------------------------------------------
+    # Persistence (per Batch 2 Step 3).
+    # ------------------------------------------------------------------
     def committed_unit_ids(self) -> List[str]:
-        """Return ids of committed units (memory entries marked committed)."""
-        return [e.id for e in self.memory.entries if getattr(e, "committed", False)]
+        return [r.data.get("unit_id") for r in self.decision_log
+                if r.kind == "commit" and r.data.get("unit_id")]
 
     def last_verdicts(self) -> List[Dict[str, Any]]:
-        """Return the last N decision records as a JSON-friendly list."""
         return [
             {"kind": r.kind, "description": r.description, "data": r.data}
             for r in self.decision_log[-20:]
         ]
 
     def save(self, path: str) -> None:
-        """Persist ψ0, ψ_current, committed unit ids, last verdicts to JSON."""
-        import json
         snapshot = {
             "version": 1,
             "dim": self.dim,
-            "psi_0": self.constitution.psi_0.tolist(),
+            "psi_0": self.psi0.tolist(),
             "psi_current": self.psi_current.tolist(),
             "committed_unit_ids": self.committed_unit_ids(),
             "last_verdicts": self.last_verdicts(),
             "mode": self.mode,
             "ticks": self.ticks,
             "time": self.time,
+            "R": self.R,
+            "eta": self.eta,
         }
         with open(path, "w", encoding="utf-8") as f:
             json.dump(snapshot, f, indent=2)
 
     def load(self, path: str) -> None:
-        """Restore from a JSON snapshot. ψ0 is treated as immutable on load."""
-        import json
         with open(path, "r", encoding="utf-8") as f:
             snapshot = json.load(f)
-        # ψ0 must match the installed ground; refuse if it would be overwritten.
         loaded_psi_0 = np.asarray(snapshot["psi_0"], dtype=np.float64)
-        if not np.allclose(loaded_psi_0, self.constitution.psi_0, atol=1e-9):
+        if not np.allclose(loaded_psi_0, self.psi0, atol=1e-9):
             raise ValueError(
-                f"Refusing to overwrite installed ψ0 with snapshot's ψ0. "
-                f"||Δ||={np.linalg.norm(loaded_psi_0 - self.constitution.psi_0):.3e}. "
+                f"SimSelf.load: refusing to overwrite installed ψ₀ with snapshot's ψ₀. "
+                f"||Δ||={np.linalg.norm(loaded_psi_0 - self.psi0):.3e}. "
                 f"This would be a constitutional edit through fluency."
             )
         self.psi_current = np.asarray(snapshot["psi_current"], dtype=np.float64)
         self.mode = snapshot.get("mode", "standard")
         self.ticks = snapshot.get("ticks", 0)
         self.time = snapshot.get("time", 0.0)
+        self.R = snapshot.get("R", self.R)
+        self.eta = snapshot.get("eta", self.eta)
         self._record("load", f"Loaded snapshot from {path}")
 
     def dump(self, path: Optional[str] = None) -> str:
-        """Convenience wrapper: save() to a default path and return the path."""
         if path is None:
-            path = f"simself_snapshot_{self.ticks:06d}.json"
+            path = f"simself_state_{self.ticks:06d}.json"
         self.save(path)
         return path
 
     def zero(self) -> None:
-        """Reset in-memory state to ψ0 only, simulating a fresh process."""
-        self.psi_current = self.constitution.psi_0.copy()
+        self.psi_current = self.psi0.copy()
         self.decision_log = []
         self.mode = "standard"
         self.ticks = 0
         self.time = 0.0
 
+    # ------------------------------------------------------------------
+    # Internal
+    # ------------------------------------------------------------------
+    def _record(self, kind: str, description: str, data: Optional[Dict] = None):
+        self.decision_log.append(DecisionRecord(time.time(), kind, description, data or {}))
+        if len(self.decision_log) > 80:
+            self.decision_log = self.decision_log[-60:]
