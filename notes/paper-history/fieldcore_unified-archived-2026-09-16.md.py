@@ -1,3 +1,15 @@
+"""ARCHIVED 2026-09-16 (per Grok master plan, applied by Hermes).
+
+This file previously claimed Hodge-ish control alongside modal_field_core.py
+(FieldCore) and tiniest-core (FieldCore). Per Grok (segment 02, applied
+2026-09-16): "pick one primitive." The chosen primitive is
+fieldcore/src/tiniest-core/tiniest_core.py (M0_Governor + projected gradient
+step). This file is preserved verbatim for diff and history; do not import
+from this path in new code.
+
+Original content preserved below.
+"""
+
 """
 FieldCore Unified — merged from parts 1, 2, 3.
 

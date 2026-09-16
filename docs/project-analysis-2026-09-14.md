@@ -41,7 +41,7 @@ fieldcore + simself are a **two-repo engineering project** constructing a **reas
 ### D. Geometric Substrate
 - **Egg toroid** (T² × I): 3 functional zones (apex/mid-body/base).
 - **4D shadow** = S⁴ \ int(T³), Heegaard genus 2.
-- **Hodge decomposition** Δ = d + d*: splits fields into exact + co-exact + harmonic.
+- **Hodge decomposition** Δ = dd* + d*d  (Hodge Laplacian, corrected 2026-09-16): splits fields into exact + co-exact + harmonic.
 - **Gradient flow:** dh/dt = -∇F(h), converges to ψ₀ from any starting point.
 - **Verified exact results (per Math-Window1 §48):** twin prime sums ≥12 divisible by 12, Seifert genus (29,31)=420=LCM(1..7), arctan(1/√φ)+arctan(√φ)=π/2, F#=256×36/25=368.64Hz (0.09% err vs Danley 368.31Hz), embryogenic Ψ₀=installed Ψ₀ cos-sim=1.000000.
 

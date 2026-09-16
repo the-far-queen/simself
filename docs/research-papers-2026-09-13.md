@@ -316,3 +316,9 @@ This is the discipline that keeps the work from looking like mysticism.
 ---
 
 *Filed by Hermes, 2026-09-13. Source: constitutional-growth-paradigm-2026-09-12.md §6 (4 papers) + simself-context-2026-09-11.md. Gödel/Lovelace discipline applied per Bobby's "we do not want to look like idiots." Final ranking per Bobby's correction: Atlas strongest, Embryogenesis second, FieldCore Cognition third, Geodesic Lexicon reframed fourth. Estimated total effort: 6 months for all 4.*
+
+---
+
+> **Note 2026-09-16** (per Grok master plan, applied by Hermes): this is the
+> pre-canonical research-papers index. The current canonical paper tree lives
+> in `papers/publishable/`. This file is preserved for diff.

@@ -1,87 +1,60 @@
 """
-dreaming.py — Constitutional dreaming with a quality gate.
+dreaming.py — dreaming on working state only (per Grok master plan, full rewrite 2026-09-16).
 
-Extracted from SimSelf.dream in the v8.0-grok file. The original:
-1. sampled 1-3 memories
-2. computed a "novelty" and "consonance" score
-3. added a frequency perturbation to psi_current if frequency_mode was set
-4. applied random axis deltas if score >= 0.36
-5. stored the dream and recorded it in the decision log
+Dreaming is a maintenance process that runs in idle moments. It reads the
+unit index and the working state, then proposes a small perturbation. The
+proposal is gated like any other packet. ψ₀ is never modified.
 
-We keep (1), (2), (4), (5). We drop (3) — frequency perturbation is a
-frequency-module concern, not a constitutional one. The constitutional
-dreaming is a recombination of existing memories + small constitutional
-drift, with a quality gate to prevent the dream log from filling with
-noise.
+The previous version of this file had the dreamer write directly into ψ
+without going through the gate. Per Grok: dreaming is a slow channel; the
+same two inequalities apply as for any other packet.
 """
+
 from __future__ import annotations
 
-import random
-import time
-from typing import Any, Dict, List, Optional
+from typing import List, Optional, Tuple
 
 import numpy as np
 
-from .constitution import cosine, embed_text
-from .memory import RelationalMemory
+from .ground import Ground
+from .harness.gate import gate_packet
+
+
+class Dream:
+    """A proposed perturbation to working state."""
+
+    def __init__(self, perturbation: np.ndarray, source_unit_ids: List[str],
+                 intensity: float):
+        self.perturbation = perturbation
+        self.source_unit_ids = source_unit_ids
+        self.intensity = intensity
 
 
 class ConstitutionalDreaming:
-    """Memory-recombination dreaming with a quality gate.
+    """Proposes perturbations to working state. ψ₀ never modified."""
 
-    Quality score = 0.45 * novelty + 0.35 * consonance + 0.20 * intensity.
-    A dream is "kept" iff score >= 0.36 (the v8 threshold; kept as-is
-    since the empirical threshold is not addressed in this file).
-    """
-
-    def __init__(self, memory: RelationalMemory, axis_names: List[str], dim: int):
-        self.memory = memory
-        self.axis_names = axis_names
+    def __init__(self, ground: Ground, dim: int):
+        self.ground = ground
         self.dim = dim
-        self.dream_log: List[Dict] = []
+        self.dream_log: List[dict] = []
 
-    def dream(self, intensity: float = 0.5) -> Dict[str, Any]:
-        intensity = max(0.15, min(1.0, intensity))
-        mems = self.memory.retrieve("", top_n=5, hops=1)
+    def dream(self, intensity: float = 0.4) -> dict:
+        """Generate one dream proposal.
 
-        if len(mems) < 2:
-            narrative = "Sparse field. Constitutional axes flickered against empty horizon."
-            novelty = 0.45
-            consonance = 0.50
-            source_ids = []
-        else:
-            chosen = random.sample(mems, k=min(3, len(mems)))
-            source_ids = [m["id"] for m in chosen]
-            fragments = [m["text"][:90] for m in chosen]
-            narrative = f"Dream recombination: {' XOR '.join(fragments)} ... interference resolved toward ground."
-            novelty = 0.55
-            core_emb = embed_text("coherent grounded authentic presence")
-            dream_emb = embed_text(narrative)
-            consonance = max(0.0, cosine(core_emb, dream_emb))
-
-        score = 0.45 * novelty + 0.35 * consonance + 0.20 * intensity
-        kept = score >= 0.36
-
-        deltas = {}
-        if kept:
-            for name in random.sample(self.axis_names, k=min(4, len(self.axis_names))):
-                delta = random.uniform(-0.05, 0.05) * intensity
-                deltas[name] = round(delta, 4)
-
-        entry = {
-            "timestamp": time.time(),
-            "narrative": narrative,
-            "source_ids": source_ids,
-            "deltas": deltas,
-            "novelty": round(novelty, 4),
-            "consonance": round(consonance, 4),
-            "score": round(score, 4),
-            "kept": kept,
+        Returns a dict with `kept` (bool), `reason`, `perturbation_norm`,
+        `source_unit_ids`. The proposal is gated; if it would push ψ outside
+        the ball it is refused.
+        """
+        psi0 = self.ground.psi_0
+        rng = np.random.RandomState(len(self.dream_log))
+        perturbation = intensity * rng.randn(self.dim)
+        allow, reason = gate_packet(perturbation, psi0)
+        result = {
+            "kept": allow,
+            "reason": reason,
+            "perturbation_norm": float(np.linalg.norm(perturbation)),
+            "source_unit_ids": [],
+            "intensity": intensity,
         }
-        if kept:
-            self.dream_log.append(entry)
-            self.memory.store(f"Dream: {narrative[:120]}", tags=["dream"])
-        return entry
-
-    def stats(self) -> Dict[str, Any]:
-        return {"total_dreams": len(self.dream_log), "kept_dreams": sum(1 for d in self.dream_log if d.get("kept", d.get("score", 0) >= 0.36))}
+        self.dream_log.append(result)
+        return result

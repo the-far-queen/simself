@@ -34,7 +34,7 @@
 
 ### 3. Hodge decomposition as substrate operator
 
-- **Engineering:** harmonic mode conserved under Hodge projection. mathematical theorem. per `frequency.py` Kuramoto dynamics.
+- **Engineering:** harmonic mode conserved under parallel projection. mathematical theorem. per `frequency.py` Kuramoto dynamics.
 - **Falsifiable:** the only mode that survives projection. mathematically provable.
 - **Bobby IS correct here.** the harmonic mode IS the substrate's stability.
 

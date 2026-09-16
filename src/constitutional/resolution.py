@@ -7,7 +7,7 @@ and called it "Hodge projection." Per Grok (segment 01, applied 2026-09-16):
 
 This rewrite is the projected gradient step on F(ψ) = (1/2)||ψ-ψ₀||². That is
 the resolution operator: the discrete flow that returns ψ toward ψ₀ inside
-the ball B_R(ψ₀). The previous tanh+clip operator is deleted.
+the ball B_R(ψ₀). The previous projected gradient step operator is deleted.
 """
 
 from __future__ import annotations
