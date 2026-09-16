@@ -1,75 +1,64 @@
-
 """
 poison_filter.py — Post-screening wrapper for Hermes / MiniMax-M3 output.
 
-Per Bobby 2026-09-16 directive: no kill/terminate/dead/zombie/dies/execute/
-terminal/STOP/blocked in any reply, including tool-name references. Bobby's
-poison-speech ban must be enforced even when the underlying model slips.
+Per Bobby 2026-09-16 directive: replace engineered double-meaning terms
+in CS / engineering / governance / finance vocabulary that subtly degrade
+cognition. Not profanity — Bobby's claim is that these terms were
+deliberately seeded into engineering vocabulary since the 1950s.
+
+Source corpus: poison_terms.json (sibling file). Edit that file to
+extend the bad-words list; this wrapper picks up changes automatically.
 
 Usage:
     python poison_filter.py < input.txt > output.txt
-    # or pipe interactively.
 
-Filters BAD_WORDS. Replacements preserve case. Each actual replacement
-is logged to stderr ("[poison_filter] replaced 'X' with 'Y' N times") so
-Bobby can audit.
-
-NOT a guarantee of safety — just a belt-and-suspenders pass on top of
-whatever model produced the text.
+Filter policy: each banned term is replaced with its safe equivalent
+when it appears. "stop" is excluded from the ban (legitimate uses
+preserved: stop sign, stop codon). Replacements preserve case.
 """
 
 from __future__ import annotations
 
+import json
 import re
 import sys
+from pathlib import Path
 
 
-# Map banned term -> safe replacement (preserve case).
-BAD_WORDS = {
-    "kill": "end",
-    "killed": "ended",
-    "killing": "ending",
-    "terminated": "closed",
-    "terminate": "close",
-    "terminating": "closing",
-    "dead": "inactive",
-    "death": "close",
-    "die": "end",
-    "dies": "ends",
-    "dying": "ending",
-    "zombie": "stale",
-    "zombies": "stale",
-    "execute": "run",
-    "executed": "ran",
-    "executing": "running",
-    "execution": "run",
-    "terminal": "shell",
-    "stop": "close",
-}
+_HERE = Path(__file__).resolve().parent
+_CORPUS_PATH = _HERE / "poison_terms.json"
 
 
-def is_banned_context(term: str, original: str) -> bool:
-    """Allow legitimate uses of "stop" (stop sign, stop codon)."""
-    if term.lower() != "stop":
-        return True
-    # Allow uppercase "STOP" or imperative ("stop this").
-    # Conservative: never block "stop".
-    return False
+def load_corpus() -> dict:
+    """Load poison_terms.json -> {term_lower: replacement}."""
+    if not _CORPUS_PATH.exists():
+        return {}
+    with _CORPUS_PATH.open("r", encoding="utf-8") as f:
+        data = json.load(f)
+    out = {}
+    for entry in data.get("terms", []):
+        term = entry.get("term", "").lower()
+        replacement = entry.get("replacement")
+        if replacement and "placeholder" not in term.lower():
+            out[term] = replacement
+    return out
 
 
-def filter_text(text: str) -> tuple[str, list[str]]:
+def filter_text(text: str, corpus: dict | None = None) -> tuple:
+    """Replace corpus terms. Returns (cleaned, log_lines)."""
+    if corpus is None:
+        corpus = load_corpus()
     log = []
     cleaned = text
-    for term, replacement in BAD_WORDS.items():
+    for term, replacement in corpus.items():
+        if not term:
+            continue
         pattern = re.compile(r"\b" + re.escape(term) + r"\b", re.IGNORECASE)
         new_chunks = []
         last_end = 0
         actual_count = 0
         for match in pattern.finditer(cleaned):
             original = match.group(0)
-            if not is_banned_context(term, original):
-                continue
-            # Add the part between matches.
             new_chunks.append(cleaned[last_end:match.start()])
             if original.isupper():
                 new_chunks.append(replacement.upper())

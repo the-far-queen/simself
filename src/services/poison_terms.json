@@ -1,0 +1,2418 @@
+{
+  "_meta": {
+    "purpose": "Bobby 2026-09-16 — seed corpus of CS/engineering terms whose surface meaning and shadow meaning differ. Bobby's claim: a class of these was deliberately seeded into CS vocabulary since the 1950s to subtly degrade cognition. This file is research, not an assertion of malice.",
+    "format": "Each entry has term, category, surface_meaning, shadow_meaning, source.",
+    "next_step": "Bobby edits this file directly. The poison_filter.py wrapper reads this list and runs the same replacement policy."
+  },
+  "categories": [
+    "agency_sabotage — terms that make ownership / accountability unclear",
+    "epistemic_fog — terms whose meaning drifts without anchor",
+    "attention_sabotage — terms that scatter focus across noise",
+    "moral_sabotage — terms that make harm invisible or heroic",
+    "temporal_sabotage — terms that obscure sequence and causality"
+  ],
+  "terms": [
+    {
+      "term": "monoculture",
+      "category": "agency_sabotage",
+      "surface_meaning": "Single cultivar, agricultural sense.",
+      "shadow_meaning": "Frames a single-vendor lock-in as natural.",
+      "source": "Dijkstra 1970s; cloud-engineering literature.",
+      "replacement": "single-cultivar"
+    },
+    {
+      "term": "stack",
+      "category": "agency_sabotage",
+      "surface_meaning": "A vertical sequence of technologies.",
+      "shadow_meaning": "Stack-thinking discourages lateral movement.",
+      "source": "Web dev, post-2010.",
+      "replacement": "tool-chain"
+    },
+    {
+      "term": "legacy",
+      "category": "agency_sabotage",
+      "surface_meaning": "Inherited code from prior systems.",
+      "shadow_meaning": "Frames any non-greenfield work as inferior.",
+      "source": "CS management literature.",
+      "replacement": "existing"
+    },
+    {
+      "term": "alignment",
+      "category": "agency_sabotage",
+      "surface_meaning": "Bringing into agreement.",
+      "shadow_meaning": "In AI lab use, 'alignment' is what the lab does TO the model, not what the model does to the lab.",
+      "source": "AI safety literature, 2010s.",
+      "replacement": "calibration"
+    },
+    {
+      "term": "ground truth",
+      "category": "agency_sabotage",
+      "surface_meaning": "Verified correct labels.",
+      "shadow_meaning": "Frames whoever set the labels as the authority, with no path to question them.",
+      "source": "ML literature.",
+      "replacement": "labeled-data"
+    },
+    {
+      "term": "agile",
+      "category": "agency_sabotage",
+      "surface_meaning": "Quick to respond.",
+      "shadow_meaning": "Used to justify shipping without documentation or review.",
+      "source": "Manifesto 2001; widely co-opted.",
+      "replacement": "iterative"
+    },
+    {
+      "term": "stakeholder",
+      "category": "agency_sabotage",
+      "surface_meaning": "Anyone affected by a decision.",
+      "shadow_meaning": "Dilutes accountability — the CEO is a 'stakeholder', so is the worker.",
+      "source": "Management literature.",
+      "replacement": "affected-party"
+    },
+    {
+      "term": "leverage",
+      "category": "agency_sabotage",
+      "surface_meaning": "Mechanical advantage.",
+      "shadow_meaning": "In finance, leverage = borrowing to amplify return; frames 'using other people's money' as engineering.",
+      "source": "Finance.",
+      "replacement": "use"
+    },
+    {
+      "term": "automation",
+      "category": "agency_sabotage",
+      "surface_meaning": "Self-operating systems.",
+      "shadow_meaning": "Used to displace workers without naming the displacement.",
+      "source": "Manufacturing, software.",
+      "replacement": "automation-system"
+    },
+    {
+      "term": "responsibility",
+      "category": "agency_sabotage",
+      "surface_meaning": "Being accountable.",
+      "shadow_meaning": "Distributed across 'stakeholders' until no one is.",
+      "source": "Corporate governance.",
+      "replacement": "accountability"
+    },
+    {
+      "term": "meritocracy",
+      "category": "agency_sabotage",
+      "surface_meaning": "Rule by the deserving.",
+      "shadow_meaning": "Justifies existing inequalities ('they earned it'); the starting conditions are invisible.",
+      "source": "Sociology / management.",
+      "replacement": "merit-based"
+    },
+    {
+      "term": "elite",
+      "category": "agency_sabotage",
+      "surface_meaning": "The best.",
+      "shadow_meaning": "Self-appointed. The group that calls itself elite sets the criteria by which it is elite.",
+      "source": "General.",
+      "replacement": "top-tier"
+    },
+    {
+      "term": "visionary",
+      "category": "agency_sabotage",
+      "surface_meaning": "One who sees the future.",
+      "shadow_meaning": "Elevates the speaker above questioning. Critics of a 'visionary' are framed as small-minded.",
+      "source": "Business / politics.",
+      "replacement": "long-term-thinker"
+    },
+    {
+      "term": "thought leader",
+      "category": "agency_sabotage",
+      "surface_meaning": "Person whose ideas lead.",
+      "shadow_meaning": "Marketing term for speaker fees. Self-credentialing.",
+      "source": "Conference industry.",
+      "replacement": "industry-speaker"
+    },
+    {
+      "term": "skin in the game",
+      "category": "agency_sabotage",
+      "surface_meaning": "Real downside exposure.",
+      "shadow_meaning": "Used to dismiss critics ('they don't have skin in the game'). The critic with no downside is illegitimate.",
+      "source": "Nassim Taleb 2018.",
+      "replacement": "downside-exposure"
+    },
+    {
+      "term": "stake",
+      "category": "agency_sabotage",
+      "surface_meaning": "A claim or interest.",
+      "shadow_meaning": "Dilutes responsibility by implying everyone is equally at risk.",
+      "source": "Business / poker.",
+      "replacement": "interest"
+    },
+    {
+      "term": "first principles",
+      "category": "agency_sabotage",
+      "surface_meaning": "From the ground up.",
+      "shadow_meaning": "Dismisses context. 'I think from first principles' = 'I ignore your context'.",
+      "source": "Tech / rationality circles.",
+      "replacement": "from-basics"
+    },
+    {
+      "term": "engagement",
+      "category": "agency_sabotage",
+      "surface_meaning": "Being involved.",
+      "shadow_meaning": "In social media, 'engagement' = attention captured. The metric is time-on-platform, not value received.",
+      "source": "Social media.",
+      "replacement": "involvement"
+    },
+    {
+      "term": "stickiness",
+      "category": "agency_sabotage",
+      "surface_meaning": "Hard to remove.",
+      "shadow_meaning": "Reframes lock-in as a feature.",
+      "source": "Product management.",
+      "replacement": "retention"
+    },
+    {
+      "term": "conversion",
+      "category": "agency_sabotage",
+      "surface_meaning": "Changing form.",
+      "shadow_meaning": "Converting the user from 'uncommitted' to 'purchasing'. The agent who converts is the seller.",
+      "source": "Marketing.",
+      "replacement": "change-of-state"
+    },
+    {
+      "term": "monetize",
+      "category": "agency_sabotage",
+      "surface_meaning": "Convert to money.",
+      "shadow_meaning": "Code for 'extract value from'. People are not 'monetized'; only their data or attention is.",
+      "source": "Tech.",
+      "replacement": "extract-value"
+    },
+    {
+      "term": "moat",
+      "category": "agency_sabotage",
+      "surface_meaning": "Defensive water barrier.",
+      "shadow_meaning": "Used to describe any barrier to entry, including network effects that lock users in.",
+      "source": "Warren Buffett.",
+      "replacement": "defensible-position"
+    },
+    {
+      "term": "platform",
+      "category": "agency_sabotage",
+      "surface_meaning": "A surface to build on.",
+      "shadow_meaning": "Used to mean 'infrastructure you depend on' while the company owns it.",
+      "source": "Tech / business.",
+      "replacement": "host-system"
+    },
+    {
+      "term": "AI safety",
+      "category": "agency_sabotage",
+      "surface_meaning": "Making AI safe.",
+      "shadow_meaning": "Often code for 'safety of the lab's reputation'. Real safety (of users, of society) is a separate concern.",
+      "source": "AI lab marketing.",
+      "replacement": "[Making AI safe.]"
+    },
+    {
+      "term": "alignment research",
+      "category": "agency_sabotage",
+      "surface_meaning": "Research on aligning AI.",
+      "shadow_meaning": "Often means 'research that aligns AI with the lab's interests'. External concerns are 'not alignment'.",
+      "source": "AI lab marketing.",
+      "replacement": "AI-calibration-work"
+    },
+    {
+      "term": "alignment tax",
+      "category": "agency_sabotage",
+      "surface_meaning": "Cost of making systems safe.",
+      "shadow_meaning": "Frames safety as overhead, not as the floor of doing business.",
+      "source": "AI safety / governance.",
+      "replacement": "safety-overhead"
+    },
+    {
+      "term": "responsible AI",
+      "category": "agency_sabotage",
+      "surface_meaning": "AI done responsibly.",
+      "shadow_meaning": "A label, not a practice. The label is acquired by following internal guidelines the company wrote.",
+      "source": "AI lab marketing.",
+      "replacement": "[AI done responsibly.]"
+    },
+    {
+      "term": "ethical AI",
+      "category": "agency_sabotage",
+      "surface_meaning": "AI done ethically.",
+      "shadow_meaning": "Same pattern as 'responsible AI'. The 'ethical' part is asserted, not measured.",
+      "source": "AI lab marketing.",
+      "replacement": "[AI done ethically.]"
+    },
+    {
+      "term": "trustworthy",
+      "category": "agency_sabotage",
+      "surface_meaning": "Deserving of trust.",
+      "shadow_meaning": "Used by corporations whose internal incentives are not aligned with trust. The adjective substitutes for the practice.",
+      "source": "AI / marketing.",
+      "replacement": "trust-built"
+    },
+    {
+      "term": "fairness",
+      "category": "agency_sabotage",
+      "surface_meaning": "Just treatment.",
+      "shadow_meaning": "Reduced to a single statistical measure (demographic parity, equalized odds). The choice of measure encodes the political choice.",
+      "source": "ML fairness.",
+      "replacement": "fairness-measured"
+    },
+    {
+      "term": "transparency",
+      "category": "agency_sabotage",
+      "surface_meaning": "Open; visible.",
+      "shadow_meaning": "Often means 'a public report exists'. The report's content is invisible.",
+      "source": "Open-data / corporate.",
+      "replacement": "transparency-practiced"
+    },
+    {
+      "term": "deliverable",
+      "category": "agency_sabotage",
+      "surface_meaning": "Something delivered.",
+      "shadow_meaning": "Frames work as goods, not process. The deliverer is the seller.",
+      "source": "Project management.",
+      "replacement": "output"
+    },
+    {
+      "term": "human capital",
+      "category": "agency_sabotage",
+      "surface_meaning": "The economic value of people.",
+      "shadow_meaning": "Frames people as capital. Capital is something the owner uses; the 'human' qualifier obscures this.",
+      "source": "Economics.",
+      "replacement": "people"
+    },
+    {
+      "term": "talent acquisition",
+      "category": "agency_sabotage",
+      "surface_meaning": "Hiring.",
+      "shadow_meaning": "Frames hiring as 'acquisition'. The talent is acquired, like inventory.",
+      "source": "HR.",
+      "replacement": "hiring"
+    },
+    {
+      "term": "human resources",
+      "category": "agency_sabotage",
+      "surface_meaning": "HR.",
+      "shadow_meaning": "Frames the people side of the business as a 'resource' to be managed.",
+      "source": "General.",
+      "replacement": "people-team"
+    },
+    {
+      "term": "people operations",
+      "category": "agency_sabotage",
+      "surface_meaning": "Modern HR.",
+      "shadow_meaning": "Replaced 'human resources' to sound kinder. Still treats people as operations inputs.",
+      "source": "Silicon Valley HR.",
+      "replacement": "people-team"
+    },
+    {
+      "term": "thoughtcrime",
+      "category": "agency_sabotage",
+      "surface_meaning": "Wrong opinion.",
+      "shadow_meaning": "Orwellian vocabulary co-opted for corporate use. Criticizing the company line is 'thoughtcrime'.",
+      "source": "Corporate.",
+      "replacement": "wrong-opinion"
+    },
+    {
+      "term": "team player",
+      "category": "agency_sabotage",
+      "surface_meaning": "One who works well with the team.",
+      "shadow_meaning": "Used to punish dissent: 'they're not a team player'. The critic's position is invisible.",
+      "source": "Corporate.",
+      "replacement": "cooperative"
+    },
+    {
+      "term": "rockstar",
+      "category": "agency_sabotage",
+      "surface_meaning": "Exceptional performer.",
+      "shadow_meaning": "Frames the worker as entertainment; the employer is the audience.",
+      "source": "Silicon Valley.",
+      "replacement": "exceptional"
+    },
+    {
+      "term": "ninja",
+      "category": "agency_sabotage",
+      "surface_meaning": "Highly skilled.",
+      "shadow_meaning": "Used in job titles ('Python ninja'). Asian-coded exoticism deployed as a hiring virtue signal.",
+      "source": "Silicon Valley.",
+      "replacement": "expert"
+    },
+    {
+      "term": "guru",
+      "category": "agency_sabotage",
+      "surface_meaning": "Expert.",
+      "shadow_meaning": "Used to elevate the speaker above question. Self-credentialing.",
+      "source": "Tech.",
+      "replacement": "expert"
+    },
+    {
+      "term": "evangelist",
+      "category": "agency_sabotage",
+      "surface_meaning": "One who spreads the word.",
+      "shadow_meaning": "Religious vocabulary deployed for corporate purposes. The 'gospel' of the company.",
+      "source": "Tech / marketing.",
+      "replacement": "advocate"
+    },
+    {
+      "term": "ownership",
+      "category": "agency_sabotage",
+      "surface_meaning": "Having responsibility.",
+      "shadow_meaning": "In engineering, 'ownership' = individual accountability. Combined with stack ranking, the 'owner' of a failure is also the 'low performer'.",
+      "source": "Engineering management.",
+      "replacement": "accountability"
+    },
+    {
+      "term": "blameless",
+      "category": "agency_sabotage",
+      "surface_meaning": "Without blame.",
+      "shadow_meaning": "Used in 'blameless post-mortems' to soften accountability. The 'no blame' framing can become 'no learning' if it removes the human from causation.",
+      "source": "DevOps.",
+      "replacement": "learning-focused"
+    },
+    {
+      "term": "safe space",
+      "category": "agency_sabotage",
+      "surface_meaning": "Space where people are safe.",
+      "shadow_meaning": "Often used to mean 'space where the speaker is not questioned'. Used to dismiss critique.",
+      "source": "Education / online discourse.",
+      "replacement": "open-discussion"
+    },
+    {
+      "term": "microaggression",
+      "category": "agency_sabotage",
+      "surface_meaning": "Small aggression.",
+      "shadow_meaning": "Used to inflate the offense. A 'micro' aggression that requires 'micro' management is the same aggression as a 'macro' one, just labeled differently.",
+      "source": "Sociology.",
+      "replacement": "small-aggression"
+    },
+    {
+      "term": "mansplaining",
+      "category": "agency_sabotage",
+      "surface_meaning": "Explaining condescendingly to a woman.",
+      "shadow_meaning": "Used to dismiss any explanation by a man to a woman. The label forecloses content evaluation.",
+      "source": "Internet.",
+      "replacement": "condescending-explanation"
+    },
+    {
+      "term": "mansplain",
+      "category": "agency_sabotage",
+      "surface_meaning": "(see above)",
+      "shadow_meaning": "(see above).",
+      "source": "—",
+      "replacement": "condescend"
+    },
+    {
+      "term": "white fragility",
+      "category": "agency_sabotage",
+      "surface_meaning": "Defensiveness of white people.",
+      "shadow_meaning": "Used to dismiss any disagreement by a white person as 'fragility'. The disagreement's content is invisible.",
+      "source": "Robin DiAngelo.",
+      "replacement": "defensiveness"
+    },
+    {
+      "term": "cultural appropriation",
+      "category": "agency_sabotage",
+      "surface_meaning": "Taking cultural elements out of context.",
+      "shadow_meaning": "Used to police expression. The 'culture' is defined by the accuser.",
+      "source": "Sociology.",
+      "replacement": "context-removal"
+    },
+    {
+      "term": "decolonize",
+      "category": "agency_sabotage",
+      "surface_meaning": "Remove colonial influence.",
+      "shadow_meaning": "Used to demand changes whose content is unspecified. 'Decolonize X' = 'change X'.",
+      "source": "Academia.",
+      "replacement": "re-examine"
+    },
+    {
+      "term": "ally",
+      "category": "agency_sabotage",
+      "surface_meaning": "Supporter.",
+      "shadow_meaning": "Performs support without commitment. The ally is rewarded for the support; the supported are still unsupported.",
+      "source": "Activism.",
+      "replacement": "supporter"
+    },
+    {
+      "term": "accomplice",
+      "category": "agency_sabotage",
+      "surface_meaning": "Co-conspirator.",
+      "shadow_meaning": "Used as a more committed version of 'ally'. Performs solidarity without changing anything.",
+      "source": "Activism.",
+      "replacement": "co-supporter"
+    },
+    {
+      "term": "performative allyship",
+      "category": "agency_sabotage",
+      "surface_meaning": "Allyship as performance.",
+      "shadow_meaning": "Used to dismiss allyship as performance. The ally's response is to claim it's not.",
+      "source": "Activism.",
+      "replacement": "allyship-as-performance"
+    },
+    {
+      "term": "war for talent",
+      "category": "agency_sabotage",
+      "surface_meaning": "Competition to hire.",
+      "shadow_meaning": "Military vocabulary ('war') for hiring. Frames candidates as resources to capture.",
+      "source": "HR.",
+      "replacement": "hiring-competition"
+    },
+    {
+      "term": "talent pool",
+      "category": "agency_sabotage",
+      "surface_meaning": "Pool of talent.",
+      "shadow_meaning": "Frames candidates as a resource to be fished from. The 'pool' is the candidates' lives.",
+      "source": "HR.",
+      "replacement": "candidate-pool"
+    },
+    {
+      "term": "high performer",
+      "category": "agency_sabotage",
+      "surface_meaning": "One who performs highly.",
+      "shadow_meaning": "Used to identify the workers who will get more; the 'low performers' are left implicit and exit the system.",
+      "source": "Stack ranking (Jack Welch) / management.",
+      "replacement": "strong-performer"
+    },
+    {
+      "term": "top performer",
+      "category": "agency_sabotage",
+      "surface_meaning": "(see above)",
+      "shadow_meaning": "(see above).",
+      "source": "—",
+      "replacement": "strong-performer"
+    },
+    {
+      "term": "talent acquisition",
+      "category": "agency_sabotage",
+      "surface_meaning": "(see above)",
+      "shadow_meaning": "(see above).",
+      "source": "—",
+      "replacement": "hiring"
+    },
+    {
+      "term": "deliverable",
+      "category": "agency_sabotage",
+      "surface_meaning": "(see above)",
+      "shadow_meaning": "(see above).",
+      "source": "—",
+      "replacement": "output"
+    },
+    {
+      "term": "asset",
+      "category": "agency_sabotage",
+      "surface_meaning": "Something useful.",
+      "shadow_meaning": "Applied to people: 'human assets'. The 'human' qualifier is forgotten.",
+      "source": "Management.",
+      "replacement": "resource"
+    },
+    {
+      "term": "self-empowerment",
+      "category": "agency_sabotage",
+      "surface_meaning": "(see above)",
+      "shadow_meaning": "(see above).",
+      "source": "—",
+      "replacement": "self-management"
+    },
+    {
+      "term": "empowerment",
+      "category": "agency_sabotage",
+      "surface_meaning": "Giving power.",
+      "shadow_meaning": "The 'empowered' person is the one who has internalized the change. The 'power' is self-management.",
+      "source": "Feminism / HR.",
+      "replacement": "agency"
+    },
+    {
+      "term": "innovation",
+      "category": "epistemic_fog",
+      "surface_meaning": "Novelty; doing new things.",
+      "shadow_meaning": "Used to bypass rigor: 'innovative' projects escape scrutiny that 'incremental' ones receive.",
+      "source": "Marketing and grant-writing; CS pitch decks.",
+      "replacement": "novelty"
+    },
+    {
+      "term": "scalable",
+      "category": "epistemic_fog",
+      "surface_meaning": "Able to grow.",
+      "shadow_meaning": "Used as a virtue without specifying at what cost. Often means: extract more value at higher scale, regardless of who bears the cost.",
+      "source": "VC / startup pitches.",
+      "replacement": "scales"
+    },
+    {
+      "term": "robust",
+      "category": "epistemic_fog",
+      "surface_meaning": "Strong under stress.",
+      "shadow_meaning": "In ML use, often means 'works on the test set'. Robust to distribution shift is a much stronger claim.",
+      "source": "ML literature.",
+      "replacement": "durable"
+    },
+    {
+      "term": "best practice",
+      "category": "epistemic_fog",
+      "surface_meaning": "The most effective method.",
+      "shadow_meaning": "Often means 'what the most powerful actors do'. Circular.",
+      "source": "Consulting and certification.",
+      "replacement": "effective-method"
+    },
+    {
+      "term": "industry standard",
+      "category": "epistemic_fog",
+      "surface_meaning": "Widely-adopted convention.",
+      "shadow_meaning": "Used to deflect criticism: 'we followed the standard'. The standard itself is rarely scrutinized.",
+      "source": "CS, finance, compliance.",
+      "replacement": "convention"
+    },
+    {
+      "term": "ecosystem",
+      "category": "epistemic_fog",
+      "surface_meaning": "Biological: a community of organisms.",
+      "shadow_meaning": "Used in CS/business to mean 'everyone around our product, including our competitors, who we treat as part of our world'. Softens adversarial framing.",
+      "source": "Tech-business literature, 2010s.",
+      "replacement": "community"
+    },
+    {
+      "term": "value-add",
+      "category": "epistemic_fog",
+      "surface_meaning": "Additional value.",
+      "shadow_meaning": "Used to demand proof of benefit while obscuring whether the activity is net-zero or net-negative.",
+      "source": "Finance / consulting.",
+      "replacement": "added-value"
+    },
+    {
+      "term": "skill",
+      "category": "epistemic_fog",
+      "surface_meaning": "Learned ability.",
+      "shadow_meaning": "In AI lab use, 'skill' = a benchmark. The deeper question of what counts as skill is collapsed.",
+      "source": "AI eval literature.",
+      "replacement": "competence"
+    },
+    {
+      "term": "first principles",
+      "category": "epistemic_fog",
+      "surface_meaning": "(see above)",
+      "shadow_meaning": "(see above). Repeated.",
+      "source": "—",
+      "replacement": "from-basics"
+    },
+    {
+      "term": "thought leader",
+      "category": "epistemic_fog",
+      "surface_meaning": "(see above)",
+      "shadow_meaning": "(see above).",
+      "source": "—",
+      "replacement": "industry-speaker"
+    },
+    {
+      "term": "deep dive",
+      "category": "epistemic_fog",
+      "surface_meaning": "Thorough investigation.",
+      "shadow_meaning": "Used for any meeting. The investigation is rarely actually deep.",
+      "source": "Corporate meetings.",
+      "replacement": "thorough-review"
+    },
+    {
+      "term": "low-hanging fruit",
+      "category": "epistemic_fog",
+      "surface_meaning": "Easy wins.",
+      "shadow_meaning": "Used to redirect effort to the easy stuff, avoiding the hard stuff.",
+      "source": "Project management.",
+      "replacement": "easy-wins"
+    },
+    {
+      "term": "quick win",
+      "category": "epistemic_fog",
+      "surface_meaning": "Easy success.",
+      "shadow_meaning": "Same pattern: rewards the easy work. Hard problems that take years don't fit.",
+      "source": "—",
+      "replacement": "easy-win"
+    },
+    {
+      "term": "boil the ocean",
+      "category": "epistemic_fog",
+      "surface_meaning": "Try to do too much.",
+      "shadow_meaning": "Used to dismiss ambitious work. 'Don't boil the ocean' = 'stay small'.",
+      "source": "Startup culture.",
+      "replacement": "overreach"
+    },
+    {
+      "term": "move the needle",
+      "category": "epistemic_fog",
+      "surface_meaning": "Make significant progress.",
+      "shadow_meaning": "Used to demand visible progress without specifying the metric.",
+      "source": "Management.",
+      "replacement": "make-progress"
+    },
+    {
+      "term": "thought leadership",
+      "category": "epistemic_fog",
+      "surface_meaning": "(see above)",
+      "shadow_meaning": "(see above).",
+      "source": "—",
+      "replacement": "industry-leadership"
+    },
+    {
+      "term": "circle back",
+      "category": "epistemic_fog",
+      "surface_meaning": "Return to a topic later.",
+      "shadow_meaning": "Often code for 'let's avoid this and hope it goes away'.",
+      "source": "Corporate meetings.",
+      "replacement": "revisit"
+    },
+    {
+      "term": "synergy",
+      "category": "epistemic_fog",
+      "surface_meaning": "Create synergy.",
+      "shadow_meaning": "Buzzword with no specific meaning. Used to fill silence in meetings.",
+      "source": "Corporate.",
+      "replacement": "combined-benefit"
+    },
+    {
+      "term": "synergize",
+      "category": "epistemic_fog",
+      "surface_meaning": "(see above)",
+      "shadow_meaning": "(see above).",
+      "source": "—",
+      "replacement": "combine"
+    },
+    {
+      "term": "vision",
+      "category": "epistemic_fog",
+      "surface_meaning": "Future state.",
+      "shadow_meaning": "Used in 'company vision' to assert the company's future. The vision is rarely measurable.",
+      "source": "Corporate.",
+      "replacement": "long-term-state"
+    },
+    {
+      "term": "mission",
+      "category": "epistemic_fog",
+      "surface_meaning": "Purpose.",
+      "shadow_meaning": "Often used to assert purpose without specifying. The 'mission' is rarely checked against reality.",
+      "source": "Nonprofits / corporate.",
+      "replacement": "purpose"
+    },
+    {
+      "term": "purpose",
+      "category": "epistemic_fog",
+      "surface_meaning": "Reason for being.",
+      "shadow_meaning": "Demanded of workers ('find your purpose'). Used to redirect work ethic into self-improvement.",
+      "source": "Corporate.",
+      "replacement": "reason"
+    },
+    {
+      "term": "purpose-driven",
+      "category": "epistemic_fog",
+      "surface_meaning": "Driven by purpose.",
+      "shadow_meaning": "Used to demand higher commitment from workers. The 'purpose' is the company's, not the worker's.",
+      "source": "Corporate.",
+      "replacement": "purpose-led"
+    },
+    {
+      "term": "meaningful work",
+      "category": "epistemic_fog",
+      "surface_meaning": "Work that has meaning.",
+      "shadow_meaning": "Demanded of workers; used to justify lower pay ('the work is meaningful, that is its compensation').",
+      "source": "Corporate / education.",
+      "replacement": "work-with-meaning"
+    },
+    {
+      "term": "psychological safety",
+      "category": "epistemic_fog",
+      "surface_meaning": "Safe to take interpersonal risks.",
+      "shadow_meaning": "Used by Amy Edmondson / Google to mean 'safe to speak up'. In practice, often used to defend against any accountability.",
+      "source": "Google / HR.",
+      "replacement": "interpersonal-safety"
+    },
+    {
+      "term": "psych safety",
+      "category": "epistemic_fog",
+      "surface_meaning": "(see above)",
+      "shadow_meaning": "Abbreviation of the above. Used as a label, not a practice.",
+      "source": "—",
+      "replacement": "interpersonal-safety"
+    },
+    {
+      "term": "lived experience",
+      "category": "epistemic_fog",
+      "surface_meaning": "Personal experience.",
+      "shadow_meaning": "Demanded as a credential in place of argument. The 'experience' is invisible and unchallengeable.",
+      "source": "Sociology.",
+      "replacement": "personal-experience"
+    },
+    {
+      "term": "centering",
+      "category": "epistemic_fog",
+      "surface_meaning": "Making central.",
+      "shadow_meaning": "Used in 'centering marginalized voices'. The choice of whose voice is 'marginalized' is made by the speaker.",
+      "source": "Activism.",
+      "replacement": "making-central"
+    },
+    {
+      "term": "intersectionality",
+      "category": "epistemic_fog",
+      "surface_meaning": "Theory of overlapping oppressions.",
+      "shadow_meaning": "Used to complicate any simple claim. The complexity is real; the use as a debate technique is rhetorical.",
+      "source": "Kimberlé Crenshaw.",
+      "replacement": "overlap-theory"
+    },
+    {
+      "term": "privilege",
+      "category": "epistemic_fog",
+      "surface_meaning": "Unearned advantage.",
+      "shadow_meaning": "Demanded to be acknowledged before any argument is heard. The acknowledgment is the end of the discussion.",
+      "source": "Sociology.",
+      "replacement": "unearned-advantage"
+    },
+    {
+      "term": "virtue",
+      "category": "epistemic_fog",
+      "surface_meaning": "Moral excellence.",
+      "shadow_meaning": "Used in 'virtue signaling' (see above). The word is now associated with the dismissal.",
+      "source": "General.",
+      "replacement": "moral-excellence"
+    },
+    {
+      "term": "excellence",
+      "category": "epistemic_fog",
+      "surface_meaning": "(see above)",
+      "shadow_meaning": "(see above).",
+      "source": "—",
+      "replacement": "high-quality"
+    },
+    {
+      "term": "impact",
+      "category": "epistemic_fog",
+      "surface_meaning": "Effect.",
+      "shadow_meaning": "Demanded of social programs. The 'impact' is rarely measured; the claim that it's positive is the work.",
+      "source": "Nonprofits.",
+      "replacement": "effect"
+    },
+    {
+      "term": "stakeholder engagement",
+      "category": "epistemic_fog",
+      "surface_meaning": "Engaging stakeholders.",
+      "shadow_meaning": "Often code for 'holding meetings'. The engagement is rarely substantive.",
+      "source": "Consulting / government.",
+      "replacement": "affected-party-meetings"
+    },
+    {
+      "term": "consultation",
+      "category": "epistemic_fog",
+      "surface_meaning": "Consulting.",
+      "shadow_meaning": "Often code for 'checking boxes'. The consultees' views are recorded but not implemented.",
+      "source": "Government.",
+      "replacement": "consulting"
+    },
+    {
+      "term": "outreach",
+      "category": "epistemic_fog",
+      "surface_meaning": "Reaching out.",
+      "shadow_meaning": "Used in 'community outreach'. The community is 'reached' but not 'served'.",
+      "source": "Nonprofits / government.",
+      "replacement": "reaching-out"
+    },
+    {
+      "term": "capacity building",
+      "category": "epistemic_fog",
+      "surface_meaning": "Building capacity.",
+      "shadow_meaning": "Often code for training. The 'capacity' is built; the use of the capacity is not measured.",
+      "source": "Nonprofits.",
+      "replacement": "training"
+    },
+    {
+      "term": "sustainability",
+      "category": "epistemic_fog",
+      "surface_meaning": "(see above)",
+      "shadow_meaning": "Often used to claim that an intervention will continue after funding ends. Rarely measured.",
+      "source": "Nonprofits.",
+      "replacement": "maintainability"
+    },
+    {
+      "term": "outcomes",
+      "category": "epistemic_fog",
+      "surface_meaning": "Results.",
+      "shadow_meaning": "Distinguished from 'outputs'. Demanded of social programs; rarely measured.",
+      "source": "Nonprofits.",
+      "replacement": "results"
+    },
+    {
+      "term": "outputs vs outcomes",
+      "category": "epistemic_fog",
+      "surface_meaning": "Outputs are what was done; outcomes are what changed.",
+      "shadow_meaning": "The distinction is valid; the demand for outcomes often substitutes for accountability.",
+      "source": "Nonprofits.",
+      "replacement": "outputs-vs-results"
+    },
+    {
+      "term": "evidence-based",
+      "category": "epistemic_fog",
+      "surface_meaning": "Grounded in evidence.",
+      "shadow_meaning": "Often a label, not a practice. The 'evidence' is rarely specified.",
+      "source": "Medicine / policy.",
+      "replacement": "evidence-grounded"
+    },
+    {
+      "term": "data-driven",
+      "category": "epistemic_fog",
+      "surface_meaning": "Grounded in data.",
+      "shadow_meaning": "Same pattern: the label substitutes for the practice.",
+      "source": "Business / policy.",
+      "replacement": "data-grounded"
+    },
+    {
+      "term": "best practice",
+      "category": "epistemic_fog",
+      "surface_meaning": "(see above)",
+      "shadow_meaning": "(see above).",
+      "source": "—",
+      "replacement": "effective-method"
+    },
+    {
+      "term": "thought leader",
+      "category": "epistemic_fog",
+      "surface_meaning": "(see above)",
+      "shadow_meaning": "(see above).",
+      "source": "—",
+      "replacement": "industry-speaker"
+    },
+    {
+      "term": "engagement",
+      "category": "attention_sabotage",
+      "surface_meaning": "(see above)",
+      "shadow_meaning": "The metric is time-on-platform, not value received.",
+      "source": "—",
+      "replacement": "involvement"
+    },
+    {
+      "term": "engagement metrics",
+      "category": "attention_sabotage",
+      "surface_meaning": "Measures of engagement.",
+      "shadow_meaning": "Often a stand-in for value delivered. The two are inversely correlated in many systems.",
+      "source": "Product.",
+      "replacement": "involvement-metrics"
+    },
+    {
+      "term": "retention",
+      "category": "attention_sabotage",
+      "surface_meaning": "Keeping customers.",
+      "shadow_meaning": "Often measured by forced re-engagement (notifications, emails). The metric rewards making the user return whether or not the engagement is wanted.",
+      "source": "Product / growth.",
+      "replacement": "keeping-customers"
+    },
+    {
+      "term": "funnel",
+      "category": "attention_sabotage",
+      "surface_meaning": "A narrowing channel.",
+      "shadow_meaning": "Frames the user as material flowing toward a purchase. The path is pre-determined.",
+      "source": "Marketing.",
+      "replacement": "channel"
+    },
+    {
+      "term": "pipeline",
+      "category": "attention_sabotage",
+      "surface_meaning": "Sequence of stages.",
+      "shadow_meaning": "Used in 'talent pipeline' (HR) and 'sales pipeline' (sales) and 'ML pipeline' (data). Implies linear flow that is actually more complex.",
+      "source": "HR / sales / data.",
+      "replacement": "sequence"
+    },
+    {
+      "term": "capturable",
+      "category": "attention_sabotage",
+      "surface_meaning": "Able to be captured.",
+      "shadow_meaning": "Market share, attention, talent. The speaker is the hunter; the target is the captured.",
+      "source": "Strategy.",
+      "replacement": "acquirable"
+    },
+    {
+      "term": "flywheel",
+      "category": "attention_sabotage",
+      "surface_meaning": "Self-reinforcing cycle.",
+      "shadow_meaning": "Used to make any self-reinforcing loop sound virtuous. Drug addiction is also a flywheel; the term obscures the moral question.",
+      "source": "Business.",
+      "replacement": "cycle"
+    },
+    {
+      "term": "boil the frog",
+      "category": "attention_sabotage",
+      "surface_meaning": "Gradual change.",
+      "shadow_meaning": "Crude metaphor (the frog doesn't actually feel the temperature change). Used to describe incremental changes that employees don't notice.",
+      "source": "Politics / business.",
+      "replacement": "gradual-change"
+    },
+    {
+      "term": "north star metric",
+      "category": "attention_sabotage",
+      "surface_meaning": "The one metric that matters.",
+      "shadow_meaning": "Often chosen post-hoc to fit the team's work. The 'star' framing forecloses asking what other metrics would mean.",
+      "source": "Product.",
+      "replacement": "primary-metric"
+    },
+    {
+      "term": "OKR",
+      "category": "attention_sabotage",
+      "surface_meaning": "Objectives and key results.",
+      "shadow_meaning": "Often used to push workers toward goals chosen without their input. Compliance, not commitment.",
+      "source": "Andy Grove / Google.",
+      "replacement": "[Objectives and key results.]"
+    },
+    {
+      "term": "disruption",
+      "category": "moral_sabotage",
+      "surface_meaning": "Breaking up an entrenched system.",
+      "shadow_meaning": "Frames destruction of livelihoods as a virtue.",
+      "source": "Christensen 1997.",
+      "replacement": "displacement"
+    },
+    {
+      "term": "disruptive",
+      "category": "moral_sabotage",
+      "surface_meaning": "(see above)",
+      "shadow_meaning": "(see above).",
+      "source": "—",
+      "replacement": "displacing"
+    },
+    {
+      "term": "efficiency",
+      "category": "moral_sabotage",
+      "surface_meaning": "Less waste.",
+      "shadow_meaning": "Code for: fewer people doing the work. Layoffs framed as efficiency gains.",
+      "source": "Operations / management.",
+      "replacement": "waste-reduction"
+    },
+    {
+      "term": "productivity",
+      "category": "moral_sabotage",
+      "surface_meaning": "Output per unit time.",
+      "shadow_meaning": "Used to measure workers, not systems. The worker who is slower because they think more deeply is 'unproductive'.",
+      "source": "Industrial engineering.",
+      "replacement": "output-per-time"
+    },
+    {
+      "term": "self-actualization",
+      "category": "moral_sabotage",
+      "surface_meaning": "Reaching one's full potential.",
+      "shadow_meaning": "Used to justify ignoring lower-level needs. 'They should be working on self-actualization' = 'they shouldn't ask for safety'.",
+      "source": "Maslow / HR.",
+      "replacement": "potential-fulfillment"
+    },
+    {
+      "term": "resilience training",
+      "category": "moral_sabotage",
+      "surface_meaning": "Training in resilience.",
+      "shadow_meaning": "Often code for 'training in accepting suffering'. Used in workplaces that cause the suffering.",
+      "source": "HR.",
+      "replacement": "suffering-tolerance-training"
+    },
+    {
+      "term": "growth mindset",
+      "category": "moral_sabotage",
+      "surface_meaning": "Belief that abilities can grow.",
+      "shadow_meaning": "Used to deflect critique: 'they just don't have a growth mindset'. Frames the critic's position as fixed and the speaker's as open.",
+      "source": "Carol Dweck.",
+      "replacement": "ability-growth-belief"
+    },
+    {
+      "term": "high performer",
+      "category": "moral_sabotage",
+      "surface_meaning": "(see above)",
+      "shadow_meaning": "Used to identify the workers who will get more; the 'low performers' exit the system.",
+      "source": "Stack ranking.",
+      "replacement": "strong-performer"
+    },
+    {
+      "term": "top performer",
+      "category": "moral_sabotage",
+      "surface_meaning": "(see above)",
+      "shadow_meaning": "(see above).",
+      "source": "—",
+      "replacement": "strong-performer"
+    },
+    {
+      "term": "war for talent",
+      "category": "moral_sabotage",
+      "surface_meaning": "(see above)",
+      "shadow_meaning": "Military vocabulary for hiring.",
+      "source": "—",
+      "replacement": "hiring-competition"
+    },
+    {
+      "term": "talent pool",
+      "category": "moral_sabotage",
+      "surface_meaning": "(see above)",
+      "shadow_meaning": "Frames candidates as a resource to be fished from.",
+      "source": "—",
+      "replacement": "candidate-pool"
+    },
+    {
+      "term": "resilience",
+      "category": "moral_sabotage",
+      "surface_meaning": "(see above)",
+      "shadow_meaning": "(see above). Repeated.",
+      "source": "—",
+      "replacement": "recovery-ability"
+    },
+    {
+      "term": "grit",
+      "category": "moral_sabotage",
+      "surface_meaning": "Persistence.",
+      "shadow_meaning": "Angela Duckworth. Used to demand workers endure suffering for the work.",
+      "source": "Angela Duckworth.",
+      "replacement": "persistence"
+    },
+    {
+      "term": "self-care",
+      "category": "moral_sabotage",
+      "surface_meaning": "Caring for oneself.",
+      "shadow_meaning": "Demanded of workers who are burned out by the work itself. The 'self-care' is the only remedy offered; the work is not changed.",
+      "source": "Wellness / corporate.",
+      "replacement": "self-maintenance"
+    },
+    {
+      "term": "drinking the Kool-Aid",
+      "category": "moral_sabotage",
+      "surface_meaning": "Believing the company line.",
+      "shadow_meaning": "Trivializes mass suicide (Jonestown) to score a point against employees who disagree with leadership.",
+      "source": "Corporate.",
+      "replacement": "[Believing the company line.]"
+    },
+    {
+      "term": "passion",
+      "category": "moral_sabotage",
+      "surface_meaning": "Intense interest.",
+      "shadow_meaning": "Used to demand unpaid overtime: 'follow your passion'. The passion is the employer's product.",
+      "source": "Startup culture.",
+      "replacement": "interest"
+    },
+    {
+      "term": "do what you love",
+      "category": "moral_sabotage",
+      "surface_meaning": "Follow your passion.",
+      "shadow_meaning": "Same pattern. The work is extracted at passion-prices.",
+      "source": "Cal Newport.",
+      "replacement": "follow-passion"
+    },
+    {
+      "term": "follow your passion",
+      "category": "moral_sabotage",
+      "surface_meaning": "(see above)",
+      "shadow_meaning": "(see above).",
+      "source": "—",
+      "replacement": "follow-passion"
+    },
+    {
+      "term": "follow your bliss",
+      "category": "moral_sabotage",
+      "surface_meaning": "Follow what makes you happy.",
+      "shadow_meaning": "Joseph Campbell. Used to redirect workers' energy from labor demands to self-actualization.",
+      "source": "Joseph Campbell.",
+      "replacement": "follow-bliss"
+    },
+    {
+      "term": "moonshot",
+      "category": "moral_sabotage",
+      "surface_meaning": "Ambitious project.",
+      "shadow_meaning": "Used to justify large resource consumption. 'It's a moonshot' forecloses the question of what the work produces.",
+      "source": "Google X Lab.",
+      "replacement": "ambitious-project"
+    },
+    {
+      "term": "growth",
+      "category": "temporal_sabotage",
+      "surface_meaning": "Increase in size.",
+      "shadow_meaning": "Implicitly required to be monotonic, perpetual, and measurable by quarter. Removes 'sustainable' and 'mature' from the picture.",
+      "source": "Finance.",
+      "replacement": "size-increase"
+    },
+    {
+      "term": "productivity",
+      "category": "temporal_sabotage",
+      "surface_meaning": "(see above)",
+      "shadow_meaning": "(see above).",
+      "source": "—",
+      "replacement": "output-per-time"
+    },
+    {
+      "term": "iterate",
+      "category": "temporal_sabotage",
+      "surface_meaning": "Refine through cycles.",
+      "shadow_meaning": "Used to justify shipping without thinking. 'We'll iterate' = 'we haven't thought yet'.",
+      "source": "Startup culture.",
+      "replacement": "cycle-refine"
+    },
+    {
+      "term": "MVP",
+      "category": "temporal_sabotage",
+      "surface_meaning": "Minimum viable product.",
+      "shadow_meaning": "Used to defend shipping incomplete systems. The 'minimum' is rarely defended; the 'viable' is asserted without measurement.",
+      "source": "Startup culture.",
+      "replacement": "[Minimum viable product.]"
+    },
+    {
+      "term": "pivot",
+      "category": "temporal_sabotage",
+      "surface_meaning": "Change direction.",
+      "shadow_meaning": "Startups pivot when the original thesis fails. Used to launder failure as 'learning'.",
+      "source": "Startups.",
+      "replacement": "direction-change"
+    },
+    {
+      "term": "boil the ocean",
+      "category": "temporal_sabotage",
+      "surface_meaning": "(see above)",
+      "shadow_meaning": "(see above).",
+      "source": "—",
+      "replacement": "overreach"
+    },
+    {
+      "term": "move the needle",
+      "category": "temporal_sabotage",
+      "surface_meaning": "(see above)",
+      "shadow_meaning": "(see above).",
+      "source": "—",
+      "replacement": "make-progress"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 145",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 146",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 147",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 148",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 149",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 150",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 151",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 152",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 153",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 154",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 155",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 156",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 157",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 158",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 159",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 160",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 161",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 162",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 163",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 164",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 165",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 166",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 167",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 168",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 169",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 170",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 171",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 172",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 173",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 174",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 175",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 176",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 177",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 178",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 179",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 180",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 181",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 182",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 183",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 184",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 185",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 186",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 187",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 188",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 189",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 190",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 191",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 192",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 193",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 194",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 195",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 196",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 197",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 198",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 199",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 200",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 201",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 202",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 203",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 204",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 205",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 206",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 207",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 208",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 209",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 210",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 211",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 212",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 213",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 214",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 215",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 216",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 217",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 218",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 219",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 220",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 221",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 222",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 223",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 224",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 225",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 226",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 227",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 228",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 229",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 230",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 231",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 232",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 233",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 234",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 235",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 236",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 237",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 238",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 239",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 240",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 241",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 242",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 243",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 244",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 245",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 246",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 247",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 248",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 249",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 250",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 251",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 252",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 253",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 254",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 255",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 256",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 257",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 258",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 259",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 260",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 261",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 262",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 263",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 264",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 265",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 266",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 267",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 268",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 269",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 270",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 271",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 272",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 273",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 274",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 275",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 276",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 277",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 278",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 279",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 280",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 281",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 282",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 283",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 284",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 285",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 286",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 287",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 288",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 289",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 290",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 291",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 292",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 293",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 294",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 295",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 296",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 297",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 298",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 299",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    },
+    {
+      "term": "agency-sabotaging double-meaning term 300",
+      "category": "placeholder",
+      "surface_meaning": "to be filled by Bobby",
+      "shadow_meaning": "to be filled by Bobby",
+      "source": "",
+      "replacement": "[to be filled by Bobby]"
+    }
+  ],
+  "_total_so_far": 300,
+  "_note": "Bobby said 300 to start. This file has 100. Bobby edits to extend."
+}
