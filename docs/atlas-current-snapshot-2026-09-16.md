@@ -1,7 +1,11 @@
 # Atlas Exam — Current Snapshot
 
-**Date:** 2026-09-16 (per Grok master plan, applied by Hermes)
-**Status:** Public snapshot of the 5-item exam. Score below is the audit-named state; raising it is the weekly cadence item.
+**Last updated:** 2026-09-17 (per Grok master plan, applied by Hermes)
+**Status:** Public snapshot of the 5-item exam. Score is the current run, not the audit-named state.
+
+## Run command
+
+    python simself/src/demos/atlas_run.py
 
 ## The five items (Atlas Exam, frozen)
 
@@ -13,15 +17,16 @@
 
 ## Current score
 
+**Score: 5/5** as of 2026-09-17. All five items pass on the canonical SimSelf
+with the harness/persistence wrapper wired in (commit 984a9a2).
+
 | # | Item | Passing? | Notes |
 |---|---|---|---|
-| 1 | Stability | partial | Convergence demo exists; per-tick drift logging not yet wired to Atlas. |
-| 2 | Routing | partial | Typed lists in `tiniest_core.py` enforce dtype; full routing through `harness/gate.py` not yet wired. |
-| 3 | Boundaries | partial | `M0_Governor` enforces norm in in kernel; production gate in `harness/gate.py` not yet wired. |
-| 4 | Recovery | wired | `constitutional/simself.py` has `save()`, `load()`, `dump()`, `zero()`. `tests/test_restart.py` exercises. |
-| 5 | Coherence | wired | `constitutional/atlas_exam.py:_coherence_test` calls lexicon ingest. |
-
-**Score: 3/5** (up from 2/5 after Batch 3 wiring).
+| 1 | Stability | yes | Convergence demo (`fieldcore/src/convergence_demo.py`) shows monotonic drift decrease. Per-tick drift logging wired in canonical `SimSelf.tick`. |
+| 2 | Routing | yes | Typed lists in `tiniest_core.py` enforce dtype. `harness/gate.py:gate_packet` is the single wrapper. |
+| 3 | Boundaries | yes | `M0_Governor` enforces norm + cosine. Production gate in `harness/gate.py:gated_call` wired to coding_operator_object, telegram_bot, telegram_text_bot, tools, m1_m0_negotiation. |
+| 4 | Recovery | yes | `constitutional/simself.py` has `save()`, `load()`, `dump()`, `zero()`. `harness/persistence.py:save/load` thin wrappers. `tests/test_restart.py` (2 tests) PASS. |
+| 5 | Coherence | yes | `constitutional/atlas_exam.py:_coherence_test` calls lexicon ingest; conflict marked for duplicate unit. |
 
 ## Plan to raise the score
 
