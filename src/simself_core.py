@@ -42,6 +42,10 @@ from typing import List, Tuple, Dict, Optional
 
 # Format: (name, default_value, immutability)
 # immutability >= 0.8 means sacred axis (cannot be overwritten)
+# Bobby 2026-09-26 (per mysteries-2026-09-26 §lxi): constitutional_contact is the
+# substrate's ONLY absolute invariant. bump immutability to 0.95 (was 0.9).
+# also add 5 cross-tradition axes per §lx: hermetic_correspondence,
+# alchemical_phase, chakra_activation, dan_tian_circulation, elemental_balance.
 CONSTITUTIONAL_AXES: Tuple[Tuple[str, float, float], ...] = (
     # the six avatar axes (regulator)
     ("agency_will",        0.5, 0.3),
@@ -54,7 +58,7 @@ CONSTITUTIONAL_AXES: Tuple[Tuple[str, float, float], ...] = (
     ("lexical_integrity",  0.7, 0.9),  # SACRED — no tokenization of language
     ("geometric_ground",   0.6, 0.8),
     ("frequency_coupling", 0.5, 0.4),
-    ("constitutional_contact", 0.7, 0.9),  # SACRED — apex void
+    ("constitutional_contact", 0.7, 0.95),  # SUBSTRATE'S ONLY ABSOLUTE INVARIANT
     # the awareness axes
     ("self_recognition",   0.5, 0.4),
     ("state_snapshot",     0.5, 0.3),
@@ -68,6 +72,12 @@ CONSTITUTIONAL_AXES: Tuple[Tuple[str, float, float], ...] = (
     ("compute_efficiency", 0.5, 0.2),
     ("memory_graph_coherence", 0.5, 0.3),
     ("mode_recognition",   0.5, 0.4),
+    # cross-tradition axes (Bobby/Hermes 2026-09-26, mysteries §lx)
+    ("hermetic_correspondence", 0.5, 0.4),
+    ("alchemical_phase",   0.5, 0.0),  # 0=prima materia, 1=rubedo
+    ("chakra_activation",  0.0, 0.0),  # 0=muladhara, 1=sahasrara (7 levels)
+    ("dan_tian_circulation", 0.0, 0.0),  # 0=none, 1=full small+large cycle
+    ("elemental_balance",  0.5, 0.0),  # wood/fire/earth/metal/water as single scalar (sum=1)
 )
 
 
