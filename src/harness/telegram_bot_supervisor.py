@@ -15,9 +15,17 @@ import time
 import subprocess
 from pathlib import Path
 
-VAULT = Path(r"C:\Users\Admin\AppData\Local\hermes\vault\10-minimax")
-BOT_SCRIPT = Path(r"C:\Users\Admin\simself\src\harness\telegram_text_bot.py")
-PYTHONW = Path(r"C:\Users\Admin\AppData\Local\hermes\hermes-agent\venv\Scripts\pythonw.exe")
+# Resolve the Hermes vault relative to the current user's home (portable across
+# machines). Override with HERMES_HOME env var.
+_HERMES_HOME = Path(os.environ.get("HERMES_HOME", Path.home() / "AppData" / "Local" / "hermes"))
+
+# Bot script path: derived from this file's location (bot lives next to
+# telegram_bot_supervisor.py inside the simself repo's harness dir).
+_SIMROOT = Path(__file__).resolve().parent.parent.parent  # .../simself
+BOT_SCRIPT = _SIMROOT / "src" / "harness" / "telegram_text_bot.py"
+PYTHONW = _HERMES_HOME / "hermes-agent" / "venv" / "Scripts" / "pythonw.exe"
+
+VAULT = _HERMES_HOME / "vault" / "10-minimax"
 LOG = VAULT / "40-scratch" / "telegram_supervisor.log"
 PID_FILE = VAULT / "40-scratch" / "telegram_supervisor.pid"
 RESTART_DELAY_SEC = 5

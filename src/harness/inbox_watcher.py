@@ -16,10 +16,15 @@ import sys
 import time
 from pathlib import Path
 
-INBOX_ROOT = Path(r"C:\Users\Admin\AppData\Local\hermes\vault\10-minimax\40-scratch\inbox")
-OUTBOX_ROOT = Path(r"C:\Users\Admin\AppData\Local\hermes\vault\10-minimax\40-scratch\outbox")
-LOCK_PATH = Path(r"C:\Users\Admin\AppData\Local\hermes\vault\10-minimax\40-scratch\telegram_text_bot.lock")
-SEEN = Path(r"C:\Users\Admin\AppData\Local\hermes\vault\10-minimax\40-scratch\inbox_watcher.seen")
+# Resolve the Hermes vault relative to the current user's home (portable across
+# machines). Override with HERMES_HOME env var.
+_HERMES_HOME = Path(os.environ.get("HERMES_HOME", Path.home() / "AppData" / "Local" / "hermes"))
+_SCRATCH = _HERMES_HOME / "vault" / "10-minimax" / "40-scratch"
+
+INBOX_ROOT = _SCRATCH / "inbox"
+OUTBOX_ROOT = _SCRATCH / "outbox"
+LOCK_PATH = _SCRATCH / "telegram_text_bot.lock"
+SEEN = _SCRATCH / "inbox_watcher.seen"
 
 POLL_SEC = 1.5
 

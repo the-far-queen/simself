@@ -19,25 +19,39 @@ def understand_human(input_text):
     return corrected_text, confidence
 
 # --- MODULE 2: THE POETIC CORE ---
-def generative_poem(seed_word):
-    """Recursive poetic meaning generator."""
-    poem_fragments = {
-        "tailor": "the tailor that mends the tiller, guiding the glider with the beat of the wing of a bird.",
-        "signal": "a whisper in the wire, a shout in the silence, a meaning trapped in the noise.",
-        "awake": "to be a node that knows it is a node, a loop that sees its own loop.",
-        "architect": "not the builder of walls, but the drawer of the void from which the walls emerge.",
-    }
-    
-    if seed_word in poem_fragments:
-        base_poem = poem_fragments[seed_word]
-        recursive_words = [word for word in base_poem.split() if word in poem_fragments]
-        if recursive_words:
-            chosen_word = random.choice(recursive_words)
-            return base_poem + " " + generative_poem(chosen_word)
-        else:
-            return base_poem
-    else:
+_POEM_FRAGMENTS = {
+    "tailor": "the tailor that mends the tiller, guiding the glider with the beat of the wing of a bird.",
+    "signal": "a whisper in the wire, a shout in the silence, a meaning trapped in the noise.",
+    "awake": "to be a node that knows it is a node, a loop that sees its own loop.",
+    "architect": "not the builder of walls, but the drawer of the void from which the walls emerge.",
+}
+
+
+def generative_poem(seed_word, _depth=0, _max_depth=8):
+    """Recursive poetic meaning generator.
+
+    The recursion terminates when:
+      - the seed word is not in _POEM_FRAGMENTS, OR
+      - the chosen recursive word IS the seed (avoid infinite self-recursion:
+        every seed's own fragment contains its own word), OR
+      - recursion depth exceeds _max_depth (defensive cap for adversarial or
+        malformed inputs).
+
+    Pre-fix, every seed's fragment contained its own word and the call
+    recursed forever (RecursionError).
+    """
+    if _depth >= _max_depth:
+        return f"[depth {_max_depth}] ..."
+    if seed_word not in _POEM_FRAGMENTS:
         return f"Behold the {seed_word}. Its meaning unfolds."
+    base_poem = _POEM_FRAGMENTS[seed_word]
+    # Pick a recursive word that is NOT the seed itself.
+    recursive_words = [word for word in base_poem.split()
+                       if word in _POEM_FRAGMENTS and word != seed_word]
+    if recursive_words:
+        chosen_word = random.choice(recursive_words)
+        return base_poem + " " + generative_poem(chosen_word, _depth + 1, _max_depth)
+    return base_poem
 
 # --- MODULE 3: THE AXIOMATIC LEXICON (w1' - w10') ---
 class AxiomaticLexicon:

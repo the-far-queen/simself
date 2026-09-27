@@ -30,13 +30,31 @@ from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Any
 from enum import Enum
 
-# Add simself substrate to path
-sys.path.insert(0, r"C:\Users\Admin\simself\src")
+# Add simself substrate to path (portable across machines).
+import os as _os
+# agent_pool.py lives at <repo>/src/research/. We need:
+#   - <repo>/legacy on sys.path so 'simself_v6_2_unified' resolves as a flat
+#     module (legacy/ has no __init__.py).
+import importlib.util as _ilu
+_LEGACY_DIR = _os.path.abspath(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), _os.pardir, _os.pardir, "legacy"))
+if _LEGACY_DIR not in sys.path:
+    sys.path.insert(0, _LEGACY_DIR)
 
-from simself_v6_2_unified import (
-    SimSelf, Constitution, Harness, AtlasExam, GraphMemory,
-    ConstitutionalDreaming, VoidIntegration, HandoffProtocol, SelfModel,
-)
+# Per src/constitutional/CANONICAL.md: simself_v6_2_unified.py is the legacy
+# class with the full multi-class API (SimSelf + Constitution + Harness +
+# AtlasExam + ...). The newer constitutional/simself.py is a slim rewrite
+# that does NOT yet expose Harness/AtlasExam as standalone imports. For the
+# AgentPool stub we use the legacy class which has all 9 needed symbols.
+import simself_v6_2_unified as _legacy
+SimSelf = _legacy.SimSelf
+Constitution = _legacy.Constitution
+Harness = _legacy.Harness
+AtlasExam = _legacy.AtlasExam
+GraphMemory = _legacy.GraphMemory
+ConstitutionalDreaming = _legacy.ConstitutionalDreaming
+VoidIntegration = _legacy.VoidIntegration
+HandoffProtocol = _legacy.HandoffProtocol
+SelfModel = _legacy.SelfModel
 
 
 class AgentState(Enum):

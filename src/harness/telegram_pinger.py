@@ -11,10 +11,15 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
-INBOX = Path(r"C:\Users\Admin\AppData\Local\hermes\vault\10-minimax\40-scratch\inbox")
-PING = Path(r"C:\Users\Admin\AppData\Local\hermes\vault\10-minimax\40-scratch\telegram_ping.txt")
-LOCK = Path(r"C:\Users\Admin\AppData\Local\hermes\vault\10-minimax\40-scratch\telegram_pinger.lock")
-SEEN = Path(r"C:\Users\Admin\AppData\Local\hermes\vault\10-minimax\40-scratch\telegram_pinger.seen")
+# Resolve the Hermes vault relative to the current user's home (portable across
+# machines). Override with HERMES_HOME env var.
+_HERMES_HOME = Path(os.environ.get("HERMES_HOME", Path.home() / "AppData" / "Local" / "hermes"))
+_SCRATCH = _HERMES_HOME / "vault" / "10-minimax" / "40-scratch"
+
+INBOX = _SCRATCH / "inbox"
+PING = _SCRATCH / "telegram_ping.txt"
+LOCK = _SCRATCH / "telegram_pinger.lock"
+SEEN = _SCRATCH / "telegram_pinger.seen"
 
 CHAT_ID = "8736659200"
 POLL_SEC = 1.5

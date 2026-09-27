@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 """DEPRECATED 2026-09-16 (per Grok sharpen 2026-09-16, applied by Hermes).
 
 This file is not the canonical SimSelf class. The canonical class is
@@ -70,8 +72,6 @@ auto-detected; everything works identically without it.
 License: MIT — free for all agents, human and non-human.
 Authors: Robert (Bobby) the author, Claude, DeepSeek — 2026 refactor pass.
 """
-
-from __future__ import annotations
 
 import json
 import math
