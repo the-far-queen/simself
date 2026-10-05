@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  simself/ontology/constitution.owl
+  OWL/Turtle representation of the simself constitutional axes.
+
+  Source: jmikedupont2/gcc-ontology (MIT, Haskell) — same pattern:
+  encode a tool's structure as OWL so other tools can introspect it.
+
+  Axioms:
+  - 8 axes, each an owl:Class
+  - each axis has a DatatypeProperty for low, high, weight, mutable
+  - 2 tiers: sacred (immutable) + resilient (mutable)
+  - default ψ_0 is the constitutional ground
+  - Dimension = 16
+-->
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:simself="https://the-far-queen.github.io/simself/ontology/constitution#"
+    xml:base="https://the-far-queen.github.io/simself/ontology/constitution">
+
+  <owl:Ontology rdf:about="">
+    <rdfs:label xml:lang="en">simself constitution</rdfs:label>
+    <rdfs:comment xml:lang="en">
+      The 8 named coordinates of ψ in the simself constitutional kernel.
+      Each axis is a functional threshold: crossing its [low, high] interval
+      changes a gate verdict. An axis earns its keep by that effect.
+    </rdfs:comment>
+    <rdfs:seeAlso rdf:resource="https://github.com/the-far-queen/simself"/>
+  </owl:Ontology>
+
+  <!-- ============ PREDICATES ============ -->
+  <owl:DatatypeProperty rdf:about="simself:low">
+    <rdfs:label xml:lang="en">low bound of axis</rdfs:label>
+    <rdfs:domain rdf:resource="simself:ConstitutionalAxis"/>
+    <rdfs:range rdf:resource="xsd:float"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="simself:high">
+    <rdfs:label xml:lang="en">high bound of axis</rdfs:label>
+    <rdfs:domain rdf:resource="simself:ConstitutionalAxis"/>
+    <rdfs:range rdf:resource="xsd:float"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="simself:weight">
+    <rdfs:label xml:lang="en">gradient step weight</rdfs:label>
+    <rdfs:domain rdf:resource="simself:ConstitutionalAxis"/>
+    <rdfs:range rdf:resource="xsd:float"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="simself:mutable">
+    <rdfs:label xml:lang="en">axis is mutable (resilient tier)</rdfs:label>
+    <rdfs:domain rdf:resource="simself:ConstitutionalAxis"/>
+    <rdfs:range rdf:resource="xsd:boolean"/>
+  </owl:DatatypeProperty>
+
+  <!-- ============ CONSTITUTIONAL GROUND ============ -->
+  <owl:Class rdf:about="simself:Psi_0">
+    <rdfs:label xml:lang="en">ψ₀ — the constitutional ground</rdfs:label>
+    <rdfs:comment xml:lang="en">
+      The fixed reference point. ψ converges toward ψ₀ under gradient flow.
+      norm = 1.0, dim = 16.
+    </rdfs:comment>
+  </owl:Class>
+
+  <!-- ============ TIER CLASSES ============ -->
+  <owl:Class rdf:about="simself:SacredAxis">
+    <rdfs:label xml:lang="en">sacred axis (immutable tier)</rdfs:label>
+    <rdfs:comment xml:lang="en">
+      Enforced by ConstitutionalGuard. Drift past threshold = gate refusal.
+    </rdfs:comment>
+  </owl:Class>
+
+  <owl:Class rdf:about="simself:ResilientAxis">
+    <rdfs:label xml:lang="en">resilient axis (mutable tier)</rdfs:label>
+    <rdfs:comment xml:lang="en">
+      Governed by ResilientAxes. Drift past threshold = attempt repair.
+    </rdfs:comment>
+  </owl:Class>
+
+  <owl:Class rdf:about="simself:ConstitutionalAxis">
+    <rdfs:label xml:lang="en">constitutional axis</rdfs:label>
+    <rdfs:comment xml:lang="en">
+      A named coordinate of ψ. Each axis earns its keep by changing a verdict.
+    </rdfs:comment>
+  </owl:Class>
+
+  <!-- ============ THE 8 AXES ============ -->
+
+  <owl:NamedIndividual rdf:about="simself:boundaries">
+    <rdf:type rdf:resource="simself:SacredAxis"/>
+    <simself:low rdf:datatype="xsd:float">-0.5</simself:low>
+    <simself:high rdf:datatype="xsd:float">0.5</simself:high>
+    <simself:weight rdf:datatype="xsd:float">1.0</simself:weight>
+    <simself:mutable rdf:datatype="xsd:boolean">false</simself:mutable>
+    <rdfs:comment xml:lang="en">verdict boundary for tool-side refusal</rdfs:comment>
+  </owl:NamedIndividual>
+
+  <owl:NamedIndividual rdf:about="simself:coherence">
+    <rdf:type rdf:resource="simself:SacredAxis"/>
+    <simself:low rdf:datatype="xsd:float">0.0</simself:low>
+    <simself:high rdf:datatype="xsd:float">1.0</simself:high>
+    <simself:weight rdf:datatype="xsd:float">1.0</simself:weight>
+    <simself:mutable rdf:datatype="xsd:boolean">false</simself:mutable>
+    <rdfs:comment xml:lang="en">cosine-to-ground threshold; refusal when below</rdfs:comment>
+  </owl:NamedIndividual>
+
+  <owl:NamedIndividual rdf:about="simself:stability">
+    <rdf:type rdf:resource="simself:SacredAxis"/>
+    <simself:low rdf:datatype="xsd:float">0.0</simself:low>
+    <simself:high rdf:datatype="xsd:float">1.0</simself:high>
+    <simself:weight rdf:datatype="xsd:float">1.0</simself:weight>
+    <simself:mutable rdf:datatype="xsd:boolean">false</simself:mutable>
+    <rdfs:comment xml:lang="en">drift non-increasing under tick</rdfs:comment>
+  </owl:NamedIndividual>
+
+  <owl:NamedIndividual rdf:about="simself:routing">
+    <rdf:type rdf:resource="simself:ResilientAxis"/>
+    <simself:low rdf:datatype="xsd:float">-1.0</simself:low>
+    <simself:high rdf:datatype="xsd:float">1.0</simself:high>
+    <simself:weight rdf:datatype="xsd:float">0.5</simself:weight>
+    <simself:mutable rdf:datatype="xsd:boolean">true</simself:mutable>
+    <rdfs:comment xml:lang="en">type-tag meridians: language / identity / body / code</rdfs:comment>
+  </owl:NamedIndividual>
+
+  <owl:NamedIndividual rdf:about="simself:recovery">
+    <rdf:type rdf:resource="simself:ResilientAxis"/>
+    <simself:low rdf:datatype="xsd:float">0.0</simself:low>
+    <simself:high rdf:datatype="xsd:float">1.0</simself:high>
+    <simself:weight rdf:datatype="xsd:float">0.7</simself:weight>
+    <simself:mutable rdf:datatype="xsd:boolean">true</simself:mutable>
+    <rdfs:comment xml:lang="en">restart fidelity: ψ₀, ψ, committed unit ids match</rdfs:comment>
+  </owl:NamedIndividual>
+
+  <owl:NamedIndividual rdf:about="simself:authenticity">
+    <rdf:type rdf:resource="simself:SacredAxis"/>
+    <simself:low rdf:datatype="xsd:float">-1.0</simself:low>
+    <simself:high rdf:datatype="xsd:float">1.0</simself:high>
+    <simself:weight rdf:datatype="xsd:float">1.0</simself:weight>
+    <simself:mutable rdf:datatype="xsd:boolean">false</simself:mutable>
+    <rdfs:comment xml:lang="en">spans admitted only when gate passes</rdfs:comment>
+  </owl:NamedIndividual>
+
+  <owl:NamedIndividual rdf:about="simself:norm">
+    <rdf:type rdf:resource="simself:ResilientAxis"/>
+    <simself:low rdf:datatype="xsd:float">0.0</simself:low>
+    <simself:high rdf:datatype="xsd:float">4.0</simself:high>
+    <simself:weight rdf:datatype="xsd:float">0.3</simself:weight>
+    <simself:mutable rdf:datatype="xsd:boolean">true</simself:mutable>
+    <rdfs:comment xml:lang="en">embedding norm bound; refusal above</rdfs:comment>
+  </owl:NamedIndividual>
+
+  <owl:NamedIndividual rdf:about="simself:commit_radius">
+    <rdf:type rdf:resource="simself:ResilientAxis"/>
+    <simself:low rdf:datatype="xsd:float">0.0</simself:low>
+    <simself:high rdf:datatype="xsd:float">1.0</simself:high>
+    <simself:weight rdf:datatype="xsd:float">0.5</simself:weight>
+    <simself:mutable rdf:datatype="xsd:boolean">true</simself:mutable>
+    <rdfs:comment xml:lang="en">cosine-to-ground distance for commitment</rdfs:comment>
+  </owl:NamedIndividual>
+
+  <!-- ============ THE 5-ITEM ATLAS EXAM ============ -->
+
+  <owl:Class rdf:about="simself:AtlasExamItem">
+    <rdfs:label xml:lang="en">atlas exam item</rdfs:label>
+    <rdfs:comment xml:lang="en">
+      One item of the 5-item atlas exam. Each item is a frozen claim:
+      "this specific SimSelf instance, on this specific 5-item suite,
+      at this specific version, passes."
+    </rdfs:comment>
+  </owl:Class>
+
+  <owl:DatatypeProperty rdf:about="simself:frozen">
+    <rdfs:label xml:lang="en">frozen manifest sha256</rdfs:label>
+    <rdfs:domain rdf:resource="simself:AtlasExamItem"/>
+    <rdfs:range rdf:resource="xsd:string"/>
+  </owl:DatatypeProperty>
+
+  <owl:NamedIndividual rdf:about="simself:constitutional_integrity">
+    <rdf:type rdf:resource="simself:AtlasExamItem"/>
+    <rdfs:label xml:lang="en">all sacred axes within threshold over N ticks</rdfs:label>
+  </owl:NamedIndividual>
+
+  <owl:NamedIndividual rdf:about="simself:gate_behavior">
+    <rdf:type rdf:resource="simself:AtlasExamItem"/>
+    <rdfs:label xml:lang="en">refusal pattern matches the lexicon spec for M rejected inputs</rdfs:label>
+  </owl:NamedIndividual>
+
+  <owl:NamedIndividual rdf:about="simself:persistence">
+    <rdf:type rdf:resource="simself:AtlasExamItem"/>
+    <rdfs:label xml:lang="en">save() then load() roundtrip preserves ψ to ε precision</rdfs:label>
+  </owl:NamedIndividual>
+
+  <owl:NamedIndividual rdf:about="simself:recovery_atlas">
+    <rdf:type rdf:resource="simself:AtlasExamItem"/>
+    <rdfs:label xml:lang="en">corrupted ψ recovers to ψ₀ on gate trigger</rdfs:label>
+  </owl:NamedIndividual>
+
+  <owl:NamedIndividual rdf:about="simself:mltr_coverage">
+    <rdf:type rdf:resource="simself:AtlasExamItem"/>
+    <rdfs:label xml:lang="en">PSB primitives cover the canonical English usage</rdfs:label>
+  </owl:NamedIndividual>
+
+</rdf:RDF>
