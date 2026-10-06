@@ -1,0 +1,22 @@
+{
+  "workload": {
+    "steps": 200,
+    "dim": 16,
+    "seed": 11
+  },
+  "results": {
+    "substrate": {
+      "final_drift": 0.26957761096338106,
+      "refusals": 72,
+      "psi_norm": 0.9960589418994237,
+      "ticks": 200
+    },
+    "plain": {
+      "final_drift": 0.4544346409725967,
+      "refusals": 0,
+      "psi_norm": 1.3241694365859695,
+      "ticks": 400
+    }
+  },
+  "substrate_score": "3/3"
+}

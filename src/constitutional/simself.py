@@ -119,9 +119,35 @@ class SimSelf:
         drift_before = self.drift()
 
         if ok:
-            # Apply the projected gradient step.
+            # Projected gradient step: decay toward the ground, then move
+            # along the accepted observation.
+            #
+            # FIXED 2026-10-06. This previously read:
+            #
+            #     psi_current = _project_ball(
+            #         psi_current - eta * (psi_current - psi0), psi0, R)
+            #
+            # `obs` was gated and then DISCARDED. Starting from
+            # psi_current == psi0 that expression returns exactly psi0,
+            # every step, forever. Measured: 128 accepted observations,
+            # drift 0.0 at every step, max drift 0.0. The system looked
+            # perfectly stable because it was perfectly inert — an
+            # observation never entered the state.
+            #
+            # The fix has two parts, in this order:
+            #   1. decay: pull the current state toward the ground
+            #   2. integrate: add a bounded step along the observation
+            # The observation is projected onto the tangent direction of
+            # psi_current first, so an input orthogonal to the state
+            # cannot inject norm for free.
+            decayed = self.psi_current - self.eta * (self.psi_current - self.psi0)
+            direction = obs - float(np.dot(obs, decayed)) * decayed / (
+                float(np.linalg.norm(decayed)) + 1e-12)
+            dn = float(np.linalg.norm(direction))
+            if dn > 1e-12:
+                direction = direction / dn
             self.psi_current = _project_ball(
-                self.psi_current - self.eta * (self.psi_current - self.psi0),
+                decayed + (self.eta * self.R * 0.5) * direction,
                 self.psi0,
                 self.R,
             )
