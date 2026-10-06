@@ -28,10 +28,30 @@ from .ground import Ground
 from .simself import SimSelf
 from .memory import ConstitutionalMemory
 from .lexicon.ingest import gate_m0, ingest, embed_bag
+from .dreaming import ConstitutionalDreaming
 
 
 class Harness:
-    """Agent harness: gated tool use, memory store, tick."""
+    """Agent harness: gated tool use, memory store, tick.
+
+    The dreamer is wired in here (2026-10-06). It was not: the module
+    existed, imported cleanly, passed its own tests, and nothing in the
+    repository ever constructed it. `process()` also claimed in its
+    docstring to "record in memory" and never called `add_item`.
+
+    Both are the same defect — a component documented as part of the
+    system with no operating mode that reaches it. `tests/test_wiring.py`
+    now fails if any core module loses its last caller.
+    """
+
+    #: dream on every Nth process() call. 0 disables.
+    DREAM_EVERY: int = 8
+
+    #: commit the oldest uncommitted observation every Nth call. Kept
+    #: smaller than DREAM_EVERY so a dream always has at least
+    #: min_sources committed memories to recombine from; otherwise it
+    #: refuses correctly and forever.
+    COMMIT_AFTER: int = 2
 
     def __init__(
         self,
@@ -45,8 +65,12 @@ class Harness:
             ground=ground or Ground((constitution or Constitution()).psi_0.copy()),
             R=R, eta=eta,
         )
-        self.memory = ConstitutionalMemory()
+        self.memory = ConstitutionalMemory(dim=self.simself.dim)
         self.index: List[Any] = []  # lexicon unit index
+        self.dreamer = ConstitutionalDreaming(self.simself.ground,
+                                              self.simself.dim,
+                                              memory=self.memory)
+        self._calls = 0
 
     def process(self, text: str) -> Dict[str, Any]:
         """Route a text span through gate, ingest, tick.
@@ -56,13 +80,52 @@ class Harness:
         3. Tick.
         4. Record in memory.
         5. Return verdict + drift + mode.
+
+        Observations are committed once they are no longer the newest
+        thing. Committing is what makes an item count as prior art for
+        `novelty()`; without it the dreamer refuses forever with
+        `insufficient_memory` and never runs. That was found by running
+        the loop, not by reading it.
         """
         result = self.simself.observe(text)
         result["drift_after"] = self.simself.drift()
+
+        # step 4, actually: record what was observed. The docstring
+        # claimed this and no line did it.
+        item_id = self.memory.add(text, self.simself.psi_current,
+                                  category="observation")
+        result["memory_id"] = item_id
+        self._calls += 1
+
+        if self._calls % self.COMMIT_AFTER == 0:
+            result["committed"] = self._commit_oldest()
+
+        # idle dreaming. maintenance work, gated like anything else.
+        if self.DREAM_EVERY and self._calls % self.DREAM_EVERY == 0:
+            result["dream"] = self.dreamer.dream()
         return result
 
+    def _commit_oldest(self):
+        """Commit the oldest uncommitted observation. Returns its id."""
+        pending = [i for i, it in self.memory.items.items()
+                   if not it.committed]
+        if not pending:
+            return None
+        oldest = min(pending,
+                     key=lambda i: self.memory.items[i].timestamp)
+        self.memory.commit(oldest)
+        return oldest
+
+    def dream(self) -> Dict[str, Any]:
+        """Run a dream on demand. Never modifies ψ₀."""
+        return self.dreamer.dream()
+
     def commit(self, item_id: str) -> bool:
-        """Promote a memory item to committed."""
+        """Promote a memory item to committed.
+
+        Committed items are what `novelty()` measures against, so an
+        uncommitted observation never suppresses a future dream.
+        """
         return self.memory.commit(item_id)
 
     def add_item(self, item) -> None:
