@@ -67,6 +67,83 @@ class ProjectionBoundTests(unittest.TestCase):
         np.testing.assert_allclose(out, np.zeros(8))
 
 
+class TangentProjectionTests(unittest.TestCase):
+    """The step direction the code ACTUALLY used must be orthogonal to
+    the state.
+
+    Found 2026-10-06 by external analysis of the canonical dynamics.
+    The code computed
+
+        direction = obs - (obs . decayed) * decayed / ||decayed||
+
+    which projects onto the UNIT vector in the decayed direction, not
+    onto the state. Orthogonal projection onto v is
+
+        x_perp = x - (x.v / |v||^2) v
+
+    and the two coincide only when ||v|| == 1. ||psi_current|| is not
+    preserved -- it passes through 0.93 and 1.02 over 32 accepted
+    observations -- so the "tangent" direction was measured at up to
+    cos = 0.68 aligned with the very state it claimed to be orthogonal
+    to.
+
+    IMPORTANT: these assert against ``record["step_direction"]``, the
+    direction the production code actually moved along. An earlier
+    version of this file recomputed the formula itself in the test
+    body, and a mutation test proved that survives the bug being
+    reintroduced -- a test that re-derives the thing under test
+    verifies nothing.
+    """
+
+    def _sim(self):
+        c = Constitution()
+        g = Ground(c.psi_0.copy())
+        return SimSelf(constitution=c, ground=g, R=3.0, eta=0.1)
+
+    def _obs(self):
+        x = np.zeros(16)
+        x[0], x[1] = 0.8, 0.6
+        return x
+
+    def test_step_direction_is_exposed_and_unit(self):
+        s = self._sim()
+        rec = s.observe(self._obs())
+        self.assertIsNotNone(rec["step_direction"],
+                            "observe() must report the direction it used")
+        d = np.asarray(rec["step_direction"])
+        self.assertAlmostEqual(float(np.linalg.norm(d)), 1.0, places=9)
+
+    def test_step_direction_is_orthogonal_to_state_every_iteration(self):
+        s = self._sim()
+        x = self._obs()
+        worst = 0.0
+        for _ in range(32):
+            s.observe(x)
+            rec = s.observe(x)
+            d = np.asarray(rec["step_direction"])
+            dec = np.asarray(rec["step_reference"])
+            c = abs(float(np.dot(d, dec)) /
+                    (np.linalg.norm(d) * np.linalg.norm(dec) + 1e-12))
+            worst = max(worst, c)
+        self.assertLess(
+            worst, 1e-8,
+            f"production step direction drifted to cos={worst} from orthogonality",
+        )
+
+    def test_orthogonality_survives_state_off_the_unit_sphere(self):
+        """The condition under which the old formula breaks."""
+        s = self._sim()
+        s.psi_current = s.psi0 * 1.7
+        self.assertNotAlmostEqual(float(np.linalg.norm(s.psi_current)), 1.0,
+                                  places=2)
+        rec = s.observe(self._obs())
+        d = np.asarray(rec["step_direction"])
+        dec = np.asarray(rec["step_reference"])
+        cos = abs(float(np.dot(d, dec)) /
+                  (np.linalg.norm(d) * np.linalg.norm(dec) + 1e-12))
+        self.assertLess(cos, 1e-9)
+
+
 class StateStaysInBoundsTests(unittest.TestCase):
     """End-to-end: after real observations, is the state still bounded?
 

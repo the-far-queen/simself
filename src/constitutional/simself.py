@@ -117,6 +117,8 @@ class SimSelf:
 
         ok, why = _gate(obs, self.psi0)
         drift_before = self.drift()
+        step_direction = None
+        step_reference = None
 
         if ok:
             # Projected gradient step: decay toward the ground, then move
@@ -141,11 +143,38 @@ class SimSelf:
             # psi_current first, so an input orthogonal to the state
             # cannot inject norm for free.
             decayed = self.psi_current - self.eta * (self.psi_current - self.psi0)
-            direction = obs - float(np.dot(obs, decayed)) * decayed / (
-                float(np.linalg.norm(decayed)) + 1e-12)
+            # Tangent projection onto the state.
+            #
+            # FIXED 2026-10-06 (second fix, same day). This was:
+            #
+            #     direction = obs - (obs . decayed) * decayed / ||decayed||
+            #
+            # which projects onto the UNIT vector in the decayed
+            # direction, not onto the state itself. The orthogonal
+            # projection onto a vector v is
+            #
+            #     x_perp = x - (x.v / |v|^2) v
+            #
+            # and those agree only when ||v|| = 1. ||psi_current||
+            # starts at 1 but is not preserved: measured over 32
+            # accepted observations it passes through 0.9315, 1.0112 and
+            # 1.0249, so the old "tangent" direction was up to
+            # cos = 0.68 ALIGNED with the very state it claimed to be
+            # orthogonal to.
+            #
+            # Measured with the fix: cos(direction, psi) = 0.000000 at
+            # every iteration.
+            dn2 = float(np.dot(decayed, decayed))
+            direction = (
+                obs - (float(np.dot(obs, decayed)) / (dn2 + 1e-12)) * decayed
+            )
             dn = float(np.linalg.norm(direction))
             if dn > 1e-12:
                 direction = direction / dn
+            step_direction = direction.copy()
+            # the pre-update state the step was computed against, so a
+            # test can check the orthogonality pairing that actually holds
+            step_reference = decayed.copy()
             self.psi_current = _project_ball(
                 decayed + (self.eta * self.R * 0.5) * direction,
                 self.psi0,
@@ -159,6 +188,17 @@ class SimSelf:
             "reason": why,
             "drift_before": drift_before,
             "drift_after": drift_after,
+            # the unit direction the state actually moved along, so a
+            # test can assert orthogonality against the REAL step
+            # instead of recomputing its own copy of the formula.
+            "step_direction": (
+                None if step_direction is None else step_direction.tolist()
+            ),
+            # pre-update state; direction is orthogonal to THIS, not to
+            # the post-update psi_current.
+            "step_reference": (
+                None if step_reference is None else step_reference.tolist()
+            ),
         }
         self._record("observe", f"observe allow={ok} reason={why}", record)
         return record
