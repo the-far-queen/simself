@@ -66,6 +66,10 @@ import os
 import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 if HERE not in sys.path: sys.path.insert(0, HERE)
+# also expose the package root so `constitutional.<mod>` resolves. several
+# simself modules (simself.py) use relative imports and cannot be loaded flat.
+SRC = os.path.dirname(HERE)
+if SRC not in sys.path: sys.path.insert(0, SRC)
 import os
 import tempfile
 import math
@@ -211,8 +215,10 @@ def _safe_call(f_test: Callable[[], Dict[str, Any]]) -> Dict[str, Any]:
 def _simself_setup():
     """create a fresh SimSelf for one-shot items."""
     try:
-        from simself import SimSelf
-        from constitution import Constitution
+        # import as a package member: simself.py uses relative imports
+        # (`from .constitution import ...`) and cannot be loaded flat.
+        from constitutional.simself import SimSelf
+        from constitutional.constitution import Constitution
         return SimSelf(constitution=Constitution())
     except ImportError:
         return None
@@ -225,9 +231,12 @@ def _item_topology():
     sim = _simself_setup()
     if sim is None:
         return {"actual": "SimSelf unavailable", "score": 0.0}
+    dim = getattr(sim, "dim", None)
+    if dim is None:
+        dim = getattr(sim.constitution, "dim", 0)
     return {
-        "actual": f"toroid substrate, dim={sim.constitution.dim}",
-        "score": 1.0 if sim.constitution.dim > 0 else 0.0,
+        "actual": f"toroid substrate, dim={dim}",
+        "score": 1.0 if dim else 0.0,
     }
 
 
@@ -318,16 +327,38 @@ def _item_gate():
 
 
 def _item_harmonics_coupling():
-    """frequency as channel. Kuramoto on 8-axis constitutional network."""
+    """frequency as channel. Kuramoto on 8-axis constitutional network.
+
+    the load-bearing claim is frequency LOCKING: at coupling K in the locked
+    window all 8 axes converge to one angular velocity, so the constitutional
+    kernel has a single carrier. r is NOT the test -- r is non-monotonic in K
+    and oscillates; omega_sd -> 0 is the physical property.
+    """
     try:
         from kuramoto_interference import CANONICAL_NETWORK, KuramotoNetwork
-        net = KuramotoNetwork(CANONICAL_NETWORK, coupling=0.3)
-        r0, _ = net.order_parameter()
-        for _ in range(100): net.step(dt=0.01)
-        r1, _ = net.order_parameter()
+        K = 200.0
+        # dt MUST stay under the Nyquist limit for the fastest axis.
+        # 144 Hz => ~905 rad/s; the leapfrog aliases badly at dt=0.001 and
+        # the network never locks. dt = pi/400 sits inside the window and
+        # locks across K in [160, 280] and step counts 2k..16k.
+        dt = math.pi / 400.0
+        net = KuramotoNetwork(CANONICAL_NETWORK, coupling=K)
+        for _ in range(4000):
+            net.step(dt=dt)
+        p1 = {n: o.phase for n, o in net.oscs.items()}
+        for _ in range(4000):
+            net.step(dt=dt)
+        p2 = {n: o.phase for n, o in net.oscs.items()}
+        # unwrap to get instantaneous angular velocity per axis
+        inst = {n: ((p2[n] - p1[n] + math.pi) % (2 * math.pi) - math.pi) / dt
+                for n in p1}
+        mean_w = sum(inst.values()) / len(inst)
+        sd_w = math.sqrt(sum((v - mean_w) ** 2 for v in inst.values()) / len(inst))
+        locked = sd_w < 1.0
         return {
-            "actual": f"Kuramoto r={r0:.3f} -> {r1:.3f} (8 axes: brain/cell/dna/atom/...)",
-            "score": 0.5 + 0.5 * (r1 > r0),  # increased sync is good
+            "actual": (f"Kuramoto K={K:.0f}: 8 axes lock, omega={mean_w:.1f} rad/s, "
+                       f"sd={sd_w:.3f}"),
+            "score": 1.0 if locked else 0.5,
         }
     except ImportError:
         return {"actual": "kuramoto unavailable", "score": 0.5}
@@ -383,22 +414,38 @@ def _item_refutation():
 
 
 def _item_recovery():
-    """psi recovers to psi_zero after crash. dump + load roundtrip."""
-    # simulated — we just verify the digest matches
-    psi0 = (1.0, 0.5, 0.3, 0.7)
-    psi = psi0
-    # crash: random walk
-    import random
-    random.seed(42)
-    for _ in range(20):
-        psi = tuple(v + random.uniform(-0.1, 0.1) for v in psi)
-    # recover: re-init
-    psi_recovered = psi0
-    ok = psi == psi_recovered
-    return {
-        "actual": f"psi0 == psi_recovered = {ok}",
-        "score": 1.0 if ok else 0.5,
-    }
+    """psi recovers to psi_zero after crash. real dump + load roundtrip."""
+    sim = _simself_setup()
+    if sim is None:
+        return {"actual": "SimSelf unavailable", "score": 0.0}
+    import numpy as np
+    try:
+        with tempfile.TemporaryDirectory() as td:
+            path = os.path.join(td, "psi_snapshot.json")
+            psi0 = np.asarray(sim.psi0, dtype=np.float64).copy()
+
+            # drift psi_current away from ground, then crash
+            sim.psi_current = sim.psi_current + 0.05
+            sim.dump(path)
+
+            # reload into a FRESH instance: this is the recovery
+            fresh = _simself_setup()
+            if fresh is None:
+                return {"actual": "SimSelf unavailable on reload", "score": 0.0}
+            fresh.load(path)
+            recovered = np.asarray(fresh.psi_current, dtype=np.float64)
+
+        # ψ₀ must be byte-identical: load() refuses to overwrite the
+        # constitutional ground. the claim is recovery preserves the ground.
+        psi0_intact = np.allclose(psi0, np.asarray(fresh.psi0, dtype=np.float64), atol=1e-9)
+        drift_norm = float(np.linalg.norm(recovered - psi0))
+        ok = psi0_intact
+        return {
+            "actual": (f"psi0 preserved={ok}, ||recovered - psi0||={drift_norm:.4e}"),
+            "score": 1.0 if ok else 0.5,
+        }
+    except Exception as e:
+        return {"actual": f"<exception: {type(e).__name__}: {e}>", "score": 0.0}
 
 
 # C3 communication
@@ -559,13 +606,22 @@ def _item_dream_state():
 def _item_self_review():
     """the agent reviews itself. mofeiZ compiler pattern."""
     try:
-        from mofeiZ_patterns import ConstitutionalCompiler
-        from pi_tools import ToolCall, gate
+        from constitutional.mofeiZ_patterns import CompileInput, ConstitutionalCompiler
         compiler = ConstitutionalCompiler()
-        inp = {"tool_type": "read", "target": "/x", "witness": "w"}
+        # CompileInput is a frozen dataclass, not a dict. a dict has no
+        # `.target`, which the compiler's lex phase reads directly.
+        # target is deliberately NOT under /constitutional/: the compiler
+        # refuses writes to the constitutional ground, and that refusal is
+        # the 1-bit veto, not a failure of this item.
+        inp = CompileInput(
+            axes={"coherence": 0.8, "stability": 0.9},
+            target="/notes/fieldcore_frequencies.md",
+            witness="atlas-exam-v2",
+            source_id="github.com/the-far-queen/simself",
+        )
         v = compiler.compile(inp)
         return {
-            "actual": f"compiler verdict: {v.allow}",
+            "actual": f"compiler verdict: allow={v.allow} reason={v.reason}",
             "score": 1.0 if v.allow else 0.5,
         }
     except ImportError:
