@@ -33,9 +33,30 @@ import numpy as np
 import soundfile as sf
 
 
-MODEL_DIR = Path("C:/Users/Admin/simself/models/tts/kokoro")
+# Model location resolves relative to the repo, with an env override.
+# The old hardcoded C:/Users/Admin path died when the machine was
+# rebuilt under the HP account on 2026-09-19 — the service imported fine
+# and then failed at first use, because git was the only thing keeping
+# the weights findable.
+REPO_ROOT = Path(__file__).resolve().parents[2]
+MODEL_DIR = Path(os.environ.get("SIMSELF_KOKORO_DIR",
+                                 REPO_ROOT / "models" / "tts" / "kokoro"))
 MODEL_PATH = MODEL_DIR / "model_q8f16.onnx"
 VOICES_PATH = MODEL_DIR / "voices256.npz"
+
+
+def model_status() -> dict:
+    """what the voice stack has and has not got. cheap, no imports."""
+    present = {p.name: p.exists() for p in
+               (MODEL_PATH, VOICES_PATH, MODEL_DIR / "af_sarah.bin")}
+    return {
+        "model_dir": str(MODEL_DIR),
+        "exists": MODEL_DIR.exists(),
+        "files": present,
+        "ready": all(present.values()),
+        "hint": None if all(present.values()) else
+                "run scripts/fetch_kokoro.py to fetch the voice stack",
+    }
 
 
 def _make_voice_dict() -> dict[str, np.ndarray]:

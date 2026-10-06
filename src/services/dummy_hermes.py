@@ -11,9 +11,13 @@ later. Use this to test the STT bridge end-to-end without needing Hermes CLI.
 from __future__ import annotations
 
 import time
+import os
 from pathlib import Path
 
-HERMES_DIR = Path("C:/Users/Admin/simself/.hermes")
+# Resolved relative to the repo. The old hardcoded C:/Users/Admin path
+# died when the machine was rebuilt under the HP account on 2026-09-19.
+REPO_ROOT = Path(__file__).resolve().parents[2]
+HERMES_DIR = Path(os.environ.get("SIMSELF_HERMES_DIR", REPO_ROOT / ".hermes"))
 INBOX = HERMES_DIR / "inbox.txt"
 OUTBOX = HERMES_DIR / "outbox.txt"
 

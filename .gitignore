@@ -48,3 +48,12 @@ build/
 docker/*/build.log
 
 harness_log.json
+
+# Voice stack weights — 84 MB of ONNX/npz/bin. Fetched by
+# scripts/fetch_kokoro.py, not committed. Kokoro is Apache-2.0 upstream.
+models/
+kokoro-v0_19.onnx
+voices.bin
+voices256.npz
+test_kokoro.wav
+test_kokoro_service.wav

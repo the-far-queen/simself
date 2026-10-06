@@ -40,7 +40,10 @@ import numpy as np
 import sounddevice as sd
 
 
-HERMES_DIR = Path("C:/Users/Admin/simself/.hermes")
+# Resolved relative to the repo. The old hardcoded C:/Users/Admin path
+# died when the machine was rebuilt under the HP account on 2026-09-19.
+REPO_ROOT = Path(__file__).resolve().parents[2]
+HERMES_DIR = Path(os.environ.get("SIMSELF_HERMES_DIR", REPO_ROOT / ".hermes"))
 INBOX = HERMES_DIR / "inbox.txt"
 OUTBOX = HERMES_DIR / "outbox.txt"
 

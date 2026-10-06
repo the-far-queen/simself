@@ -33,10 +33,17 @@ from pathlib import Path
 
 
 HERE = Path(__file__).resolve().parent
-DESKTOP_GROK = Path("C:/Users/Admin/Desktop/Grok")
+# Home and vault roots resolve from the environment, defaulting to the
+# live account. The old hardcoded C:/Users/Admin paths died when the
+# machine was rebuilt under the HP account on 2026-09-19.
+HOME = Path(os.environ.get("SIMSELF_HOME", Path.home()))
+VAULT = Path(os.environ.get("SIMSELF_VAULT",
+                            HOME / "AppData" / "Local" / "hermes" / "vault"))
+DESKTOP_GROK = Path(os.environ.get("SIMSELF_DESKTOP_GROK",
+                                   HOME / "Desktop" / "Grok"))
 DESKTOP_GROK_MD = DESKTOP_GROK / "md"
-VAULT_GROK = Path("C:/Users/Admin/AppData/Local/hermes/vault/10-minimax/50-index/notes/chat-transcripts/grok")
-MYSELF_PATH = Path("C:/Users/Admin/AppData/Local/hermes/vault/10-minimax/50-index/MYSELF.md")
+VAULT_GROK = VAULT / "10-minimax" / "50-index" / "notes" / "chat-transcripts" / "grok"
+MYSELF_PATH = VAULT / "10-minimax" / "50-index" / "MYSELF.md"
 
 
 SECTION_BREAK_PATTERNS = [

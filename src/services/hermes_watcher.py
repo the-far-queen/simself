@@ -17,7 +17,10 @@ import os
 import time
 from pathlib import Path
 
-HERMES_DIR = Path("C:/Users/Admin/simself/.hermes")
+# Resolved relative to the repo. The old hardcoded C:/Users/Admin path
+# died when the machine was rebuilt under the HP account on 2026-09-19.
+REPO_ROOT = Path(__file__).resolve().parents[2]
+HERMES_DIR = Path(os.environ.get("SIMSELF_HERMES_DIR", REPO_ROOT / ".hermes"))
 OUTBOX = HERMES_DIR / "outbox.txt"
 INBOX = HERMES_DIR / "inbox.txt"
 
