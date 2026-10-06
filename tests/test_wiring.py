@@ -29,7 +29,8 @@ if SRC not in sys.path:
 CONST = os.path.join(SRC, "constitutional")
 
 # modules that MUST be reachable from somewhere else
-MUST_BE_CALLED = ["dreaming", "entity", "boot_sequence", "resolution"]
+MUST_BE_CALLED = ["dreaming", "entity", "boot_sequence", "resolution",
+                "handoff", "void"]
 
 # modules deliberately parked. entity.py is marked LEGACY in its own
 # docstring and returns a placeholder — wiring a stub in would be worse

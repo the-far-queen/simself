@@ -29,6 +29,8 @@ from .simself import SimSelf
 from .memory import ConstitutionalMemory
 from .lexicon.ingest import gate_m0, ingest, embed_bag
 from .dreaming import ConstitutionalDreaming
+from .handoff import HandoffProtocol
+from .void import VoidIntegration
 
 
 class Harness:
@@ -53,6 +55,9 @@ class Harness:
     #: refuses correctly and forever.
     COMMIT_AFTER: int = 2
 
+    #: dt for the zero-input maintenance step that follows each observe.
+    TICK_DT: float = 0.05
+
     def __init__(
         self,
         constitution: Optional[Constitution] = None,
@@ -70,6 +75,10 @@ class Harness:
         self.dreamer = ConstitutionalDreaming(self.simself.ground,
                                               self.simself.dim,
                                               memory=self.memory)
+        # handoff + void wired in 2026-10-06. Both had been advertised in
+        # this repo's docs since August and neither existed as code.
+        self.handoff = HandoffProtocol(self.simself)
+        self.void = VoidIntegration(self.simself.dim)
         self._calls = 0
 
     def process(self, text: str) -> Dict[str, Any]:
@@ -88,7 +97,12 @@ class Harness:
         the loop, not by reading it.
         """
         result = self.simself.observe(text)
-        result["drift_after"] = self.simself.drift()
+        # the zero-input maintenance step. observe() only moves psi on
+        # input; without a tick the system accumulates observations and
+        # never integrates them, and readiness stays at no_ticks forever.
+        tick = self.simself.tick(dt=self.TICK_DT)
+        result["tick"] = tick["tick"]
+        result["drift_after"] = tick["drift_after"]
 
         # step 4, actually: record what was observed. The docstring
         # claimed this and no line did it.
@@ -133,6 +147,9 @@ class Harness:
 
     def state_report(self) -> Dict[str, Any]:
         return {
+            "ready_for_handoff": self.handoff.readiness().ready,
+            "void_distance": self.void.distance_to_void(
+                self.simself.psi_current),
             "drift": self.simself.drift(),
             "mode": self.simself.mode,
             "ticks": self.simself.ticks,
