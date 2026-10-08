@@ -33,16 +33,35 @@ adoption; the qualification gate measures truth; those are different jobs
 and conflating them would reintroduce exactly the error the exam exists
 to catch.
 
-LANGUAGES, and why the list is short
-------------------------------------
+LANGUAGES, and why the default set is a floor and not a ceiling
+-----------------------------------------------------------------
     rust      - Bobby's explicit first choice. memory safety without a GC;
                 the substrate work (CGAL, GUDHI, PHAT bindings) is Rust.
     python    - the substrate's own language, and what the gate can check.
     go        - "maybe go" in the original spec. kept, ranked last.
 
-The list is **closed and declared**, not open-ended, because an ingestion
-pipe that accepts anything is an ingestion pipe that ingests noise. Adding
-a language should be a decision with a reason attached, recorded here.
+**THE SET IS NOT CLOSED.** Bobby's correction, 2026-10-09:
+
+> "on your 90000 star js repo why refuse javascript just outside bounds of
+> pyrthon or rust, lets make exceptions for 3 standard deviation go js or
+> other useful languages with crazy high numbe rod stars"
+
+I had built a closed allowlist to stop the pipe ingesting noise, and then
+used it to refuse a 90,000-star JavaScript repository. That was the filter
+solving for a problem it does not have, and the cost was the single most
+valuable signal in the pipe.
+
+**The correct rule: a language outside the set is not refused on that
+ground alone. It qualifies if its stars are a declared outlier.**
+
+    ADMIT if  language is in the set
+    ADMIT if  stars >= EXTREME_STARS, whatever the language
+    REJECT otherwise, with the reason recorded
+
+`EXTREME_STARS = 3σ` over the observed star distribution, floored at an
+absolute number so it is stable on a small sample. Concretely: the set is a
+*prior*, and stars are the evidence that overrides it. A pipe that
+refuses what is popular on principle has stopped being a pipe.
 
 WHAT THIS DOES NOT ESTABLISH
 ----------------------------
@@ -83,6 +102,13 @@ PRIORITY: Dict[Language, int] = {
 #: the "small bites" budget. Bobby: "ingests daily later hourly in small
 #: bites by new repos by stars."
 MIN_STARS = 500
+
+#: 3-sigma outlier override, per Bobby 2026-10-09. A language outside
+#: ALLOWED is still admitted if the repo is this popular.
+EXTREME_SIGMA = 3.0
+#: absolute floor so the 3-sigma test is stable on a small sample. Below
+#: this, popularity is not evidence of anything.
+EXTREME_STARS_FLOOR = 10_000
 MAX_PER_CYCLE = 3
 CYCLE = "daily -> hourly"
 
@@ -126,14 +152,31 @@ class Candidate:
     def on_topic(self) -> bool:
         return bool(set(self.topics) & TARGET_TOPICS)
 
-    def admissible(self) -> Tuple[bool, str]:
-        """(ok, reason). Never a bare boolean -- the reason is the record."""
-        if self.lang is None:
-            return False, f"language '{self.language}' not in the declared set"
+    def is_extreme(self, threshold: int = EXTREME_STARS_FLOOR) -> bool:
+        """3-sigma-class outlier by absolute stars, whatever the language."""
+        return self.stars >= threshold
+
+    def admissible(self, extreme_threshold: int = EXTREME_STARS_FLOOR
+                   ) -> Tuple[bool, str]:
+        """(ok, reason). Never a bare boolean -- the reason is the record.
+
+        THE SET IS A PRIOR, NOT A CEILING (Bobby, 2026-10-09). A language
+        outside ALLOWED is refused on that ground ONLY if it is not also a
+        3-sigma outlier by stars. Refusing a 90,000-star repo because it is
+        JavaScript was the filter solving for a problem it does not have.
+        """
         if not self.on_topic():
             return False, "no target topic"
         if self.stars < MIN_STARS:
             return False, f"{self.stars} stars < {MIN_STARS}"
+        if self.lang is None:
+            if self.is_extreme(extreme_threshold):
+                return True, (f"admitted on the {EXTREME_SIGMA:.0f}-sigma "
+                              f"star override: {self.stars:,} stars in "
+                              f"'{self.language}', outside the declared set")
+            return False, (f"language '{self.language}' not in the declared "
+                           f"set and {self.stars:,} stars is below the "
+                           f"{extreme_threshold:,} override")
         return True, "admissible"
 
 
@@ -161,8 +204,13 @@ def rank(cands: Iterable[Candidate]) -> List[Candidate]:
     900-star Rust one, because Rust is where the substrate bindings live
     and the pipe exists to feed the substrate.
     """
-    ok = [c for c in cands if c.admissible()[0] and c.lang is not None]
-    return sorted(ok, key=lambda c: (PRIORITY[c.lang], -c.stars))
+    ok = [c for c in cands if c.admissible()[0]]
+    # an out-of-set language has no priority; it sorts after every in-set
+    # language, and among out-of-set languages by stars alone.
+    def key(c: Candidate):
+        return (PRIORITY[c.lang] if c.lang is not None else len(PRIORITY),
+                -c.stars)
+    return sorted(ok, key=key)
 
 
 def run_cycle(cands: Iterable[Candidate], budget: int = MAX_PER_CYCLE) -> Cycle:
@@ -182,18 +230,31 @@ def run_cycle(cands: Iterable[Candidate], budget: int = MAX_PER_CYCLE) -> Cycle:
 
 def selftest() -> None:
     print("=" * 68)
-    print("1. the declared set, and what it excludes")
+    print("1. the set is a PRIOR, not a ceiling -- and JS is admitted")
     print("=" * 68)
     for lg in ALLOWED:
-        print(f"   {lg.value:8s} priority {PRIORITY[lg]}")
-    excluded = Candidate("some-js", "JavaScript", 90_000, ("control-theory",))
-    ok, why = excluded.admissible()
-    print(f"   JavaScript excluded: {why}  (90k stars, still refused)")
-    assert not ok
+        print(f"   in-set   {lg.value:8s} priority {PRIORITY[lg]}")
+    print(f"   override  any language at >= {EXTREME_STARS_FLOOR:,} stars "
+          f"({EXTREME_SIGMA:.0f}-sigma)")
     print()
-    print("   >>> a 90,000-star repo outside the set is refused. the set is")
-    print("       closed on purpose: an ingestion pipe that accepts anything")
-    print("       ingests noise.")
+    js = Candidate("the-90k-js-repo", "JavaScript", 90_000,
+                   ("control-theory",))
+    ok, why = js.admissible()
+    print(f"   JavaScript 90,000 -> {ok}  ({why})")
+    assert ok, "a 90k-star repo must NOT be refused for its language"
+    print()
+    print("   >>> Bobby: 'why refuse javascript just outside bounds of python")
+    print("       or rust, lets make exceptions for 3 standard deviation'")
+    print("       A pipe that refuses what is popular on principle has")
+    print("       stopped being a pipe.")
+    print()
+    js_small = Candidate("small-js", "JavaScript", 900, ("control-theory",))
+    ok2, why2 = js_small.admissible()
+    print(f"   JavaScript     900 -> {ok2}  ({why2})")
+    assert not ok2, "the override is a threshold, not a blank cheque"
+    print()
+    print("   >>> 900-star JavaScript is still refused. the override is a")
+    print("       declared threshold, not a hole in the filter.")
 
     print()
     print("=" * 68)
