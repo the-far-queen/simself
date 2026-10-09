@@ -309,6 +309,53 @@ under constraint, with the constraint enforced by the geometry itself.
 
 ---
 
+## Status, measured
+
+`python -m pytest tests/ -q` → **418 passed, 2 skipped, 0 failing.**
+
+The two substrate repos are also green as of 2026-10-09:
+
+| repo | result |
+|---|---|
+| [fieldcore](https://github.com/the-far-queen/fieldcore) | 538 passed, 0 failed, 1 xfailed |
+| [far-math](https://github.com/the-far-queen/far-math) | 24 checks, Layer A/B/C rule enforced in code |
+| [far-courses](https://github.com/the-far-queen/far-courses) | 16 transmission checks; docs at 8.9% prerequisite load |
+
+Five fieldcore tests were red for weeks. None were retuned to pass — each
+was diagnosed, and two turned out to be stale assertions of claims that had
+already been withdrawn, and three asserted a threshold that is provably
+unachievable under the measurement they used. Those findings are in the
+fieldcore commit messages.
+
+## What is NOT claimed
+
+- **Not conscious.** Nothing here measures that. The modules carrying
+  suggestive names say so in their own docstrings.
+- **Not proven by the mathematics.** The Layer A results are verified.
+  Everything in Layer B and C is marked and load-bearing on nothing.
+- **Not transmissible yet.** The schools now measure at 8.9% prerequisite
+  load, which is a floor, not a proof that a curriculum can carry the
+  Tier 2 content to someone who has never met this project.
+
+## Terms used here
+
+Defined here so this document can be read cold.
+
+- **gradient** - the direction in which a function rises fastest
+- **manifold** - a space that locally looks like ordinary Euclidean space
+- **Clifford torus** - the flat torus inside the 3-sphere, given by |z| = |w| = 1/sqrt(2)
+- **Heegaard splitting** - building a 3-manifold by gluing two handlebodies along their boundary
+- **Hopf fibration** - a map from the 3-sphere onto the 2-sphere whose fibers are great circles
+- **solid torus** - D2 x S1, a doughnut
+- **harmonic** - the part of a field with Delta h = 0, which gradient flow does not move
+- **PSB** - Primary Semantic Block: a typed unit of meaning, the atom this project uses instead of a token
+- **M0 governor** - the deterministic component with authority to refuse
+- **M1 controller** - the out-of-core component that qualifies operators and audits changes
+- **constitutional axis** - a coordinate with thresholds rather than a continuous value
+- **spectral** - computed from the eigenvalues of a matrix, i.e. from its shape rather than its entries
+- **prerequisite load** - the fraction of a document's domain terms that it never defines for the reader
+- **VOID** - a verification verdict meaning the check is structurally incapable of failing
+
 **Public repos.** `LICENSE` is open. No tollbooth. Fork, clone, run, build — including commercial use.
 
 ## Defense (one paragraph)
@@ -340,6 +387,13 @@ deprecation banners. See `src/constitutional/CANONICAL.md`.
 | `src/constitutional/psb_primitives.py` | 6 primitive types, `coverage()` measured. |
 | `src/constitutional/frequency.py` | Parallel state. ψ untouched. |
 | `src/constitutional/adversarial.py` | 21 protocol stubs. |
+| `src/constitutional/twin_prime_coupling.py` | Fixed coupling across nine manifolds by twin-prime skip hierarchy. Zero learned parameters. |
+| `src/constitutional/metalog.py` | Actor/observer split; the causal discrepancy between intending and having done. |
+| `src/constitutional/master_protocols.py` | Four protocols, four independently-computed coherence metrics. Layer C, marked. |
+| `src/research/contracts.py` | What each capability promises and how a caller checks it. Measured per machine. |
+| `src/research/integrations.py` | 15 verified external systems, licence-gated. Stars never promote into the runtime path. |
+| `src/research/companion.py` | avatar state → TTS → Telegram, degrading visibly rather than silently. |
+| `src/research/harness_adapters.py` | Eight real filesystem/import probes for the harnesses. |
 | `src/state_vector.py` | ψ with projected gradient step. |
 | `src/m1_m0_negotiation.py` | M1 → M0 negotiation through `gate_packet`. |
 | `src/coding_operator_object.py` | Model I/O surface, gated. |
