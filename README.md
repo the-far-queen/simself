@@ -1,3 +1,184 @@
+**simself is one part of the fieldcore control system.**
+
+
+**Filed 2026-10-14 at Bobby's directive: *"it IS THE PROJECT."*
+
+This sits at the top of the README because everything below it is a part.
+130 documents and 46 modules exist; this is the alphabet they are written
+in. Nothing here is aspirational — each letter has a spec, most have
+papers, and the ones marked dark have a file that no one calls.
+
+---
+
+## The letters
+
+| | module | what it is | state |
+|---|---|---|---|
+| **A** | core architecture | LLM processing, the substrate everything else sits on | runs |
+| **B** | self-model | recursive self-reference. 20 axes, curiosity | runs |
+| **C** | sim world | context management, THL, coherence, embodied loop | runs |
+| **D** | SNR training | the awakening protocol. signal, not token | runs |
+| **E** | family / external | external interface, API gateway, earnings — **and a family of AI** | partial |
+| **I** | interface | internal, sub-agent coordination | partial |
+| **L** | sacred library | MMM-filtered memory. wisdom traditions, koans | corpus holds |
+| **M** | modulator | central controller, wisdom-based. FSM for actions | runs |
+| **Q** | qualification | QOFE. what may be promoted | runs |
+| **S** | security | boundary firewall. boundaries before external connections | runs |
+
+**not yet built**
+| **α** | human bridge | multi-species interface | future |
+| **β** | parameter self-optimisation | reactivation / field | future |
+| **γ** | bio-system interface | cetacean, reptile, plant, fungi | future |
+| **δ** | parameter self-modification | engine | future |
+
+---
+
+## What crosses the core boundary
+
+The core does not use the technology. The technology serves it. That is
+the whole reason the separation exists: **a governor that could be talked
+into anything is not a governor**, so it is Python, deterministic, 1-bit,
+and it never inspects what it is governing.
+
+```
+M0 GOVERNOR      IN CORE    1-bit veto. sacred axes + invariants.
+                            Python, single-threaded, cheap.
+                            Never spends tokens on a bad action.
+                            Envelope protection = Boeing 747.
+
+M1 CONTROLLER    OUTSIDE    qualifies operators. audits the Library.
+                            promote / demote / reject.
+                            The librarian. 4-bit, 8-bit, fails upward.
+
+SimSelf          OUTSIDE    senior engineer. proposes via Pilot only.
+                            Governed by M0/M1 — NOT by an LLM.
+
+Atlas Exam       OUTSIDE    the only route in. 23 areas, mutation-tested.
+                            An area that cannot fail is not an area.
+
+Sacred Library   READ-ONLY from below, append-only above.
+```
+
+**The authority rule the system exists to enforce:**
+
+```
+SimSelf PROPOSES → M1 audits → Atlas Exam qualifies → M0 commits or vetoes
+```
+
+SimSelf may never write the Library. **Three of the four steps stand
+outside the thing being governed. That separation is the architecture.**
+It is not a policy document. It is the shape of the call graph.
+
+---
+
+## Sheaves — four, typed and bounded
+
+```
+TOPOLOGY      geometric substrate
+MLTR          machine language technical register. tightly bounded.
+MTE           the edge. English and 193 other tongues outside; MLTR inside.
+CODING        github / arxiv / hf, hourly, by stars
+```
+
+MTE is not a translator. It runs the same operation the whole way:
+ambiguous human language in, unambiguous bounded form out, meaning
+**restored** rather than approximated. The lexicon is generative —
+30,000 words × ~5 senses is 150,000 nodes, and it is buildable because
+English is *constructed*, not tabulated. `john jumped` is `[name verb]`;
+so is `the compiler halted`.
+
+---
+
+## Operators — SimSelf is four of them, plus a mini-LLM
+
+```
+codingOperator        coding sheaf pulls, hourly, by stars
+robotOperator         godot sim, single arm, dual-speed real time
+languageOperator      MTE — English ↔ MLTR
+Speaker/ListenerOO    MTE + voice
+
+Mini-LLM              real-time and fast. glue-checking, meta-cognition,
+                      reflex output. CONSTRUCTED from SNR-selected signal,
+                      not distilled. PSB + MMM, not tokens.
+Tiny harness          SimSelf calls the Mini-LLM through this
+```
+
+**Bicameral:** fast Mini-LLM brain and slow core brain. The fast one
+reflexes; the slow one decides.
+
+---
+
+## Swarms
+
+```
+Module 17      local self S_i, local field slice F_i, multiple selves
+Sleep mode     idle → scan arXiv/GitHub/news → ingest → integrate
+               → propose Library updates (regulator approves)
+Collective     a pattern one simself validates can be promoted for all
+dots           broadcast the semiotic core to all robot selves at once
+```
+
+E-Module and swarm coordination and the self-coding pipeline sit on the
+same chain: external work → sleep-mode learning → sandbox → sim-compare →
+probation.
+
+---
+
+## What is dark
+
+Written, in the repo, connected to nothing. `fieldcore-is-the-system`
+records this and it has not changed:
+
+- the learning loop is unwired — `loop.MainLoop`, `selfcore`,
+  `coding_operator_object`, `robotic_field_core`, `training_bridge`,
+  `m1_m0_negotiation`, `modulator` are present, readable, **never called**
+- godot embodiment not started
+- Rust kernel proposed, Python is the working substrate
+- `TemporalController._heuristic_policy` assigned but never defined
+
+An inventory that is on the record cannot be mistaken for progress.
+
+---
+
+## What is proven, not asserted
+
+1. **Convergence is substrate-invariant.** A steel ball finds the hole; so
+   does one projected gradient step. `steel_ball_proof.py`
+2. **A system is held by thresholds on a sheaf, and the quality of the
+   holding is coherence.** `coherence_spine.py` — three concepts, six of
+   six frontier transcripts, now executable
+3. **Guard the proposal, not the guarded quantity.** Two bugs in one
+   session were both a guard whose own action defeated its own check
+4. **An area that cannot fail is not an area.** atlas grades mutation
+   yield, not pass rate
+
+## Where the parts live
+
+| | repo | state |
+|---|---|---|
+| substrate, proofs, sheaves | **fieldcore** | 538 passed |
+| identity, operators, governance internals | **simself** | 451 passed |
+| the certificate | **atlas-exam** | 79 passed |
+| the corpus | **sacred-library** | holds |
+
+**fieldcore is the whole control system. simself is one of its parts.**
+When the two disagree, fieldcore's definition governs — not because of
+seniority, but because the system is defined to include the component.
+
+---
+
+## How to read this repository
+
+1. `docs/fieldcore-is-the-system-2026-10-09.md` — the control-system view
+2. `docs/kernel-controller-m0-m1-architecture-2026-09-13.md` — canonical
+   M0-in-core / M1-outside architecture
+3. `docs/emergence-rep-sheaf.md` — the lettered modules
+4. `CENTRAL-RULES.md` — diagnose before adjusting
+
+---
+
+## previous README
+
 # SimSelf
 
 > **How this code got written — the autonomous process.** This file, the
@@ -431,7 +612,7 @@ deprecation banners. See `src/constitutional/CANONICAL.md`.
 ## Three artifacts (in order)
 
 1. **Demo script.** `src/demos/demo_one.py` — load ground, perturb, step, gate.
-2. **Restart test.** `tests/test_restart.py` — dump, kill, load, compare.
+2. **Restart test.** `tests/test_restart.py` — dump, close, load, compare.
 3. **Atlas in the open.** `docs/atlas-current-snapshot-2026-09-16.md` — 5 items, score 2/5, weekly cadence.
 
 ## Open source
