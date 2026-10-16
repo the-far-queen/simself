@@ -52,7 +52,15 @@ class ScannedRepo:
 class ScanManifest:
     """the result of one scanner run. append-only log."""
     scanner_version: str = "1.0"
-    scan_ts: str = field(default_factory=lambda: datetime.datetime.utcnow().isoformat() + "Z")
+    # `datetime.utcnow()` is deprecated and scheduled for REMOVAL in a future
+    # Python. This line warned 16 times across the suite on 2026-10-16.
+    # Switched to an explicit UTC-aware stamp formatted to the SAME shape
+    # ("...Z"), so stored manifests are byte-comparable with earlier ones:
+    # now(timezone.utc).isoformat() would emit "+00:00" instead of "Z".
+    scan_ts: str = field(
+        default_factory=lambda: datetime.datetime.now(datetime.timezone.utc)
+        .strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+    )
     repos: Tuple[ScannedRepo, ...] = ()
 
     def to_text(self) -> str:
@@ -109,7 +117,9 @@ def scan_from_cache(repos: List[Dict[str, Any]]) -> ScanManifest:
             language=r.get("language", ""),
             description=(r.get("description") or "")[:200],
             topics=topics,
-            scan_ts=datetime.datetime.utcnow().isoformat() + "Z",
+            # same deprecation fix as ScanManifest.scan_ts above
+            scan_ts=datetime.datetime.now(datetime.timezone.utc)
+            .strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
             matched=matched,
         ))
     return ScanManifest(repos=tuple(sorted(matches, key=lambda r: r.stars, reverse=True)))
