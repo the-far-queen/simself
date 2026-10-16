@@ -14,6 +14,7 @@ this gate_m0 diverge), the policy has already split.
 """
 from __future__ import annotations
 
+import hashlib
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Callable, List, Optional, Tuple
@@ -191,10 +192,41 @@ PRIM = {
 
 
 def embed_bag(span: str, dim: int = 16) -> np.ndarray:
+    """Stable bag-of-tokens embedder.
+
+    HASHING FIX 2026-10-16 (Hermes). This used Python's builtin `hash()`,
+    which is randomized per process by PYTHONHASHSEED. Measured: the SAME span
+    embedded to axis 2 in one process and axis 4 in the next.
+
+        process 1: [0.0, 0.0, 0.56, 0.0, 0.0, ...]
+        process 2: [0.0, 0.0, 0.0, 0.0, 0.56, ...]
+
+    Consequences, all of them load-bearing:
+
+      - a committed Unit's embedding does not survive a restart, so the
+        lexicon silently rewrites itself every run
+      - the M0 gate's allow/refuse verdict is not reproducible: identical
+        input, different answer, chosen by process start order
+      - the exam and the tests each get their own ground truth, which is
+        why 79 tests could pass while the real score was 8/23
+
+    `hashlib.blake2b(digest_size=8)` replaces it: fast, stdlib, and stable
+    across processes, machines and Python versions. The algorithm is
+    otherwise UNCHANGED — same two accumulations, same normalisation, same
+    dim. Only the hash changed, so old in-memory units are unaffected and
+    no stored artifact needs migrating (there are none to migrate: see
+    above, they could not have persisted meaningfully).
+
+    Do not "fix" this by seeding PYTHONHASHSEED. That fixes the symptom in
+    one launcher and leaves every other entry point wrong.
+    """
     v = np.zeros(dim)
-    for i, tok in enumerate(span.lower().split()):
-        v[hash(tok) % dim] += 1.0
-        v[(hash(tok) // dim) % dim] += 0.25
+    for tok in span.lower().split():
+        h = int.from_bytes(
+            hashlib.blake2b(tok.encode("utf-8"), digest_size=8).digest(), "big"
+        )
+        v[h % dim] += 1.0
+        v[(h // dim) % dim] += 0.25
     n = float(np.linalg.norm(v))
     return v if n == 0 else v / n
 
