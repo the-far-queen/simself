@@ -211,7 +211,15 @@ if __name__ == "__main__":
     def f1_run(inputs):
         import uuid
         # fake gate
-        ids = {hash(str(x)) for x in inputs["aspects"]}
+        # STABLE-HASH FIX 2026-10-16 (Hermes). `hash(str(x))` on bytes-as-str
+        # is randomized per process, so this "distinctness" check was really a
+        # per-run lottery: same input, different distinct_id count. It is a
+        # demo harness, but a demo that cannot reproduce its own number teaches
+        # the wrong lesson. blake2b makes it deterministic.
+        ids = {
+            hashlib.blake2b(str(x).encode("utf-8"), digest_size=8).hexdigest()
+            for x in inputs["aspects"]
+        }
         return len(ids) == len(inputs["aspects"]), {
             "distinct_ids": len(ids),
             "f1_pass_rate": 1.0,

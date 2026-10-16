@@ -6,6 +6,7 @@ Full language→vision→motor pipeline with asynchronous gluing.
 Based on docs/fieldcore/docs/stalk-gluing1.txt
 """
 
+import hashlib
 import numpy as np
 import torch
 import torch.nn as nn
@@ -102,7 +103,16 @@ class LanguageStalk:
         """REINFORCE: Store eligibility-style update."""
         
         # trace (orphan word, restored as comment)
-        trace_key = f"trace_{hash(other_z.cpu().numpy().tobytes())}"
+        # STABLE-HASH FIX 2026-10-16 (Hermes). This key was `hash(bytes)`, which is
+        # randomized per process. So `eligibility_trace` is an in-memory dict
+        # that would silently lose every entry it had been given on the next
+        # run — a delayed-reward trace that forgets its own history is not a
+        # delayed-reward trace. blake2b over the same bytes is deterministic.
+        # The bytes themselves are already the content-addressed part; only
+        # the digest was unstable.
+        trace_key = "trace_" + hashlib.blake2b(
+            other_z.cpu().numpy().tobytes(), digest_size=16
+        ).hexdigest()
         if trace_key not in self.eligibility_trace:
             self.eligibility_trace[trace_key] = self._get_current_projection().detach()
         

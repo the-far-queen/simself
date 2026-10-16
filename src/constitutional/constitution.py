@@ -19,6 +19,8 @@ Public API:
 
 from __future__ import annotations
 
+import hashlib
+
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Tuple
 
@@ -144,13 +146,28 @@ class Constitution:
         return float(np.dot(obs, self.psi_0) / (np.linalg.norm(obs) + 1e-9))
 
 
-# Legacy entry points preserved so existing callers keep working.
+# STABLE-HASH FIX 2026-10-16 (Hermes). Was Python's builtin hash(), which is
+# randomized per process by PYTHONHASHSEED. This one is worse than the
+# ingest.py instance fixed the same day: embed_text is what builds psi_0, so
+# the GROUND ITSELF changed between runs. An identity substrate whose ground
+# is re-randomized on every start cannot hold a position, drift, or any
+# measurement across a restart.
+#
+# Identical algorithm to the fixed embed_bag: same two accumulations, same
+# normalisation, same dim. Only the hash changed, so the mapping is stable
+# across processes, machines and Python versions.
 def embed_text(text: str, dim: int = 16) -> np.ndarray:
-    """Bag-of-tokens embedding. Same shape as kernel/lexicon."""
+    """Bag-of-tokens embedding. Same shape as kernel/lexicon.
+
+    Stable: blake2b, not builtin hash(). See the note above.
+    """
     v = np.zeros(dim)
-    for i, tok in enumerate(text.lower().split()):
-        v[hash(tok) % dim] += 1.0
-        v[(hash(tok) // dim) % dim] += 0.25
+    for tok in text.lower().split():
+        h = int.from_bytes(
+            hashlib.blake2b(tok.encode("utf-8"), digest_size=8).digest(), "big"
+        )
+        v[h % dim] += 1.0
+        v[(h // dim) % dim] += 0.25
     n = float(np.linalg.norm(v))
     return v / n if n > 0 else v
 
