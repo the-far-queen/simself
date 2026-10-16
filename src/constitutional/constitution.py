@@ -146,16 +146,18 @@ class Constitution:
         return float(np.dot(obs, self.psi_0) / (np.linalg.norm(obs) + 1e-9))
 
 
-# STABLE-HASH FIX 2026-10-16 (Hermes). Was Python's builtin hash(), which is
-# randomized per process by PYTHONHASHSEED. This one is worse than the
-# ingest.py instance fixed the same day: embed_text is what builds psi_0, so
-# the GROUND ITSELF changed between runs. An identity substrate whose ground
-# is re-randomized on every start cannot hold a position, drift, or any
-# measurement across a restart.
-#
-# Identical algorithm to the fixed embed_bag: same two accumulations, same
-# normalisation, same dim. Only the hash changed, so the mapping is stable
-# across processes, machines and Python versions.
+# STABLE-HASH FIX 2026-10-16 (Hermes). Was Python's builtin hash(),
+    # randomized per process by PYTHONHASHSEED. Corrected scope note: an
+    # earlier draft of this comment said the ground psi_0 was re-randomized
+    # because of it. That was wrong — psi_0 is a hardcoded literal at the
+    # dataclass field above, and never passed through this function. The
+    # real damage here is that any caller embedding text through this helper
+    # got a different vector per process, so anything comparing two runs
+    # (drift, similarity across restarts, a stored span re-embedded later)
+    # disagreed with itself.
+    #
+    # Identical algorithm to the fixed embed_bag: same two accumulations, same
+    # normalisation, same dim. Only the hash changed.
 def embed_text(text: str, dim: int = 16) -> np.ndarray:
     """Bag-of-tokens embedding. Same shape as kernel/lexicon.
 
