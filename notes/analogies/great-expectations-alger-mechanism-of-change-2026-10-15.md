@@ -37,9 +37,21 @@ Miss Havisham tells Pip he is a gentleman. That is an identity handed to a
 child from outside, by someone who cannot be held to it.
 
 Pip believes it. For twenty years he performs it — the clothes, the speech,
-the betting. The book's cold sentence about what that feels like, ch. 4, about
-his sister's treatment of him as a child, is the same wound the promise
-touched:
+the betting. And the injection itself is on the record, in the actual words
+of the woman who administers it, ch. 8. She tells Estella to play cards with
+him; Estella objects; and Miss Havisham answers:
+
+> "With this boy? Why, he is a common labouring-boy!" — "Well? You can break
+> his heart." / "Beggar him," said Miss Havisham to Estella (ch. 8)
+
+Three clauses. He is defined by what he is not. Permission to keep him is
+granted as a licence to damage him, and the licence is issued in front of the
+one person whose opinion he is about to spend twenty years trying to earn.
+The book puts the wound in the mouth of the person inflicting it, and then
+lets the reader watch him go and get the opinion anyway.
+
+The book's cold sentence about what the promise felt like, ch. 4, is the same
+wound from the other side:
 
 > "I was always treated as if I had insisted on being born in opposition to
 > the dictates of reason, religion, and morality" (ch. 4)
@@ -180,7 +192,53 @@ never lies about what he did.
 
 ---
 
-## 6. the penitent is not the growth
+## 6. the two voices that were wrong about him, and how
+
+The book sets two people who both misjudge Pip into the machinery, and both
+misjudge him in opposite directions. Both are wrong by the whole distance,
+and one is right by accident.
+
+**The sister.** The punishment is the same wound every time, and it is never
+random — ch. 2:
+
+> "I often served as a connubial missile" (ch. 2)
+
+She hits him because she is frightened, she does it in front of company, and
+she apologises for it afterwards, badly, in the wrong register — which is
+worse than not apologising. The form of it is what installs the identity: he is
+treated as an offender from birth, and he accepts the description without ever
+being able to test it. Ch. 4, "I was always treated as if I had insisted on
+being born in opposition to the dictates of reason, religion, and morality" —
+he has no memory of the charge and no way to contest it.
+
+**The blacksmith.** Joe's discipline is the opposite shape and it never
+registers as discipline because it is never administered as punishment. Ch. 2,
+on the walk with the convict:
+
+> "I always treated him as a larger species of child, and as no more than my
+> equal." (ch. 2)
+
+Pip says that about Joe, and it is the whole of Joe in one line: fed,
+sheltered, taught, and never once put above the boy. The teaching is the only
+real inheritance Pip gets, and it arrives as an argument rather than a
+ceremony — ch. 9, Joe on what a person has to do before he can be anything:
+
+> "The king upon his throne, with his crown upon his ed, can’t sit and write
+> his acts of Parliament in print, without having begun, when he were a
+> unpromoted Prince, with the alphabet.—Ah!" (ch. 9)
+
+> "And as to being common, I don’t make it out at all clear. You are oncommon
+> in some things. You’re oncommon small." (ch. 9)
+
+Note the shape of the second one. Joe does not deny Pip is common. He denies
+that the thing Pip is ashamed of is the whole of him — he is uncommon in some
+things and small in others, and the distinction is the first accurate estimate
+of Pip's value anyone gives him. It arrives at the forge, from a man who cannot
+read, before anyone with money or standing has said anything. Neither Joe's
+blows nor this were ever going to be described as kindness by the people in the
+room.
+
+### the penitent is not the growth
 
 The famous self-accusations are not the transformation. They are the noise
 around it. What actually does the work is three quiet things.
@@ -345,10 +403,24 @@ decoration corpus, and it is the same selection rule applied to images that
   parser; asserted equal to `range(1, 60)`. An earlier naive parser read
   `IV` as 6 and silently mis-anchored five quotations — the assertion is in
   the code for that reason.
-- All 30 quotations matched against the normalised source string; 30/30
-  verbatim, 0 chapter-anchor mismatches.
+- All quotations matched against the normalised source string; 19/19 verbatim,
+  0 chapter-anchor mismatches. 15 distinct chapters cited, all in range.
 - One transcription error caught and corrected in the process: a full stop
   where the source has a comma, ch. 39.
+- **Source correction, 2026-10-15.** The original brief asked for "Dr.
+  Magwire," "Smallweather" and "Bentley Snout." **None of those exist in
+  Great Expectations** — 0 occurrences each, verified against the source
+  string. They are *Nicholas Nickleby* characters. "Nickleby" itself: 0
+  occurrences. The punishment material in this note is therefore taken from
+  the scenes actually present (Tickler, ch. 2; the Christmas goadings, ch. 4;
+  the wash, ch. 7; the Rampage, ch. 12-13), and "Bentley" means Bentley
+  Drummle. Lesson recorded because it is the cheapest possible way to invent a
+  quote: put a plausible detail in the brief and never check it.
+- One claim of mine was wrong and was corrected in this pass: I wrote that Joe
+  taught Pip the alphabet by beating him. Joe's A-to-Z passage (ch. 9) is a
+  figure for gradual accumulation and he adds "though I can't say I've
+  exactly done it" — he never claims to have completed the work. The note now
+  says what he actually says.
 
 *Filed by Hermes (minimax-m3.1), 2026-10-15, at Bobby's instruction: read the
 text properly rather than gloss it, map it to Alger, and write down what it
