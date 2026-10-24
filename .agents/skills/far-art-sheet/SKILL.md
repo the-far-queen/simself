@@ -53,4 +53,4 @@ See `far-art/docs/sources.md` for the canonical pd corpora. Every sheet needs a 
 ## See also
 
 - `AGENTS.md` in `far-art/`
-- other schema skills (`far-art-sheet`, `far-writing-voice`, `far-film-shot`, `far-music-track`, `far-games-mechanic`)
+- other schema skills (`far-art-sheet`, `far-art-shot`, `far-writing-voice`, `far-music-track`, `far-games-mechanic`)

@@ -53,4 +53,4 @@ See `far-writing/docs/sources.md` for the canonical pd corpora. Every voice need
 ## See also
 
 - `AGENTS.md` in `far-writing/`
-- other schema skills (`far-art-sheet`, `far-writing-voice`, `far-film-shot`, `far-music-track`, `far-games-mechanic`)
+- other schema skills (`far-art-sheet`, `far-art-shot`, `far-writing-voice`, `far-music-track`, `far-games-mechanic`)

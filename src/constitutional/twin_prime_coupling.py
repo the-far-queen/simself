@@ -13,7 +13,8 @@ This module implements the coupling and nothing else. It does not decide
 what a manifold computes — that is the cell's job, and the cell is not
 implemented here. What is implemented is the part that can be checked.
 
-Layer note: this is Layer B in far-math's terms. The arithmetic is exact
+Layer note: this is Layer B in the far-math school's terms (the school now
+lives in fieldcore/src/farmath). The arithmetic is exact
 and verified below; the claim that this coupling structure is the right one
 for a substrate is not established and is not asserted. Bobby's directive
 applies — preserve, mark, do not drop.

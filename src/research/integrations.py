@@ -4,7 +4,7 @@ Every entry is a real repository, verified against the GitHub API on
 2026-10-09, with the fields that decide integration: licence, activity,
 and what part of SimSelf it serves. Nothing here is vendored. An entry
 that cannot be legally or cleanly used is marked and kept, exactly as a
-Layer C claim is kept (see far-math).
+Layer C claim is kept (see fieldcore/src/farmath).
 
 Verdict vocabulary
 ------------------

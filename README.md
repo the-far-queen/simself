@@ -499,7 +499,7 @@ The two substrate repos are also green as of 2026-10-09:
 | repo | result |
 |---|---|
 | [fieldcore](https://github.com/the-far-queen/fieldcore) | 538 passed, 0 failed, 1 xfailed |
-| [far-math](https://github.com/the-far-queen/far-math) | 24 checks, Layer A/B/C rule enforced in code |
+| [fieldcore](https://github.com/the-far-queen/fieldcore) (folded far-math, 2026-10-16) | 24 checks, Layer A/B/C rule enforced in code |
 | [far-courses](https://github.com/the-far-queen/far-courses) | 16 transmission checks; docs at 8.9% prerequisite load |
 
 Five fieldcore tests were red for weeks. None were retuned to pass — each

@@ -43,7 +43,7 @@ The YAML `description` is what an agent ingests first. Include the triggers — 
 | `fieldcore-stalk` | the stalk architecture |
 | `far-art-sheet` | far-art 56-axis style sheet schema |
 | `far-writing-voice` | far-writing voice schema |
-| `far-film-shot` | far-film shot schema |
+| `far-art-shot` | far-art shot schema (video coverage) |
 | `far-music-track` | far-music track schema |
 | `far-games-mechanic` | far-games mechanic schema |
 

@@ -41,7 +41,7 @@ The **SKILL.md format**: YAML frontmatter (`name`, `description` with triggers) 
 Adopted in `simself/.agents/skills/` with 11 skills:
 - simself-identity, simself-gate, simself-constitution, simself-atlas-exam, simself-publish
 - fieldcore-tiny-core, fieldcore-stalk
-- far-art-sheet, far-writing-voice, far-film-shot, far-music-track, far-games-mechanic
+- far-art-sheet, far-art-shot, far-writing-voice, far-music-track, far-games-mechanic
 
 ## what we did NOT adopt (yet)
 
