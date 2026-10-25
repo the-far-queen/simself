@@ -100,6 +100,88 @@ def nearest_committed(
     return best, best_c
 
 
+#: The claim register, loaded ONCE and shared. It lives in fieldcore
+#: because the ground's claims are fieldcore's own -- the gate limits,
+#: the governor, the substrate verdict, the drift, the locus.
+#:
+#: WHY THE THIRD GATE, and it is not a duplicate of the two above.
+#:
+#:   gate_m0        the SIMILARITY gate. Is this span near the ground?
+#:   nearest_committed  the COST gate. Is this span near what is
+#:                     already committed?
+#:   THE CLAIM GATE the POLARITY gate. Does this span CONTRADICT a
+#:                     ground claim?
+#:
+#: And the third is the one the first two cannot do. Measured, 2026-10-26
+#: (fieldcore/src/gate_truth_diagnostic.py):
+#:
+#:   the on-ground sentence   +0.935641
+#:   its own contradiction    +0.932066
+#:
+#: A contradiction is SIMILAR to the ground -- that is what makes it a
+#: contradiction rather than an off-topic sentence -- so the similarity
+#: gate admits the lie at almost exactly the truth's score. No floor
+#: separates them. The polarity gate is a different instrument, and it
+#: is the one that reads the difference.
+#:
+#: THE LOADER. If fieldcore is not importable, the claim gate is
+#: ABSENT, and an absent gate must not read as a pass. So the claim
+#: gate is FAIL-CLOSED when it cannot load: it refuses, it does not
+#: wave the span through. A missing substrate is a skip, and a skip is
+#: never a pass.
+_CLAIM_REGISTER = None
+_CLAIM_REGISTER_TRIED = False
+
+
+def _claim_register():
+    """The shared claim register, or None if fieldcore is unreachable."""
+    global _CLAIM_REGISTER, _CLAIM_REGISTER_TRIED
+    if _CLAIM_REGISTER_TRIED:
+        return _CLAIM_REGISTER
+    _CLAIM_REGISTER_TRIED = True
+    try:
+        import os
+        import sys
+        here = os.path.dirname(os.path.abspath(__file__))
+        # src/constitutional/lexicon -> src -> simself -> work_repos
+        repos = os.path.abspath(
+            os.path.join(here, "..", "..", "..", ".."))
+        fc = os.path.join(repos, "fieldcore", "src")
+        if os.path.isdir(fc) and fc not in sys.path:
+            sys.path.insert(0, fc)
+        import claim_register as _cr
+        _CLAIM_REGISTER = _cr.standard_register()
+    except Exception:
+        _CLAIM_REGISTER = None
+    return _CLAIM_REGISTER
+
+
+def claim_gate(text: str) -> Tuple[bool, str]:
+    """The polarity gate. Returns (allow, reason).
+
+    FAIL-CLOSED. If the register cannot be loaded, the span is
+    refused with a reason that says so -- because an absent gate must
+    not read as a pass.
+
+    AND IT IS THE THIRD GATE, not a fourth. The claim register is
+    consulted once per span, and its verdict is one of the reasons the
+    ingest path can return.
+    """
+    reg = _claim_register()
+    if reg is None:
+        return False, "claim_gate_unavailable"
+    try:
+        adj = reg.read(text)
+    except Exception as exc:  # noqa: BLE001
+        # an exception is not a verdict, and it is not a pass
+        return False, "claim_gate_raised:%s" % type(exc).__name__
+    if adj.verdict.value == "contradicted":
+        return False, "contradicts_ground:%s" % (adj.claim_id or "?")
+    if adj.verdict.value == "ungrounded":
+        return False, "ungrounded_claim:%s" % (adj.claim_id or "?")
+    return True, "ok"
+
+
 def gate_m0(
     emb: np.ndarray,
     psi0: np.ndarray,
@@ -150,6 +232,26 @@ def ingest(
     ok, why = gate_m0(emb, psi0, max_norm, min_cos)
     nbr, c_nbr = nearest_committed(emb, index, psi0, radius)
     c_g = cost_pair(emb, psi0, psi0, radius, Status.COMMITTED)
+
+    # THE POLARITY GATE, and it runs BEFORE the similarity gate.
+    #
+    # WHY BEFORE. The similarity gate cannot see a contradiction -- it
+    # admits one at almost the truth's score, because a contradiction
+    # is similar to the ground. So a span that contradicts the ground
+    # would clear the similarity gate and be committed, and the
+    # contradiction would be a fact in the lexicon. The polarity gate
+    # is the one that catches it, so it runs first.
+    #
+    # AND IT IS FAIL-CLOSED. An unavailable register refuses the span
+    # with a reason, because a missing substrate is a skip and a skip
+    # is never a pass.
+    claim_ok, claim_why = claim_gate(span)
+    if not claim_ok:
+        unit.status = Status.REFUSED
+        v = Verdict(False, claim_why, c_g, c_nbr,
+                    None if nbr is None else nbr.id, drift0, drift0)
+        index.append(unit)
+        return unit, v
 
     if not ok:
         unit.status = Status.REFUSED
