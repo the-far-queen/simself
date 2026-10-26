@@ -182,7 +182,14 @@ def main() -> int:
     print("endpoint:", client.base_url)
     print()
 
-    wrapper = MTELLMWrapper(llm=client)
+    # THE SCOPE, so the live run checks the model's references against
+    # what is actually here.
+    try:
+        from constitutional.mte_llm_wrapper import resolve_scope
+    except ImportError:
+        def resolve_scope(roots=None):
+            return None
+    wrapper = MTELLMWrapper(llm=client, scope=resolve_scope())
 
     for ex in EXCHANGES:
         print("-" * 78)

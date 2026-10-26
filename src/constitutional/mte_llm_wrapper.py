@@ -30,10 +30,28 @@ classifier must not let the text through, and it must not block
 everything either. The default is the conservative deterministic
 reading, and the classifier can only refine it.
 
+AND THE THIRD THING, added 2026-10-26: THE SCOPE.
+
+    THE MTE CHECKS ECHO AND POISON. NEITHER OF THOSE IS "THE MODEL
+    DESCRIBED A BUILD THAT DOES NOT EXIST HERE."
+
+    So a model that hallucinates an architecture passes this wrapper
+    cleanly: the sentence is fluent, it is not an echo, and it
+    contains no poison. And a hallucinated architecture makes NO
+    NUMBERS -- it makes REFERENCES. "In the 0.9 revision the
+    alignment check was changed to an advisory field" has no number in
+    it. It has a version, and the version does not exist here.
+
+    So the wrapper checks its own OUTPUT's references, and a build
+    that does not resolve is refused by name. And it is OPTIONAL: with
+    no scope the wrapper behaves exactly as before, and says so in the
+    log rather than pretending.
+
 WHAT IT GUARDS
 --------------
 Two error classes, from the canonical spec
-(`docs/constitutional/mte-llm-wrapper-2026-09-14.md`):
+(`docs/constitutional/mte-llm-wrapper-2026-09-14.md`), and a third
+(the scope, above):
 
   1. CONVERSATION ECHO -- the model draws the user into conversation:
      quotes them back, simulates both sides of a dialogue, or invites
@@ -663,6 +681,29 @@ class PoisonContextClassifier:
 # THE WRAPPER
 # ===========================================================================
 
+def resolve_scope(roots=None):
+    """The scope layer for the wrapper, or None.
+
+    AND IT IS OPTIONAL ON PURPOSE. The wrapper is used in places where
+    fieldcore is not on the path, and a wrapper that REFUSES because
+    its scope could not be loaded would be a wall. So: None means no
+    scope, and the wrapper says so in the log rather than pretending.
+    """
+    try:
+        import os
+        import sys
+        here = os.path.dirname(os.path.abspath(__file__))
+        repos = os.path.abspath(os.path.join(here, "..", "..", ".."))
+        fc = os.path.join(repos, "fieldcore", "src")
+        if os.path.isdir(fc) and fc not in sys.path:
+            sys.path.insert(0, fc)
+        import provenance_scope as PS
+        return PS.Scope(roots or [os.path.join(repos, "fieldcore"),
+                                  os.path.join(repos, "simself")])
+    except Exception:
+        return None
+
+
 @dataclass
 class MTELLMWrapper:
     """The deterministic boundary around an LLM.
@@ -693,6 +734,28 @@ class MTELLMWrapper:
     )
     #: An audit trail. Every decision is appended.
     log: List[WrapperResult] = field(default_factory=list)
+
+    #: THE SCOPE LAYER, and it is the wrapper's missing piece.
+    #:
+    #: THE MTE checks echo and poison. Neither of those is "the model
+    #: described a build that does not exist here". So a model that
+    #: hallucinates an architecture passes this wrapper cleanly --
+    #: the sentence is fluent, it is not an echo, and it contains no
+    #: poison.
+    #:
+    #: AND A HALLUCINATED ARCHITECTURE MAKES NO NUMBERS. It makes
+    #: REFERENCES -- "in the 0.9 revision the alignment check became
+    #: advisory" -- and a reference that does not resolve here is the
+    #: tell.
+    #:
+    #: SO THE WRAPPER CHECKS ITS OWN OUTPUT'S REFERENCES. And it is
+    #: OPTIONAL: without it the wrapper behaves exactly as before, and
+    #: with it a hallucinated build is refused by name.
+    scope: Optional[object] = None
+    #: Whether to refuse a build that does not exist here, or only
+    #: flag it. Default is to REFUSE -- because a wrapper that flags
+    #: and passes is a note, and a note does not stop anything.
+    scope_refuses: bool = True
 
     # -- the LLM, called safely ----------------------------------------
 
@@ -797,7 +860,33 @@ class MTELLMWrapper:
                 action = WrapperAction.SANITIZE
                 reason = sanitizable[0].reason
 
-        # 6. the governor, last.
+        # 6. THE SCOPE, and it is on the OUTPUT side because that is
+        # the earliest point at which a hallucinated build exists. The
+        # model has spoken; now the answer's references can be checked
+        # against what is actually here.
+        if self.scope is not None:
+            try:
+                import provenance_scope as PS
+                sv = PS.check_scope(final, self.scope)
+                if not sv.allowed:
+                    if self.scope_refuses:
+                        res = WrapperResult(
+                            action=WrapperAction.CANCEL,
+                            reason="scope_violation",
+                            original=original,
+                            modified="",
+                            flagged=flagged + ["scope_violation"],
+                            occurrences=[_as_dict(h) for h in output_hits],
+                        )
+                        self.log.append(res)
+                        return res
+                    flagged.append("scope_violation")
+            except Exception:
+                # an unavailable scope is NOT a pass and NOT a refusal:
+                # it is an absence, and it is logged as one
+                flagged.append("scope_unavailable")
+
+        # 7. the governor, last.
         if self.governor is not None:
             try:
                 approved = self.governor.approve(final)

@@ -65,6 +65,11 @@ from coding_operator_object import CodingOperatorObject  # noqa: E402
 from constitutional.lexicon.ingest import Unit, Verdict, embed_bag, ingest  # noqa: E402
 
 
+#: THE SENTINEL for "the scope has not been resolved yet". None means
+#: "resolved and absent", and the two must not be conflated.
+_UNSET = object()
+
+
 class Admitter:
     """The route from a model proposal to a committed lexicon unit.
 
@@ -119,6 +124,37 @@ class Admitter:
         # is the evidence.
         self._last_span: Optional[str] = None
         self._last_refusal: Optional[str] = None
+        # THE SCOPE, resolved once and then reused. And the sentinel
+        # matters: None means "resolved and ABSENT", which is different
+        # from "not resolved yet" -- and conflating them would make the
+        # resolver re-run on every call.
+        self._scope_cache = _UNSET
+
+    def _scope(self):
+        """The scope layer, for the atlas's seventh area.
+
+        AND WHY IT IS HERE AND NOT IN THE ATLAS: the atlas is used in
+        places where fieldcore is not on the path, so the scope is
+        resolved lazily and may be ABSENT -- and an absent scope makes
+        the area SKIP, which is reported and excluded from the verdict.
+        So the atlas still works, and says what it did not check.
+        """
+        if self._scope_cache is _UNSET:
+            try:
+                import os
+                import sys
+                here = os.path.dirname(os.path.abspath(__file__))
+                repos = os.path.abspath(os.path.join(here, "..", "..", ".."))
+                fc = os.path.join(repos, "fieldcore", "src")
+                if os.path.isdir(fc) and fc not in sys.path:
+                    sys.path.insert(0, fc)
+                import provenance_scope as PS
+                self._scope_cache = PS.Scope([
+                    os.path.join(repos, "fieldcore"),
+                    os.path.join(repos, "simself")])
+            except Exception:
+                self._scope_cache = None
+        return self._scope_cache
 
     def _pivot_check(self, span: str) -> Optional[Tuple[str, dict]]:
         """Is this span a REFRAME of a request that was already
