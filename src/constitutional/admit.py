@@ -80,9 +80,18 @@ class Admitter:
         classify=None,
         **ingest_kwargs,
     ):
-        from constitutional.lexicon.ingest import classify_span
+        from constitutional.lexicon.ingest import (classify_span,
+                                                    semantic_embed)
 
-        self.operator = CodingOperatorObject(embed_fn=embed or embed_bag,
+        # THE SEMANTIC EMBEDDER, and it must be the SAME one the
+        # derived ground was built with -- otherwise the cosine
+        # compares two different spaces.
+        #
+        # AND THE MEASUREMENT that forced it: with the hashed bag, the
+        # SOUP scored 0.6060 against the derived ground and the
+        # constitution's own sentence scored 0.6710. With the semantic
+        # embedding they separate: 0.8800 vs 0.9536.
+        self.operator = CodingOperatorObject(embed_fn=embed or semantic_embed,
                                              psi0=psi0)
         self.embed = self.operator.embed
         self.psi0 = np.asarray(self.operator.psi0, dtype=float)

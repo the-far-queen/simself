@@ -51,7 +51,43 @@ from constitutional.lexicon.ingest import embed_bag  # noqa: E402
 
 # Measured axis-0 cosines under the stable hash. These are the words the
 # substrate's own psi_0 = [1,0,...,0] actually aligns with.
-ALIGNS = ("form", "gate", "core", "allow")
+#: THE ALIGNED SPANS, RE-DERIVED FOR THE DERIVED GROUND.
+#:
+#: "form", "gate", "core", "allow" were near the PLACEHOLDER's axis 0
+#: by construction -- those words were picked because they hashed into
+#: bucket 0. Against the derived ground they are not near it, so every
+#: one of them is refused and the test's own assertion fires:
+#: "every aligned span was refused -- the gate is a wall".
+#:
+#: And that assertion is CORRECT and worth keeping -- a gate that
+#: refuses everything IS a wall. So the fix is to give the test spans
+#: that are genuinely aligned with the CURRENT ground, chosen by
+#: MEASURING.
+ALIGN_CANDIDATES = (
+    "the constitutional ground is write protected",
+    "the gate refuses a packet below the coherence threshold",
+    "the drift is non increasing under every tick",
+    "a span is admitted only when the gate passes",
+    "the embedding norm is bounded and a packet above it is refused",
+)
+
+
+def _aligned_spans():
+    """The spans nearest the ground, chosen by measuring."""
+    import numpy as np
+    from constitutional.constitution import Constitution
+    from constitutional.lexicon.ingest import semantic_embed
+
+    psi0 = np.asarray(Constitution().psi_0, dtype=float)
+
+    def cos(text):
+        v = np.asarray(semantic_embed(text), dtype=float)
+        return float(np.dot(v, psi0) / (np.linalg.norm(v) * np.linalg.norm(psi0)))
+
+    return tuple(sorted(ALIGN_CANDIDATES, key=cos, reverse=True)[:4])
+
+
+ALIGNS = _aligned_spans()
 OFF_AXIS = ("truth", "verdict", "unit")
 
 

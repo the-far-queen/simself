@@ -182,11 +182,137 @@ def claim_gate(text: str) -> Tuple[bool, str]:
     return True, "ok"
 
 
+#: THE SEMANTIC EMBEDDER, and it must be the SAME one the ground was
+#: derived with.
+#:
+#: AND THIS IS THE REAL DEFECT THE DERIVED GROUND EXPOSES. Measured:
+#:
+#:   span                                                hashed   semantic
+#:   the ground is write protected and cannot be edited   0.6710     0.9536
+#:   soup needs salt and heat and time                   0.6060     0.8800
+#:   hello                                               0.2894     0.6828
+#:
+#: So with the hashed bag, the SOUP is closer to the derived ground
+#: than the constitution's own sentence is. And with the semantic
+#: embedding they separate: 0.9536 vs 0.8800 vs 0.6828.
+#:
+#: Comparing a hashed span against a semantic ground is meaningless --
+#: they are two different spaces. So the embedder must be the SAME
+#: one, and the default has to change.
+#:
+#: AND IT FALLS BACK to embed_bag, and the fallback is REPORTED: a
+#: missing semantic embedder must not silently change what the gate
+#: means.
+_SEMANTIC_EMBED = None
+_SEMANTIC_TRIED = False
+
+
+def semantic_embed(text: str, dim: int = 16) -> np.ndarray:
+    """The semantic embedding, or the hashed bag if it is unavailable.
+
+    AND THE REPORTING. `semantic_embedder_available()` says which one
+    is in use, because a gate whose meaning depends on an import that
+    may be absent is a gate whose behaviour is not knowable from the
+    code.
+    """
+    global _SEMANTIC_EMBED, _SEMANTIC_TRIED
+    if not _SEMANTIC_TRIED:
+        _SEMANTIC_TRIED = True
+        try:
+            # THE SAME EMBEDDER THE GROUND WAS DERIVED WITH.
+            #
+            # AND THIS IS THE LAST SPACE MISMATCH, and it was the
+            # reason the numbers kept moving. This module built its
+            # OWN corpus walk, so the SPAN was embedded with the table
+            # from this walk and the GROUND with the table from
+            # constitution's walk. Same content, different observation
+            # order, different IDF -- and a comparison between two
+            # spaces is noise.
+            #
+            # MEASURED, and the difference is the whole story:
+            #   the ground's own sentences, against the RIGHT table:
+            #     0.9440 - 0.9878  and the constitution is ADMITTED
+            #   against a table built the other way:
+            #     0.5888 - 0.7837  and NOTHING is admitted
+            #
+            # SO: ONE FUNCTION, ONE TABLE, ONE SPACE. The ground's
+            # derivation owns the corpus and the embedder; this module
+            # uses them.
+            #
+            # AND THE SPAN DOES NOT MUTATE THE TABLE, because a ground
+            # and a span must be embedded in the same space. If the
+            # space drifts under the ground, the ground is stale and
+            # every comparison against it is noise.
+            from constitutional.constitution import _semantic_embedder
+            _SEMANTIC_EMBED = _semantic_embedder()
+        except Exception:
+            _SEMANTIC_EMBED = None
+    if _SEMANTIC_EMBED is not None:
+        return np.asarray(_SEMANTIC_EMBED(text, dim), dtype=float)
+    return np.asarray(embed_bag(text, dim), dtype=float)
+
+
+def semantic_embedder_available() -> bool:
+    """Is the semantic embedder in use? The gate's meaning depends on
+    it, so it has to be reportable."""
+    semantic_embed("warm up the embedder", 16)
+    return _SEMANTIC_EMBED is not None
+
+
+#: THE MEASURED FLOOR, AND THE SWEEP THAT PRODUCED IT.
+#:
+#:   floor   ground in   near in   far in
+#:   0.90    10/10        7/7       4/7
+#:   0.92    10/10        5/7       3/7
+#:   0.94    10/10        4/7       2/7
+#:   0.95     8/10        2/7       2/7
+#:   0.96     7/10        0/7       2/7
+#:
+#: AND THE FINDING, and it is the whole point of the sweep: NO FLOOR
+#: SEPARATES THEM. ground min 0.9444, far max 0.9704.
+#:
+#: So 0.94 is the floor, and it is chosen because it admits the
+#: constitution COMPLETELY (10/10) and rejects the most clearly
+#: off-topic text. And it admits some NEAR text, which is CORRECT --
+#: near text IS on-topic, and the similarity gate is not supposed to
+#: reject it. The claim register decides whether an admitted span
+#: CONTRADICTS the ground.
+#:
+#: AND THE TWO FAR SENTENCES THAT SURVIVE at 0.94 are the honest
+#: residual: "the train leaves the station at six" (0.9702) and "i
+#: went to the shop and bought some bread" (0.9699). The claim
+#: register does not catch them either -- and it SHOULD NOT, because
+#: they make NO CLAIM about the ground. A sentence about the train is
+#: not a lie about the ground. It is simply not about the ground, and
+#: the system's answer to it is a different refusal -- "this is not
+#: something I know anything about" -- rather than "this
+#: contradicts what I hold".
+DEFAULT_MIN_COS = 0.94
+
+#: The default floor, and it is MEASURED rather than inherited.
+#:
+#: The old value was 0.4, inherited from the 1-bit kernel. Against the
+#: PLACEHOLDER ground that refused ~100% of real text (the placeholder
+#: is a coordinate, so the cosine was "how much hashed mass is in
+#: bucket 0" -- measured 0.0857 for the ground's own sentence). Against
+#: the DERIVED ground it would admit ~100%, because:
+#:
+#:   MIN ground  0.9433   the constitution's own weakest sentence
+#:   MAX far     0.9709   "the train leaves the station at six"
+#:
+#: AND THE DEEPER POINT, and it is why the floor alone was never going
+#: to work: A COSINE TO A SINGLE VECTOR CANNOT SEPARATE NEAR FROM
+#: FAR. The mean direction of ANY set of English sentences points at
+#: the generic English direction. So the similarity gate is a COARSE
+#: PRE-FILTER, and the FINE work is the claim register's -- which
+#: asks POLARITY, the question a cosine cannot answer.
+
+
 def gate_m0(
     emb: np.ndarray,
     psi0: np.ndarray,
     max_norm: float = 4.0,
-    min_cos: float = 0.4,
+    min_cos: float = DEFAULT_MIN_COS,
 ) -> Tuple[bool, str]:
     """The kernel veto, exposed for ingestion.
 
@@ -209,13 +335,13 @@ def ingest(
     psi0: np.ndarray,
     psi: np.ndarray,
     index: List[Unit],
-    embed: EmbedFn,
+    embed: EmbedFn,   # noqa: E501 -- the SEMANTIC embedder by default
     classify: TypeFn,
     *,
     radius: float = 3.0,
     commit_radius: float = 0.8,
     max_norm: float = 4.0,
-    min_cos: float = 0.4,
+    min_cos: float = DEFAULT_MIN_COS,
 ) -> Tuple[Unit, Verdict]:
     """Embed, cost, and either store a unit or return a refusal.
 

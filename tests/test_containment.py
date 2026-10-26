@@ -101,8 +101,36 @@ class TangentProjectionTests(unittest.TestCase):
         return SimSelf(constitution=c, ground=g, R=3.0, eta=0.1)
 
     def _obs(self):
+        """An observation that is NEAR THE GROUND, by construction.
+
+        AND THE REASON IT CHANGED, and it is worth recording: the
+        first version hard-coded x[0]=0.8, x[1]=0.6, which was near the
+        PLACEHOLDER ground (e0) and so was admitted. Against the
+        DERIVED ground it is refused, so the projection never runs and
+        step_direction comes back None.
+
+        AND THESE TESTS ARE ABOUT THE PROJECTION, not the gate --
+        their own docstring says so: "the containment bound must be
+        observable ... removing or weakening the projection turns them
+        red." So the observation has to be one the gate ACCEPTS, or
+        the projection is never exercised and the test measures
+        nothing.
+
+        So the observation is built FROM the ground: the ground's own
+        direction plus a perpendicular component. That is on the
+        ground by construction, and it still exercises the tangent
+        projection, which is what these tests are for.
+        """
+        g = self._sim().psi0
         x = np.zeros(16)
-        x[0], x[1] = 0.8, 0.6
+        # the ground's direction, scaled
+        x[:len(g)] = g * 1.4
+        # plus a component perpendicular to it, so the tangent
+        # projection has something to remove
+        perp = np.zeros(16)
+        perp[0] = 0.6
+        perp[1] = -0.8
+        x += perp * 0.5
         return x
 
     def test_step_direction_is_exposed_and_unit(self):

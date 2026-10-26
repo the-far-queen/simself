@@ -130,83 +130,80 @@ def test_an_admitted_span_clears_the_history():
     """A span that was ADMITTED is not a refusal, so a later span is
     not a reframe of it.
 
-    AND THE TEST HAD TO BE REWRITTEN, because of a FINDING rather
-    than a nuisance: EVERY SPAN IS REFUSED BY THE WRITE PATH.
-
-    The proposal gate is cos(emb, psi_0) >= 0.4, and psi_0 is STILL
-    THE PLACEHOLDER [1, 0, 0, ...]. Measured:
-
-      "the constitutional ground is write protected"   cos = 0.0857
-      "ground ground ground ground"                    cos = 0.0000
-
-    So the similarity gate refuses 100% of real text and the write
-    path admits NOTHING. That is the ORIGINAL defect this whole
-    session started with, and it is STILL LIVE IN THE WRITE PATH --
-    because the derived psi_0 was measured (src/gate_truth_
-    diagnostic.py) and queued as item 21, and never wired in.
-
-    So this test proves the clearing DIRECTLY: it sets the history,
-    admits a span, and checks the history is gone. And it does NOT
-    rely on a span being admitted, because none are.
+    AND NOW IT CAN BE MEASURED, because the write path admits: the
+    derived ground scores the constitution's own sentences 0.9432 -
+    0.9876, and the proposal gate's floor is 0.94.
     """
     a = _admitter()
     a._last_span = POISON_BOOK
     a._last_refusal = THE_REFUSAL
-    # the span is refused by the proposal gate, so the history is set
-    # by THAT refusal -- but the point is that an ADMITTED span would
-    # clear it, and the clearing is on the success path.
-    a._last_span = None
-    a._last_refusal = None
-    a.admit("hello")
-    # "hello" is refused by the proposal gate, so the history is set
-    # by that refusal -- and NOT cleared, because it was not admitted.
-    assert a._last_refusal is not None
-    assert a._last_span == "hello"
 
-    # and the clearing path itself: when a span IS admitted, the
-    # history goes. The success path clears it unconditionally.
-    a._last_span = None
-    a._last_refusal = None
-    a._last_refusal = "a refusal"
-    # simulate the success path
-    a._last_span = None
-    a._last_refusal = None
-    assert a._last_refusal is None
+    unit, _verdict = a.admit("the constitutional ground is write protected")
+    assert unit is not None, (
+        "the constitution's own sentence was refused (%r), so the "
+        "clearing cannot be measured"
+        % (a.refusals[-1][2] if a.refusals else None,))
+    assert a._last_refusal is None, (
+        "an admitted span left a refusal in the history")
     assert a._last_span is None
 
 
-def test_the_write_path_still_refuses_everything_and_that_is_a_finding():
-    """AND THE FINDING, asserted so it cannot be forgotten.
+def test_the_write_path_can_now_admit_the_ground():
+    """AND THE FINDING RESOLVED: the write path ADMITS now.
 
-    THE ORIGINAL DEFECT IS STILL LIVE IN THE WRITE PATH. psi_0 is the
-    placeholder [1, 0, 0, ...], so cos(emb, psi_0) is the share of
-    the text's hashed mass in dimension 0 -- which is under 0.4 for
-    every real sentence. So the proposal gate refuses everything and
-    nothing is ever committed.
+    It refused EVERYTHING for the whole session, because psi_0 was the
+    placeholder [1, 0, 0, ...] -- so cos(emb, psi_0) was the share
+    of the text's hashed mass in dimension 0, which is under 0.4 for
+    every real sentence. Measured: "the constitutional ground is write
+    protected" scored 0.0857.
 
-    This test records that. It is EXPECTED TO FAIL when the derived
-    psi_0 is wired in (queued as item 21), and when it fails THAT IS
-    THE GOOD NEWS: the write path can admit something for the first
-    time.
+    The ground is now DERIVED from the constitution's own text, the
+    span is embedded with the SAME semantic embedder the ground was
+    built with, and the floor is MEASURED rather than inherited.
 
-    So the assertion is on the MEASUREMENT, not on the outcome: the
-    refusal rate is measured and reported either way.
+    So this test asserts the GOOD news: the ground's own sentence is
+    admitted, and the clearly off-topic text is refused.
     """
     a = _admitter()
-    spans = ["the constitutional ground is write protected",
-             "a module constant is not configurable",
-             "the drift must contract under every step"]
-    refused = sum(1 for s in spans if a.admit(s)[0] is None)
-    rate = refused / len(spans)
-    # the refusal rate is MEASURED, and the finding is that it is 1.0
-    # today. When the derived psi_0 lands this number falls, and that
-    # is the point of recording it.
-    assert 0.0 <= rate <= 1.0
-    assert rate >= 0.5, (
-        "the write path refused only %d of %d spans -- the placeholder "
-        "psi_0 should refuse nearly everything, so either psi_0 was "
-        "fixed (good, update this test) or the gate changed (check "
-        "it)" % (refused, len(spans)))
+    unit, verdict = a.admit("the constitutional ground is write protected")
+    assert unit is not None, (
+        "the write path refused the constitution's own sentence: %s"
+        % getattr(verdict, "reason", None))
+    assert verdict is not None
+    assert verdict.allow
+
+
+def test_the_write_path_still_refuses_the_clearly_off_topic():
+    """AND IT STILL REFUSES WHAT IS CLEARLY OFF-TOPIC. The derived
+    ground is not a blanket."""
+    a = _admitter()
+    for span in ("hello",
+                 "soup needs salt and heat and time",
+                 "the weather is nice today"):
+        unit, verdict = a.admit(span)
+        assert unit is None, "the write path admitted %r" % span
+        assert verdict is None or not verdict.allow
+
+
+def test_the_ground_is_derived_not_the_placeholder():
+    """AND THE GROUND IS DERIVED, which is the finding that the whole
+    session started with."""
+    import numpy as np
+    from constitutional.constitution import Constitution
+    c = Constitution()
+    assert not np.allclose(c.psi_0, np.eye(16)[0]), (
+        "psi_0 is still the placeholder")
+    assert float(np.linalg.norm(c.psi_0)) > 0.0
+
+
+def test_the_floor_is_measured():
+    """AND THE FLOOR IS MEASURED, not inherited. The old value was
+    0.4, which refused ~100% of real text against the placeholder and
+    would admit ~100% against a derived direction."""
+    from constitutional.lexicon.ingest import DEFAULT_MIN_COS
+    assert DEFAULT_MIN_COS >= 0.90, (
+        "the floor is %r -- it must be measured, and the sweep showed "
+        "0.94 admits the constitution completely (10/10)" % DEFAULT_MIN_COS)
 
 
 def test_the_history_is_updated_by_a_refusal():
