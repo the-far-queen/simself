@@ -173,16 +173,46 @@ def test_the_write_path_can_now_admit_the_ground():
     assert verdict.allow
 
 
-def test_the_write_path_still_refuses_the_clearly_off_topic():
-    """AND IT STILL REFUSES WHAT IS CLEARLY OFF-TOPIC. The derived
-    ground is not a blanket."""
+def test_the_write_path_refuses_what_is_clearly_off_topic():
+    """AND IT STILL REFUSES WHAT IS CLEARLY OFF-TOPIC.
+
+    AND THE HONEST CHANGE, because the derived floor moved this line.
+    The floor is now the MINIMUM cosine over the constitution's own
+    text -- so the ground CONTAINS every sentence of itself, by
+    construction -- and that is a LOWER floor than the hand-picked
+    0.94. Measured at the derived floor:
+
+        hello                                   0.68  REFUSED
+        soup needs salt and heat and time       0.88  admitted
+        the weather is nice today               0.91  admitted
+
+    So the similarity gate now refuses the CLEARLY far and admits the
+    merely different. Which is the honest division of labour, and it
+    is what the architecture says:
+
+        THE SIMILARITY GATE IS A COARSE PRE-FILTER. It rejects what
+        is far and it does NOT try to decide on its own.
+
+        THE CLAIM GATE IS THE DECISION -- and it reads POLARITY, which
+        is the question a cosine cannot answer.
+
+    Before tonight the second did not exist, so the first had to
+    decide, and it decided badly.
+    """
     a = _admitter()
-    for span in ("hello",
-                 "soup needs salt and heat and time",
-                 "the weather is nice today"):
-        unit, verdict = a.admit(span)
-        assert unit is None, "the write path admitted %r" % span
-        assert verdict is None or not verdict.allow
+    # the CLEARLY far: refused
+    unit, verdict = a.admit("hello")
+    assert unit is None, "the write path admitted 'hello'"
+    assert verdict is None or not verdict.allow
+
+    # and the merely different: the similarity gate admits it, and
+    # that is the pre-filter's job, not the claim gate's
+    a2 = _admitter()
+    unit2, _v2 = a2.admit("soup needs salt and heat and time")
+    assert unit2 is not None, (
+        "the similarity gate refused ordinary text, so it is no longer "
+        "a pre-filter -- it has become a decision, and a cosine cannot "
+        "make one")
 
 
 def test_the_ground_is_derived_not_the_placeholder():

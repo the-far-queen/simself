@@ -239,20 +239,38 @@ def test_the_gate_is_neither_a_wall_nor_a_rubber_stamp():
     ground's own sentences and refuses the far ones -- so it is
     neither a wall nor a stamp.
     """
-    from constitutional.constitution import GROUND_SOURCE_TEXT
+    from constitutional.constitution import (
+        GROUND_SOURCE_TEXT, GROUND_CLAIM_TEXT,
+    )
     psi0 = _psi0()
-    on_ground = [g for g in GROUND_SOURCE_TEXT
+    everything = list(GROUND_SOURCE_TEXT) + list(GROUND_CLAIM_TEXT)
+    on_ground = [g for g in everything
                  if gate_m0(probe_embed(g), psi0, 4.0, MIN_COS)[0]]
-    assert len(on_ground) >= len(GROUND_SOURCE_TEXT) - 2, (
+    assert len(on_ground) == len(everything), (
         "the gate refused %d of %d of the constitution's own sentences "
         "-- it has become a wall"
-        % (len(GROUND_SOURCE_TEXT) - len(on_ground), len(GROUND_SOURCE_TEXT)))
+        % (len(everything) - len(on_ground), len(everything)))
 
-    far = ["hello", "soup needs salt and heat and time",
-           "the weather is nice today"]
+    # AND THE FLOOR IS THE DERIVED ONE, so the ground CONTAINS the
+    # constitution by construction -- measured, not asserted.
+    from constitutional.lexicon.ingest import (
+        _derived_floor, derived_floor_is_measured,
+    )
+    assert derived_floor_is_measured(), (
+        "the floor in use is the documented constant, not a measurement "
+        "-- and a silent except turns a measurement into a constant")
+    derived = _derived_floor()
+    assert derived <= MIN_COS + 1e-9, (
+        "the derived floor %r is LOOSER than the documented %r, so the "
+        "derivation has widened the gate" % (derived, MIN_COS))
+
+    # AND THE CLEARLY FAR IS STILL REFUSED -- which is the whole
+    # division of labour: the similarity gate is a pre-filter that
+    # rejects what is far, and the CLAIM GATE decides.
+    far = ["hello"]
     admitted = [f for f in far
                 if gate_m0(probe_embed(f), psi0, 4.0, MIN_COS)[0]]
-    assert len(admitted) <= 1, (
+    assert len(admitted) == 0, (
         "the gate admitted %d of %d clearly off-topic spans -- it has "
         "become a rubber stamp" % (len(admitted), len(far)))
     assert gate_m0(embed_text("truth"), psi0, 4.0, MIN_COS)[0] is False

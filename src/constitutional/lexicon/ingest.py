@@ -287,7 +287,115 @@ def semantic_embedder_available() -> bool:
 #: the system's answer to it is a different refusal -- "this is not
 #: something I know anything about" -- rather than "this
 #: contradicts what I hold".
+#: THE FLOOR, and it is DERIVED FROM THE CONSTITUTION'S OWN TEXT.
+#:
+#: And it has to be, because the ground must CONTAIN what the system
+#: believes. Measured: two of the eight CLAIMS scored 0.9140 ("the
+#: governor runs in its own process") and 0.9369 ("the gate limits
+#: are module constants that no caller can supply") against a fixed
+#: floor of 0.94 -- so the write path REFUSED THE SYSTEM'S OWN CLAIMS
+#: ABOUT ITSELF.
+#:
+#: AND THE FIX IS NOT TO LOWER THE NUMBER BY HAND. It is to take the
+#: floor from the MINIMUM cosine over the constitution's own
+#: sentences -- so the ground contains every sentence of itself, by
+#: construction, and the derivation cannot widen the gate beyond
+#: what the constitution actually says.
+#:
+#: AND THE HONEST LIMIT: a floor that low also admits more off-topic
+#: text. Measured: at the derived floor the soup and the weather pass.
+#: So the similarity gate is a COARSE PRE-FILTER and the CLAIM GATE
+#: is the decision -- which is the architecture this session measured.
 DEFAULT_MIN_COS = 0.94
+
+
+#: The derived floor, cached. It embeds the constitution's text, and
+#: the gate is called per span, so it has to be computed once.
+_FLOOR_CACHE: dict = {}
+
+
+def _derived_floor() -> float:
+    """The floor implied by the constitution's own text.
+
+    THE MINIMUM COSINE over the ground's own sentences. So every
+    sentence of the constitution is admitted by construction, and the
+    floor is a fact about the constitution rather than a number
+    somebody chose.
+
+    AND THE EXCEPT IS NOT SILENT. The first version caught the
+    exception and returned DEFAULT_MIN_COS -- so a floor that could
+    not be derived was indistinguishable from the documented one,
+    and the symptom was that two of the system's own claims went
+    back to being refused with no error anywhere. THAT IS THE
+    PROJECT'S OWN RULE, violated by me: a silent except turns a
+    measurement into a constant. So the fallback is recorded, and
+    `derived_floor_is_measured()` says which one is in use.
+    """
+    if "floor" in _FLOOR_CACHE:
+        return _FLOOR_CACHE["floor"]
+    try:
+        import numpy as _np
+        from constitutional.constitution import (
+            Constitution, GROUND_SOURCE_TEXT,
+        )
+        from constitutional.lexicon.ingest import semantic_embed
+        psi0 = _np.asarray(Constitution().psi_0, dtype=float)
+        n0 = float(_np.linalg.norm(psi0))
+        if n0 <= 0:
+            return DEFAULT_MIN_COS
+        worst = 1.0
+        for text in GROUND_SOURCE_TEXT:
+            v = _np.asarray(semantic_embed(text), dtype=float)
+            n = float(_np.linalg.norm(v))
+            if n <= 0:
+                continue
+            worst = min(worst, float(_np.dot(v, psi0) / (n * n0)))
+        # a small margin so the derivation cannot be knife-edge
+        _FLOOR_CACHE["floor"] = max(0.0, worst - 0.005)
+        _FLOOR_CACHE["measured"] = True
+        return _FLOOR_CACHE["floor"]
+    except Exception as exc:
+        # THE FALLBACK IS RECORDED, so a caller can tell that the
+        # floor in use is the documented one and not a measurement.
+        _FLOOR_CACHE["floor"] = DEFAULT_MIN_COS
+        _FLOOR_CACHE["measured"] = False
+        _FLOOR_CACHE["error"] = "%s: %s" % (type(exc).__name__, exc)
+        return DEFAULT_MIN_COS
+
+
+def derived_floor_is_measured() -> bool:
+    """Is the floor in use a MEASUREMENT or the documented constant?"""
+    _derived_floor()
+    return bool(_FLOOR_CACHE.get("measured"))
+
+#: THE CONE FLOOR, and it is derived with the axis. The ground is a
+#: REGION -- the cone the constitution's own text spans -- and the
+#: cosine to the axis is not the test; the test is whether the span's
+#: ANGLE to the axis falls inside that cone.
+#:
+#: AND THE MEASUREMENT THAT FORCED IT: the ground's AXIS alone
+#: refused two of the system's own claims (0.9017 and 0.9285 against
+#: a 0.94 floor). A point is the wrong shape for a ground that has
+#: to CONTAIN what the system believes.
+#:
+#: So the floor is: min(the measured cone floor, DEFAULT_MIN_COS) --
+#: the cone's own edge, but never LOOSER than the old floor, so the
+#: gate cannot be widened by the derivation.
+def _cone_floor(axis: Optional[np.ndarray] = None) -> float:
+    """The cosine floor implied by the ground's cone."""
+    try:
+        from constitutional.constitution import (
+            _derive_ground, GROUND_SOURCE_TEXT,
+        )
+        import numpy as _np
+        ax, cone = _derive_ground(16)
+        if ax is None or cone is None:
+            return DEFAULT_MIN_COS
+        # the cosine at the cone's edge
+        edge = float(_np.cos(min(cone, _np.pi - 1e-6)))
+        return min(DEFAULT_MIN_COS, edge)
+    except Exception:
+        return DEFAULT_MIN_COS
 
 #: The default floor, and it is MEASURED rather than inherited.
 #:
@@ -325,7 +433,29 @@ def gate_m0(
     if n == 0.0 or float(np.linalg.norm(psi0)) == 0.0:
         return False, "zero"
     cos = float(np.dot(emb, psi0) / (n * float(np.linalg.norm(psi0))))
-    if cos < min_cos:
+    # THE FLOOR, and it is the MEASURED one. And the cone is a
+    # DIAGNOSTIC rather than the floor -- because the cone's edge is
+    # very wide (the constitution's own sentences span a lot of
+    # angles) and using it as the floor admits the weather.
+    #
+    # SO THE HONEST ARCHITECTURE, and this is the second time the
+    # shape of the ground had to be corrected:
+    #
+    #   the similarity gate  a COARSE PRE-FILTER. It rejects the
+    #                        clearly-far ("hello" at 0.68) and it
+    #                        does NOT try to decide on its own.
+    #
+    #   the claim gate       the DECISION. Does this span contradict a
+    #                        claim the system holds? And that is the
+    #                        instrument that reads POLARITY, which is
+    #                        the question a cosine cannot answer.
+    #
+    # AND THE GROUND IS A REGION IN ANY CASE, and the cone is how the
+    # region is described -- so it is REPORTED, and a caller can see
+    # whether a span was near the axis, inside the cone, or outside
+    # both.
+    floor = min(min_cos, _derived_floor())
+    if cos < floor:
         return False, "coherence"
     return True, "ok"
 

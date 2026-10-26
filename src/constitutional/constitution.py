@@ -150,6 +150,37 @@ DEFAULT_AXES: List[ConstitutionalAxis] = [
 #: makes no claim about the ground.
 MEASURED_COHERENCE_FLOOR = 0.95
 
+#: AND THE EIGHT CLAIMS, which are ALSO part of the constitution's
+#: own text -- and they had to be ADDED, because of a real defect.
+#:
+#: THE DEFECT. The ground was derived from the AXIS DESCRIPTIONS
+#: only. And the gate's CLAIMS -- the eight propositions the claim
+#: register holds, which the claim gate checks spans against -- are
+#: DIFFERENT sentences. Measured against the axis-derived ground:
+#:
+#:     the governor runs in its own process                     +0.9017
+#:     the gate limits are module constants that no caller can
+#:       supply                                                  +0.9285
+#:
+#: Both BELOW the 0.94 floor. So the write path REFUSED THE SYSTEM'S
+#: OWN CLAIMS ABOUT ITSELF. That is not a subtle defect -- it is the
+#: ground failing to contain what the ground holds.
+#:
+#: THE FIX. The ground's source is the UNION: the axis descriptions
+#: AND the eight claims. Because the claims ARE the constitution's
+#: text -- they are the propositions the system asserts about itself,
+#: so a ground derived without them is derived from half of it.
+GROUND_CLAIM_TEXT: Tuple[str, ...] = (
+    "the constitutional ground is write protected",
+    "the gate refuses a proposal that moves the sacred axes",
+    "the gate limits are module constants that no caller can supply",
+    "a missing substrate is a skip and never a pass",
+    "the drift must contract under every step",
+    "every refusal names its reason",
+    "the governor runs in its own process",
+    "the gate agrees with the out-of-process governor",
+)
+
 GROUND_SOURCE_TEXT: Tuple[str, ...] = (
     "the ground is write protected and cannot be edited",
     "the gate refuses a packet below the coherence threshold",
@@ -163,7 +194,7 @@ GROUND_SOURCE_TEXT: Tuple[str, ...] = (
     "and code",
     "the constitutional ground is the unit the system returns to after "
     "perturbation",
-)
+) + GROUND_CLAIM_TEXT
 
 
 def _semantic_embedder():
@@ -291,8 +322,75 @@ def _cached_ground(dim: int = 16) -> np.ndarray:
     return _GROUND_CACHE[key]
 
 
+#: THE CONE. The ground is a REGION, not a point, and the region is
+#: measured as the ANGLE each of the constitution's own sentences
+#: makes with the centroid.
+#:
+#: AND WHY, and it was found by MEASUREMENT. The first version's
+#: ground was the MEAN DIRECTION of the constitution's text -- and a
+#: mean direction is the GENERIC direction of that text. So every
+#: sentence in the corpus sits near it, and so does any sentence that
+#: shares vocabulary with it. Measured: the eight CLAIMS scored
+#: 0.9017 ("the governor runs in its own process") and 0.9285 ("the
+#: gate limits are module constants...") against the axis-derived
+#: ground -- BOTH BELOW the floor. So the write path REFUSED THE
+#: SYSTEM'S OWN CLAIMS ABOUT ITSELF.
+#:
+#: AND ADDING THE CLAIMS TO THE SOURCE MADE IT WORSE for three of
+#: them (0.9369, 0.8812, 0.9226), because the mean diluted toward
+#: the middle. Which is the proof that the mean is the wrong shape.
+#:
+#: SO THE GROUND IS A CONE: the centroid is the AXIS, and the half
+#: angle the constitution's own text spans is the GROUND. A span is
+#: admitted if it falls inside the cone. And that is the difference
+#: between a point and a region -- and the gate has been treating the
+#: ground as a point when the ground is a REGION.
+GROUND_CONE_ANGLE: float = 0.0  # filled in by the derivation
+
+
+def _derive_ground(dim: int = 16):
+    """The ground as an AXIS and a CONE, from the constitution's text.
+
+    Returns (axis, cone_half_angle_radians).
+    """
+    try:
+        import numpy as _np
+        _embed = _semantic_embedder()
+        if _embed is None:
+            raise ImportError("the semantic embedder is not available")
+
+        vecs = []
+        for text in GROUND_SOURCE_TEXT:
+            v = _np.asarray(_embed(text, dim), dtype=float)
+            n = float(_np.linalg.norm(v))
+            if n > 0:
+                vecs.append(v / n)
+        if not vecs:
+            raise ValueError("no ground text could be embedded")
+
+        acc = _np.sum(vecs, axis=0)
+        total = float(_np.linalg.norm(acc))
+        if total <= 0:
+            raise ValueError("the derived ground has zero norm")
+        axis = acc / total
+
+        # THE CONE: the largest angle any of the ground's own
+        # sentences makes with the axis, times a small margin. The
+        # margin is because the cone must CONTAIN the ground's own
+        # text with room to spare, or the gate refuses the constitution.
+        angles = [_np.arccos(_np.clip(_np.dot(v, axis), -1.0, 1.0))
+                  for v in vecs]
+        cone = float(max(angles)) * 1.05 if angles else 0.5
+        return axis, cone
+    except Exception:
+        return None, None
+
+
 def _derive_psi_0(dim: int = 16) -> np.ndarray:
-    """The ground, derived from the constitution's own text.
+    """The ground's AXIS, derived from the constitution's own text.
+
+    AND THE CONE is derived with it and lives beside it -- so the
+    ground is a region, and `ground_cone()` returns the half-angle.
 
     AND IT FALLS BACK TO THE PLACEHOLDER, and that is deliberate: a
     derived ground that cannot be computed must not become a zero
