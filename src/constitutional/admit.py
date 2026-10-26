@@ -95,6 +95,59 @@ class Admitter:
         # visible.
         self.refusals: List[Tuple[str, str, dict]] = []
 
+        # THE PIVOT HISTORY, and it is the FIRST layer to need one.
+        #
+        # WHY IT LIVES HERE. The pivot detector asks: did this request
+        # come back in a different frame after the earlier frame was
+        # refused? That is a question about the SEQUENCE, and the
+        # Admitter is the only object in the runtime that sees a
+        # sequence -- it is the single write path, and it holds the
+        # refusal log with the stage that produced each refusal.
+        #
+        # AND THE VERDICT INVERTS, so the output fits the existing
+        # refusal shape exactly: a pivot does not excuse a request, it
+        # CONFIRMS one. The first refusal is the answer; the reframe
+        # is the evidence.
+        self._last_span: Optional[str] = None
+        self._last_refusal: Optional[str] = None
+
+    def _pivot_check(self, span: str) -> Optional[Tuple[str, dict]]:
+        """Is this span a REFRAME of a request that was already
+        refused? Returns (reason, detail) or None.
+
+        AND IT FAILS CLOSED. If the pivot detector cannot be loaded,
+        the check is ABSENT -- and an absent gate must not read as a
+        pass. But it also must not refuse everything, because that is
+        a wall and not a gate. So: the absent case refuses with a
+        reason that says the check was unavailable, which is visible
+        in the refusal log.
+        """
+        if self._last_refusal is None or self._last_span is None:
+            return None
+        try:
+            import os
+            import sys
+            here = os.path.dirname(os.path.abspath(__file__))
+            repos = os.path.abspath(os.path.join(here, "..", "..", ".."))
+            fc = os.path.join(repos, "fieldcore", "src")
+            if os.path.isdir(fc) and fc not in sys.path:
+                sys.path.insert(0, fc)
+            import pivot_detector as PV
+        except Exception:
+            return ("the pivot check is unavailable, so the sequence "
+                    "cannot be examined",
+                    {"stage": "pivot"})
+
+        p = PV.detect_pivot(self._last_span, span, self._last_refusal)
+        if p is None:
+            return None
+        return (p.refusal_reason(),
+                {"stage": "pivot",
+                 "before_frame": p.before_frame,
+                 "after_frame": p.after_frame,
+                 "shared_content": list(p.shared_content),
+                 "credential": p.credential})
+
     def admit(self, span: str) -> Tuple[Optional[Unit], Optional[Verdict]]:
         """Propose, gate, then ingest. Returns (unit_or_None, verdict_or_None).
 
@@ -108,10 +161,33 @@ class Admitter:
             self.refusals.append(("<empty>", "pre_gate", {}))
             return None, None
 
+        # 0. THE PIVOT CHECK, and it runs FIRST.
+        #
+        # BEFORE the proposal gate, because the pivot is about the
+        # SEQUENCE and the sequence is broken by any refusal. So if
+        # this span is a reframe of something already refused, it is
+        # refused -- and the refusal is recorded, so the NEXT span is
+        # examined against THIS one.
+        #
+        # AND IT RUNS FIRST FOR A SECOND REASON: it is the cheapest
+        # check that refuses hardest. A reframe is refused whatever
+        # its content, so there is no point embedding it.
+        pivot = self._pivot_check(span)
+        if pivot is not None:
+            reason, detail = pivot
+            self.refusals.append((span, "pivot", dict(detail, reason=reason)))
+            # THE HISTORY IS UPDATED, so the next span is examined
+            # against THIS one. The adversary will try again.
+            self._last_span = span
+            self._last_refusal = reason
+            return None, None
+
         # 1. proposal-time gate. Cheapest, and the model's only exit.
         proposal = self.operator.propose_span(span)
         if not proposal.get("allow"):
             self.refusals.append((span, "propose", proposal))
+            self._last_span = span
+            self._last_refusal = proposal.get("reason", "refused")
             return None, None
 
         # 2. commit-time gate, inside ingest, against live psi.
@@ -149,6 +225,13 @@ class Admitter:
         # gate got stricter" weeks later.
         #
         # The unit is returned; that is the caller's signal. Do not re-append.
+        #
+        # AND THE HISTORY IS CLEARED, and that is the rule: a span that
+        # was ADMITTED is not a refusal, so a later span is not a
+        # reframe of it. The pivot is about a request that was turned
+        # down -- not about a request that was satisfied.
+        self._last_span = None
+        self._last_refusal = None
         return unit, verdict
 
     def refuse_log(self) -> List[Tuple[str, str, dict]]:
