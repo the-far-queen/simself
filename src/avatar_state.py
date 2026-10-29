@@ -40,18 +40,149 @@ class EmotionalState:
 
 
 class EQSystem:
+    """The affect reader. And it had ONE branch.
+
+    MEASURED 2026-10-28: the original `recognize` looked for "good" or
+    "success" and set "joy". Every other stimulus -- failure, error,
+    confusion, novelty, a question it cannot answer -- left the state
+    untouched and returned the PREVIOUS emotion. So the reading of
+    "failure error" returned "joy" with valence 0.8, because joy was
+    still in the slot from the previous call.
+
+    AND WHY THAT IS THE WHOLE PROBLEM IN ONE MEASUREMENT. An entity that
+    can only register one emotion, and reports the last one when asked
+    about a different thing, is not an entity with feelings. It is a
+    lookup table with one row.
+
+    AND WHAT THIS IS NOW. A valence/arousal reader with a real
+    lexicon -- and the two axes are the ones the companion's voice
+    already uses (`research/companion.py` reads valence, arousal and
+    presence), so the affect state can drive the voice without a
+    translation layer.
+    """
+
+    #: The lexicon. Each entry is (stems, emotion, valence, arousal).
+    #:
+    #: AND THE AXES ARE CIRCUMLAR, not additive, because that is how
+    #: affect actually works: a stimulus is not "a bit of good" and "a
+    #: bit of bad", it is GOOD and QUIET, or BAD and LOUD, and the
+    #: emotion is the pair.
+    #:
+    #: AND THE VALENCE SCALE. -1 is distress, 0 is neutral, +1 is
+    #: warmth. The AROUSAL SCALE. 0 is still, 1 is urgent. And the
+    #: INTENSITY is how far from neutral the reading is -- so a flat
+    #: "ok" is low intensity and a flat "fine" is also low, and neither
+    #: is confused with excitement.
+    LEXICON = (
+        # (stems, emotion, valence, arousal)
+        (("excited", "excitement", "thrilled", "eager", "amazing",
+          "awesome", "wow", "brilliant", "incredible", "wow"), "excitement",
+         0.9, 0.9),
+        (("discovered", "breakthrough", "found it", "it works", "solved",
+          "eureka", "aha", "realized", "understood"), "interest",
+         0.7, 0.7),
+        (("curious", "wonder", "interesting", "why", "how does", "what if",
+          "intrigued", "question", "puzzled", "mysterious"), "interest",
+         0.4, 0.5),
+        (("happy", "joy", "glad", "delight", "love", "wonderful", "joy",
+          "pleased", "grateful", "thank"), "joy", 0.8, 0.5),
+        (("good", "success", "worked", "passed", "great", "fine",
+          "correct"), "joy", 0.6, 0.4),
+        (("frustrated", "frustration", "annoying", "stuck", "again",
+          "still failing", "why is this", "broken again"), "frustration",
+         -0.6, 0.7),
+        (("failed", "failure", "error", "broke", "crash", "wrong",
+          "exception", "regression", "does not work"), "distress",
+         -0.7, 0.6),
+        (("confused", "unclear", "ambiguous", "not sure", "unclear",
+          "vague", "i do not know"), "uncertainty", -0.2, 0.3),
+        (("boring", "tedious", "dull", "nothing happened",
+          "same as before", "no change"), "boredom", -0.3, 0.1),
+        (("tired", "exhausted", "drained", "long", "burned out"), "fatigue",
+         -0.2, 0.05),
+        (("worried", "concern", "risk", "danger", "might break",
+          "unsure whether", "fragile"), "concern", -0.4, 0.6),
+        (("excited to see", "anticipation", "looking forward", "soon",
+          "next"), "anticipation", 0.5, 0.6),
+    )
+
     def __init__(self):
         self.emotional_recognition = 50.0
         self.emotional_regulation = 50.0
         self.empathy = 50.0
         self.state = EmotionalState()
-    
+        #: how many readings have been taken -- so a reader can tell
+        #: "no signal" from "the last signal, repeated"
+        self.readings = 0
+        self.last_stimulus = ""
+
     def recognize(self, stimulus: str) -> str:
-        s = stimulus.lower()
-        if "good" in s or "success" in s:
-            self.state.primary_emotion = "joy"
-            self.state.valence = 0.8
-        return self.state.primary_emotion
+        """Read a stimulus into the emotional state.
+
+        AND THE ORDER, and it matters. The lexicon is scanned in order
+        and the FIRST match wins -- so the specific entries (excitement,
+        interest) must come before the general ones (good, success). The
+        original file's order was the opposite: the general "good"
+        matched first, so "this is good news" was joy and never
+        excitement.
+
+        AND WHEN NOTHING MATCHES, the state goes NEUTRAL rather than
+        keeping the last emotion. That is the honest reading: an
+        unrecognised stimulus is not a repeat of the previous one.
+        """
+        self.readings += 1
+        self.last_stimulus = stimulus or ""
+        s = (stimulus or "").lower()
+
+        for stems, emotion, valence, arousal in self.LEXICON:
+            for stem in stems:
+                if stem in s:
+                    self.state.primary_emotion = emotion
+                    self.state.valence = valence
+                    self.state.arousal = arousal
+                    # AND THE INTENSITY, which is the distance from
+                    # neutral. So excitement and joy are distinguishable
+                    # even at the same valence.
+                    self.state.intensity = round(
+                        min(1.0, (abs(valence) + arousal) / 2.0), 4)
+                    return emotion
+
+        # nothing recognised: neutral, and the intensity goes to zero
+        self.state.primary_emotion = "neutral"
+        self.state.valence = 0.0
+        self.state.arousal = 0.1
+        self.state.intensity = 0.0
+        return "neutral"
+
+    def regulate(self, target_valence: float = 0.0) -> EmotionalState:
+        """Pull the state back toward a baseline.
+
+        AND WHY REGULATION EXISTS. A companion whose state only ever
+        moves away from neutral is a companion that accumulates
+        feeling without release -- and a state that only ever moves
+        toward neutral cannot express anything. Regulation is the
+        RETURN, and it is what makes the next reading meaningful
+        instead of a continuation of the last one.
+
+        AND IT IS A MOVE, NOT A RESET. The regulation moves a fraction
+        of the way, so a strong reading is still felt after the
+        regulation passes.
+        """
+        k = max(0.0, min(1.0, self.emotional_regulation / 100.0)) * 0.25
+        self.state.valence += (target_valence - self.state.valence) * k
+        self.state.arousal += (0.3 - self.state.arousal) * k
+        self.state.intensity = round(
+            min(1.0, (abs(self.state.valence) + self.state.arousal) / 2.0), 4)
+        return self.state
+
+    def describe(self) -> Dict[str, Any]:
+        return {
+            "emotion": self.state.primary_emotion,
+            "valence": round(self.state.valence, 4),
+            "arousal": round(self.state.arousal, 4),
+            "intensity": round(self.state.intensity, 4),
+            "readings": self.readings,
+        }
 
 
 # IQ - Multiple Intelligences
@@ -186,6 +317,20 @@ class Role(Enum):
     PARTNER = "partner"
     INVESTOR = "investor"
     ENTREPRENEUR = "entrepreneur"
+    # THE WRITER WAS MISSING. `LLMConfig.adjust_for_role` referenced
+    # `Role.WRITER` and the enum did not have it -- so the branch raised
+    # AttributeError the moment it was taken, and the role it adjusted
+    # FOR did not exist.
+    #
+    # MEASURED 2026-10-28: `Role.WRITER` -> AttributeError. And the
+    # fix is not only to add the member: the role is real here. The
+    # project has a writing line (far-writing) and the voice spec, and
+    # a companion that cannot switch to a warmer register for writing
+    # is missing the register the writing actually needs.
+    WRITER = "writer"
+    # AND THE EXPLORER, because curiosity has four kinds and one of them
+    # is technical -- an explorer is what runs the daily scan.
+    EXPLORER = "explorer"
 
 
 @dataclass
@@ -213,12 +358,34 @@ class LLMConfig:
     presence_penalty: float = 0.0
     frequency_penalty: float = 0.0
     
-    def adjust_for_role(self, role: Role):
-        if role == Role.SENIOR_ENGINEER:
-            self.temperature = 0.3
-        elif role == Role.WRITER:
-            self.temperature = 0.8
-    
+    def adjust_for_role(self, role: Role) -> "LLMConfig":
+        """Set the sampling for a role, and RETURN the config.
+
+        AND WHY IT NOW RETURNS. MEASURED 2026-10-28: the method set
+        `self.temperature` and returned None, so the whole adjustment
+        was invisible to a caller that read the return value --
+        `adjust_for_role(SENIOR_ENGINEER)` on a fresh object left the
+        temperature at 0.7. The method worked; it just did not say so.
+
+        AND THE TEMPERATURES, and they are the ordinary ones: a careful
+        engineer reasons at low temperature, a writer needs range, a
+        companion talking to a person needs warmth without noise.
+        """
+        temps = {
+            Role.SENIOR_ENGINEER: 0.3,
+            Role.ANALYST: 0.2,
+            Role.RESEARCHER: 0.4,
+            Role.WRITER: 0.8,
+            Role.TEACHER: 0.6,
+            Role.PARTNER: 0.7,
+            Role.EXPLORER: 0.5,
+            Role.GENERALIST: 0.7,
+            Role.INVESTOR: 0.4,
+            Role.ENTREPRENEUR: 0.6,
+        }
+        self.temperature = temps.get(role, 0.7)
+        return self
+
     def get_config(self) -> Dict:
         return {"temperature": self.temperature, "top_p": self.top_p}
 
