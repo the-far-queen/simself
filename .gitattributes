@@ -1,0 +1,17 @@
+# The learned vocabulary artifact, and the corpus texts, are BYTE-EXACT.
+#
+# MEASURED 2026-10-31 (the dark-pole defect, found by checking):
+# `core.autocrlf=true` is set on this machine, and the rule that marks
+# the corpus texts `-text` read `corpus/**/texts/*.txt` -- which does
+# not reach files that sit directly in a corpus directory. Git would
+# have rewritten their line endings on checkout and the manifest's
+# sha256 would have stopped matching the file.
+#
+# So the rule is EXTENDED, and a check now asks git what it will
+# actually do rather than reading the attribute file and assuming.
+#
+# The learned vocabulary artifact is in the same class: its content
+# digest is computed over the JSON text, so it survives a line-ending
+# change -- but a byte-exact artifact is byte-exact, and a check that
+# verifies a digest should not depend on the line endings.
+src/constitutional/canon_vocab.json -text

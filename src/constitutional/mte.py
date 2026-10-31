@@ -46,6 +46,7 @@ import re
 from dataclasses import dataclass, field, asdict
 from typing import Any, Dict, Iterable, List, Optional, Set, Tuple
 
+from . import psb_primitives
 from .psb_primitives import PRIMITIVES, UnitType
 
 __all__ = [
@@ -239,6 +240,26 @@ class SlotPattern:
 
     @staticmethod
     def _forms(unit: Optional[UnitType], role: str) -> Set[str]:
+        """the surface forms that fill a slot.
+
+        **AND THE LEARNED LITERARY FORMS ARE READ HERE, AND ONLY
+        HERE.** MEASURED 2026-10-31: the substrate's own alphabet is 31
+        technical forms, so the engine could not bind literary prose
+        (coverage 4.6%-28.5% on real prose, and 21.0% on the canon --
+        so it could not carry the canon either).
+
+        The learned forms live in `psb_primitives.LITERARY_FORMS` and
+        are added to the substrate's own. **AND THE SUBSTRATE'S OWN
+        FORMS ARE KEPT**, so the substrate's sentences still bind.
+
+        **AND `PRIMITIVES` ITSELF IS NOT MUTATED.** MEASURED: putting
+        the learned forms into `PRIMITIVES` changed `classify_span()`,
+        and so weakened the confabulation filter -- which catches
+        fluent-but-empty spans by spotting the ones that classify as
+        OTHER. A change that improves the coverage number and weakens
+        a safety check is not a change, so the vocabulary is read here
+        instead.
+        """
         forms: Set[str] = set()
         for u, words in PRIMITIVES.items():
             if unit is not None and u != unit:
@@ -246,6 +267,9 @@ class SlotPattern:
             forms.update(words)
             if u.value == role:
                 forms.add(u.value)
+        # THE LEARNED FORMS, for the unit being matched.
+        if unit is not None:
+            forms.update(psb_primitives.literary_forms(unit.value))
         return forms
 
     def __repr__(self) -> str:
