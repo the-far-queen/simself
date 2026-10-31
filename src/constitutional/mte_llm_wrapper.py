@@ -154,6 +154,7 @@ REASONS = (
     "echo_overlap",
     "echo_marker",
     "echo_invitation",
+    "echo_unrepaired",
     "poison_discussion",
     "poison_quote",
     "poison_fiction",
@@ -168,6 +169,7 @@ REASONS = (
     "mte_parse_failed",
     "governor_veto",
     "classifier_unavailable",
+    "empty_response",
 )
 
 
@@ -290,18 +292,42 @@ class EchoDetector:
         return None, self.overlap(user_text, response)
 
     def drop_echo(self, response: str) -> str:
-        """Strip the dialogue scaffolding from a response.
+        """Strip the dialogue scaffolding from a response, KEEPING THE TEXT.
 
         This is the fallback when a regeneration is not possible (no LLM
         to ask, or the retry budget is spent). It removes the STRUCTURE
         -- the fake turns and the invitation -- and leaves the substance.
         It cannot undo a semantic echo; it can only remove the visible
         markers of one. That limit is stated rather than hidden.
+
+        AND THE SUBSTANCE WAS NOT BEING LEFT. MEASURED 2026-10-31
+        against this method as it stood: the fake-turn removal deleted
+        the WHOLE LINE --
+
+            re.sub(r"(?im)^(user|assistant|human|system)\\s*:.*$", "", out)
+
+        -- so "user: hello\\nassistant: hi there" became "", and the
+        wrapper's own repair check then saw an empty answer and
+        refused the exchange as `echo_unrepaired`. The fallback was
+        DESTROYING the answer it was supposed to repair, and the
+        refusal it produced read like the model had misbehaved.
+
+        So the LABEL is removed and the TEXT AFTER IT is kept:
+
+            "assistant: hi there"  ->  "hi there"
+
+        The label is the structure. The text after it is the substance,
+        and the substance is what the caller needs.
+
+        AND A TURN THAT IS ONLY A LABEL -- "assistant:" with nothing
+        after it -- leaves nothing, which is correct: there was no
+        substance to keep.
         """
         out = response
-        # drop whole fake turns, e.g. "user: hi\nassistant: hello"
+        # drop the LABEL of a fake turn, and keep the text after it.
+        # "user: hello" -> "hello"
         out = re.sub(
-            r"(?im)^(user|assistant|human|system)\s*:.*$", "", out)
+            r"(?im)^(user|assistant|human|system)\s*:\s*", "", out)
         # drop the invitation sentences
         for m in self.invitations:
             out = re.sub(r"(?i)[^.!?\n]*\b" + re.escape(m) + r"\b[^.!?\n]*[.!?]?", "", out)
@@ -780,7 +806,74 @@ class MTELLMWrapper:
             out = self.llm.generate(prompt)
         except Exception as exc:
             raise _LLMUnavailable(str(exc)) from exc
-        return out if isinstance(out, str) else str(out)
+        return self._as_text(out)
+
+    @staticmethod
+    def _as_text(out: object) -> str:
+        """The model's answer, as TEXT -- or "" if it has none.
+
+        THE COERCION IS A DEFECT, and this is where it was found.
+        MEASURED 2026-10-31 against the wrapper as it stood:
+        `str(out)` was applied to whatever the client returned, so a
+        client that returned a dict `{}` produced the literal text
+        `"{}"` -- TWO BRACES -- and the wrapper's own empty-answer check
+        saw a non-empty string and PASSED IT. The caller received
+        "{}" with a PASS next to it.
+
+        THE SAME COERCION TURNED `None` INTO A LIE. `str(None)` is the
+        text "None", and the wrapper's own docstring for the client
+        protocol says the model must never answer with nonsense.
+
+        SO THE RULES ARE, and each one is a measurement:
+
+          1. A STRING IS THE ANSWER. Nothing else is.
+          2. `None` IS NO ANSWER. The model WAS reached and answered
+             with nothing -- which is a DIFFERENT failure from an
+             unreachable model, and the log must name which one it was.
+          3. A MAPPING OR SEQUENCE CARRIES ITS TEXT IN ITS PARTS.
+             A client that returns the API's own shape
+             (`{"content": [{"text": "..."}]}`) is a normal client, not
+             a broken one, so its text is read out of it. But a
+             mapping with NO parts carries no text, and neither does a
+             sequence with no parts.
+          4. TEXT WITH NO WORDS IN IT IS NOT AN ANSWER. Punctuation is
+             not a sentence, and "{}" is not an answer.
+
+        So the return is "" whenever there is no text to return, and
+        the caller refuses it by name.
+        """
+        if out is None:
+            return ""
+        if isinstance(out, str):
+            return out
+        if isinstance(out, dict):
+            # the API shape, and the parts may be nested one level down
+            content = out.get("content")
+            if isinstance(content, list):
+                parts = []
+                for part in content:
+                    if isinstance(part, dict):
+                        text = part.get("text")
+                        if isinstance(text, str):
+                            parts.append(text)
+                    elif isinstance(part, str):
+                        parts.append(part)
+                return "".join(parts).strip()
+            text = out.get("text")
+            return text.strip() if isinstance(text, str) else ""
+        if isinstance(out, (list, tuple)):
+            parts = []
+            for part in out:
+                if isinstance(part, str):
+                    parts.append(part)
+                elif isinstance(part, dict):
+                    text = part.get("text")
+                    if isinstance(text, str):
+                        parts.append(text)
+            return "".join(parts).strip()
+        # Anything else -- an int, an object -- has no text in it, and
+        # `str()` would manufacture some.
+        return ""
 
     # -- the main path --------------------------------------------------
 
@@ -819,7 +912,44 @@ class MTELLMWrapper:
             self.log.append(res)
             return res
 
-        # 3. the OUTPUT, scanned for echo and for poison.
+        # 3. THE OUTPUT -- and first: IS THERE AN OUTPUT AT ALL?
+        #
+        # An empty or whitespace-only response is NOT an answer. It is
+        # the absence of one, and the wrapper's contract is that the
+        # absence of an answer must never read as a legitimate one.
+        #
+        # MEASURED 2026-10-30 against the wrapper as it stood: an empty
+        # response came back as action=pass, reason="passed all guards",
+        # modified="" -- and `allowed` was True. The caller received an
+        # empty string with a PASS next to it.
+        #
+        # AND IT IS NOT THE `classifier_unavailable` PATH. An unreachable
+        # model is already refused by `_generate` raising, and that path
+        # exists. This is a different failure: the model WAS reached, and
+        # it answered with nothing. Both are refusals, and the log names
+        # which of the two happened.
+        #
+        # AND "NOTHING" INCLUDES TEXT WITH NO WORDS IN IT.
+        # MEASURED 2026-10-31 against the wrapper as it stood: a client
+        # that returned a dict `{}` was coerced with `str()`, which
+        # produced the literal text "{}" -- two braces -- and the
+        # emptiness check saw a non-empty string and PASSED IT. The
+        # caller received "{}" with a PASS next to it.
+        #
+        # Punctuation is not a sentence. So the check is for WORDS, and
+        # the same word-pattern the echo scan uses answers it.
+        if not _WORDS.search(response):
+            res = WrapperResult(
+                action=WrapperAction.CANCEL,
+                reason="empty_response",
+                original=original,
+                modified="",
+                flagged=["empty_response"],
+            )
+            self.log.append(res)
+            return res
+
+        # 3b. the OUTPUT, scanned for echo and for poison.
         echo_reason, overlap = self.echo.scan(user_text, response)
         output_hits = self.poison.scan(response, sender="llm")
         output_blocking = [h for h in output_hits if h.action is WrapperAction.CANCEL]
@@ -848,6 +978,19 @@ class MTELLMWrapper:
             flagged.append(echo_reason)
             final = self._repair_echo(user_text, response, echo_reason)
             rephrases = self._rephrase_count
+            # AND THE FALLBACK IS NOT A PASS. It can leave nothing, or
+            # it can leave the user's own words, and neither of those is
+            # an answer. The repair is VERIFIED, not assumed.
+            if not self._echo_repaired(user_text, final):
+                res = WrapperResult(
+                    action=WrapperAction.CANCEL,
+                    reason="echo_unrepaired",
+                    original=original,
+                    modified="",
+                    flagged=flagged + ["echo_unrepaired"],
+                )
+                self.log.append(res)
+                return res
             action = WrapperAction.REPHRASE if rephrases else WrapperAction.FLAG
             reason = echo_reason
 
@@ -931,11 +1074,46 @@ class MTELLMWrapper:
             except Exception:
                 break
             self._rephrase_count += 1
+            # AN EMPTY REGENERATION IS NOT A CLEAN ANSWER.
+            #
+            # MEASURED 2026-10-30 against the wrapper as it stood: the
+            # echo scan finds no echo in an empty string -- there is
+            # nothing in it to echo -- so the empty regeneration was
+            # accepted as the repaired answer and returned to the caller
+            # as modified="". An empty regeneration now falls through to
+            # the structural fallback, like any failed regeneration.
+            if not again.strip():
+                continue
             reason, _ = self.echo.scan(user_text, again)
             if reason is None:
                 return again
         # no clean regeneration: strip the visible scaffolding
         return self.echo.drop_echo(response)
+
+    def _echo_repaired(self, user_text: str, final: str) -> bool:
+        """Is the text left after the repair actually an answer?
+
+        THREE WAYS IT IS NOT, and each one was measured:
+
+          1. IT IS EMPTY. The fallback stripped the scaffolding and
+             nothing was underneath it. An empty answer is not an
+             answer, whatever the log says about the echo.
+          2. IT IS THE INPUT. MEASURED 2026-10-30 against the live run:
+             the fallback stripped the invitation but not the echoed
+             body, so the text came back as the user's own words
+             verbatim. Delivering that as the answer IS the echo, not a
+             repair of it.
+          3. IT STILL TRIPS THE ECHO SCAN. The fallback removes the
+             STRUCTURE of an echo; it cannot undo a semantic one -- its
+             own docstring says so. So the repair is VERIFIED by
+             re-running the scan on what is left.
+        """
+        if not final.strip():
+            return False
+        if final.strip() == user_text.strip():
+            return False
+        reason, _ = self.echo.scan(user_text, final)
+        return reason is None
 
 
 class _LLMUnavailable(Exception):
