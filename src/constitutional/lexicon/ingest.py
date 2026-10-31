@@ -156,7 +156,8 @@ def _claim_register():
     return _CLAIM_REGISTER
 
 
-def claim_gate(text: str) -> Tuple[bool, str]:
+def claim_gate(text: str, *, as_measurement: bool = False
+               ) -> Tuple[bool, str]:
     """The polarity gate. Returns (allow, reason).
 
     FAIL-CLOSED. If the register cannot be loaded, the span is
@@ -166,12 +167,53 @@ def claim_gate(text: str) -> Tuple[bool, str]:
     AND IT IS THE THIRD GATE, not a fourth. The claim register is
     consulted once per span, and its verdict is one of the reasons the
     ingest path can return.
+
+    AND THE MEASUREMENT MODE, and this is the wiring the evidence layer
+    needed. MEASURED 2026-10-31:
+
+        the evidence layer fires ONLY in measurement mode
+        the ingest path called read(text) with no mode
+        -> the mode was always prose
+        -> the evidence layer NEVER RAN in production
+
+    And the layer was not merely quiet -- it was unreachable. The
+    register's own rule is: a span that asserts a MEASURED ground
+    claim must CARRY the measurement (a command and a number) or it
+    is UNGROUNDED. That check lives in measurement mode, so in prose
+    mode the confabulation walked straight through.
+
+    AND THE CALLER KNOWS WHICH PATH IT IS. That is the whole design:
+    a span arriving from a MEASUREMENT path -- the ingest path, a
+    readout, a bench output -- is checked with as_measurement=True; a
+    span arriving as PROSE is checked with as_measurement=False.
+
+    So the flag is a parameter and NOT a guess. The default is prose,
+    because prose is the safe direction: an assertion that is not
+    claiming to be a measurement must not be refused for lacking a
+    command.
     """
     reg = _claim_register()
     if reg is None:
         return False, "claim_gate_unavailable"
     try:
-        adj = reg.read(text)
+        import claim_register as CR
+        # THE MODE IS THE AND OF TWO CONDITIONS, and MEASURED 2026-10-31:
+        #
+        #   1. the PATH says measurement -- the caller knows which path
+        #      the span arrived on, and that is the caller's to say
+        #   2. the SPAN presents itself as a measurement -- its own form
+        #
+        # The first version had only condition 1, and the ingest path
+        # says True for everything -- so the ground's own prose was
+        # REFUSED 8 of 8 at the ingest site. A gate that refuses the
+        # ground's own text is a gate that refuses everything, and it
+        # would have looked healthy.
+        #
+        # The second condition is the register's rule, so the gate and
+        # the ingest path answer the same question from one place.
+        if as_measurement and not CR.presents_as_measurement(text):
+            as_measurement = False
+        adj = reg.read(text, as_measurement=as_measurement)
     except Exception as exc:  # noqa: BLE001
         # an exception is not a verdict, and it is not a pass
         return False, "claim_gate_raised:%s" % type(exc).__name__
@@ -472,11 +514,24 @@ def ingest(
     commit_radius: float = 0.8,
     max_norm: float = 4.0,
     min_cos: float = DEFAULT_MIN_COS,
+    as_measurement: bool = True,
 ) -> Tuple[Unit, Verdict]:
     """Embed, cost, and either store a unit or return a refusal.
 
     Drift is measured before any write; ingest does not move ψ. Movement is a
     later identity update that consumes an admitted or committed unit.
+
+    AND THE MEASUREMENT MODE. The ingest path is a MEASUREMENT path -- a
+    span arriving here came out of a run, and it is stored as a fact
+    about the system. So the claim gate checks it in measurement mode,
+    which is the mode where the evidence layer fires: a span that
+    asserts a measured ground claim must carry the measurement, or it
+    is UNGROUNDED.
+
+    MEASURED 2026-10-31: before this, the ingest path called
+    read(text) with no mode, so the evidence layer never ran here at
+    all. The flag defaults to True because the ingest path IS a
+    measurement path -- and a caller that knows otherwise passes False.
     """
     span = " ".join(text.split())
     emb = np.asarray(embed(span), dtype=float)
@@ -501,7 +556,18 @@ def ingest(
     # AND IT IS FAIL-CLOSED. An unavailable register refuses the span
     # with a reason, because a missing substrate is a skip and a skip
     # is never a pass.
-    claim_ok, claim_why = claim_gate(span)
+    #
+    # AND THE MEASUREMENT MODE, and the ingest path IS a measurement
+    # path. MEASURED 2026-10-31: the evidence layer fires only in
+    # measurement mode, the ingest path called read(text) with no mode,
+    # so the layer never ran here at all -- and the confabulation it
+    # catches (a span asserting a measured ground claim without
+    # carrying the measurement) walked straight into the lexicon.
+    #
+    # So the ingest path declares itself a measurement path. And the
+    # declaration is the CALLER'S, because the caller knows which path
+    # the span arrived on.
+    claim_ok, claim_why = claim_gate(span, as_measurement=as_measurement)
     if not claim_ok:
         unit.status = Status.REFUSED
         v = Verdict(False, claim_why, c_g, c_nbr,
