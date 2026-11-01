@@ -19,6 +19,9 @@ Modules:
 - mini_llm: stub (per the project-scope).
 - temporal_control: phase 1 stub.
 - lexicon.ingest: language intake. Same gate as kernel + harness.
+- chain_audit: the chain audit binding. Records a reasoning chain, wires
+  MiniMax for the backward-influence signal, and audits a handoff's
+  prose. The signals themselves live in fieldcore/src/chain_audit.py.
 """
 
 from .constitution import (
