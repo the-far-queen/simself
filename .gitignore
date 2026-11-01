@@ -33,6 +33,12 @@ data/
 ledger.json
 *.db
 
+# SimSelf runtime state dumps. `SimSelf.dump()` writes
+# `simself_state_{ticks:06d}.json` into the CWD by default -- it is a
+# RUNTIME ARTIFACT of one run, not source, and it changes every run.
+# MEASURED 2026-11-01: one was sitting untracked in the repo root.
+simself_state_*.json
+
 # Editor
 .vscode/
 .idea/
