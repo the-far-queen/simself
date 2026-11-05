@@ -21,6 +21,19 @@ from dataclasses import dataclass, field
 from enum import Enum
 import time
 
+# THE PLAN STATE MACHINE, imported the way this module is consumed.
+#
+# `executive_planner.py` lives at src/ top level and is consumed two ways
+# (as `simself.src.executive_planner` and as a bare `executive_planner`
+# with src/ on sys.path), so the relative import cannot succeed in one
+# of them. Same dual form as `coding_operator_object.py`. MEASURED
+# 2026-11-05: the plan-state machine used to live INSIDE the atlas
+# exam's probe, so the exam graded its own homework. It lives here.
+try:  # form 1: imported as simself.src.executive_planner
+    from .plan_state import Plan, Step
+except ImportError:  # form 2: bare module, src/ on sys.path
+    from plan_state import Plan, Step  # type: ignore[no-redef]
+
 
 # =============================================================================
 # SENIOR SOFTWARE ENGINEER - Task Decomposition
@@ -236,6 +249,67 @@ class SeniorEngineerPlanner:
         
         return components
     
+    def plan_for(self, request: str, context: Optional[Dict] = None) -> Plan:
+        """Turn a decomposition into an EXECUTABLE PLAN.
+
+        WHY THIS EXISTS. MEASURED 2026-11-05: the atlas exam's area 22
+        asks whether a plan is STATE, and its probe defined the `Plan`
+        and `Step` classes INSIDE the probe string -- so the area
+        graded the exam's own code and the substrate's plan behaviour
+        was never what it measured. The state machine now lives in
+        `plan_state.py`, and this is the substrate's own producer of
+        one.
+
+        AND WHY THE DEPENDENCIES COME FROM THE MILESTONES. A plan
+        whose steps all depend on nothing can be done in any order, and
+        that is a list. So the dependencies are the DECOMPOSITION'S OWN
+        LAYERS: a component in a milestone needs the components of the
+        milestone before it, because that is what a milestone means --
+        the Foundation is done before the Core is started.
+
+        So the plan's structure is not invented here and it is not
+        invented by the caller either. It is the decomposition, read as
+        a layered build, with each layer named and each layer's
+        dependency on the one before it.
+
+        AND WHY THE ORDER IS THE DECOMPOSITION'S ORDER. The steps are
+        emitted in the order the components were emitted, so the order
+        is a property of the decomposition and not of a set's iteration
+        order.
+        """
+        d = self.decompose(request, context or {})
+        names = list(d.components)
+
+        # The layers, in order. A milestone's components need the
+        # previous milestone's components.
+        layers: List[List[str]] = []
+        for ms in d.milestones:
+            members = [c for c in names if c in (ms.get("components") or [])]
+            if members:
+                layers.append(members)
+        covered = {c for layer in layers for c in layer}
+        leftovers = [c for c in names if c not in covered]
+        if leftovers:
+            layers.append(leftovers)
+
+        needs_of: Dict[str, tuple] = {}
+        previous: List[str] = []
+        for layer in layers:
+            for name in layer:
+                needs_of[name] = tuple(previous)
+            previous = list(layer)
+
+        steps: List[Step] = []
+        for name in names:
+            produces = ""
+            for ms in d.milestones:
+                if name in (ms.get("components") or []):
+                    produces = "the %s milestone" % ms.get("name", "")
+                    break
+            steps.append(Step(name=name, needs=needs_of.get(name, ()),
+                              produces=produces))
+        return Plan(steps)
+
     def _decide_architecture(self, request: str, context: Dict) -> tuple:
         """Decide on architecture."""
         # Simple decision tree
