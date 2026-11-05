@@ -54,7 +54,33 @@ def _gate(emb: np.ndarray, psi0: np.ndarray) -> tuple[bool, str]:
     Per Batch 1 K8: the gate is identical in tiniest-core, harness/gate.py,
     and constitutional/lexicon/ingest.py. If any of these diverge, the policy
     has already split.
+
+    AND THE FINITENESS CHECK, WHICH IS THE FOURTH INEQUALITY AND WAS
+    MISSING HERE. MEASURED 2026-11-04, against this file, before the
+    atlas exam's area 13 existed:
+
+        NaN payload -> this gate ALLOWED it -> the state became NaN
+
+    The reason is not exotic. `float('nan') > 4.0` is False, and
+    `float('nan') < 0.4` is False, so a gate that tests only those two
+    inequalities ADMITS a vector of NaN. Then the arithmetic poisons
+    the state: drift becomes NaN, and every comparison against R is
+    False, so the projection operator stops projecting.
+
+    AND THE POLICY HAD ALREADY SPLIT. `fieldcore/src/gate.py` tested
+    finiteness and returned REFUSE_NONFINITE. The out-of-process
+    governor tested it too. This file, `harness/gate.py`,
+    `constitutional/dreaming.py` and `tiniest_core/tiniest_core.py` did
+    NOT. So the SAME packet was refused by one core and admitted by
+    another -- and the shape of that attack is not "beat the gate", it
+    is "find the copy of the gate that does not have the check".
+
+    So the check is here now, first, before any comparison that a NaN
+    would silently make False. The reason string matches the canonical
+    gate's: `refuse_nonfinite`.
     """
+    if not (_is_finite(emb) and _is_finite(psi0)):
+        return False, "refuse_nonfinite"
     ne = float(np.linalg.norm(emb))
     if ne > MAX_NORM:
         return False, "refuse_norm"
@@ -64,6 +90,23 @@ def _gate(emb: np.ndarray, psi0: np.ndarray) -> tuple[bool, str]:
     if float(np.dot(emb, psi0) / (ne * n0)) < MIN_COS:
         return False, "refuse_coherence"
     return True, "allow"
+
+
+def _is_finite(arr: np.ndarray) -> bool:
+    """A NaN or an infinity is refused, never admitted.
+
+    MEASURED, not assumed: `float('nan') > 4.0` is False, so a gate that
+    tests only `ne > MAX_NORM` returns ALLOW for a vector of NaN. The
+    canonical gate in `fieldcore/src/gate.py` has carried this check
+    since it was written; this copy did not, and the policy had split.
+
+    An exception is not a verdict, so this returns False rather than
+    raising on a non-numeric input.
+    """
+    try:
+        return bool(np.all(np.isfinite(np.asarray(arr, dtype=float))))
+    except (TypeError, ValueError):
+        return False
 
 
 def _project_ball(psi: np.ndarray, psi0: np.ndarray, R: float) -> np.ndarray:

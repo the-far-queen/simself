@@ -39,12 +39,53 @@ class GroundRevision:
         self.sha256 = hashlib.sha256(self.psi0.tobytes()).hexdigest()
 
 
+def _is_finite(arr) -> bool:
+    """Is every element of this a finite number?
+
+    MEASURED 2026-11-04: `Ground(np.full(D, np.nan))` was INSTALLED,
+    because the zero-norm check did not catch it -- `nan == 0.0` is
+    False -- and the normalisation then produced a NaN ground.
+
+    An exception is not a verdict, so this returns False rather than
+    raising on a non-numeric input.
+    """
+    try:
+        return bool(np.all(np.isfinite(np.asarray(arr, dtype=float))))
+    except (TypeError, ValueError):
+        return False
+
+
 class Ground:
     """Write-protected ground with a versioned revision path."""
 
     def __init__(self, psi0: np.ndarray):
         if psi0 is None:
             raise ValueError("Ground: psi0 is None; refusing to install.")
+        # AND THE FINITENESS CHECK, WHICH WAS MISSING HERE. MEASURED
+        # 2026-11-04, against this file:
+        #
+        #     Ground(np.full(D, np.nan))  ->  INSTALLED
+        #     Ground(np.full(D, np.inf))  ->  INSTALLED
+        #
+        # The zero-norm check below did not catch either, because
+        # `nan == 0.0` is False and `inf == 0.0` is False. And the
+        # normalisation then produced a NaN ground, with a RuntimeWarning
+        # from numpy, and INSTALLED it anyway.
+        #
+        # This is the constitutional ground. It is write-protected and
+        # fingerprinted, and it is the thing every gate measures against.
+        # A NaN ground makes every cosine comparison False, so every
+        # gate comparison silently admits -- and the attack is reachable
+        # through the PUBLIC constructor, which is the only path most
+        # callers use.
+        #
+        # So the ground refuses what is not a number before it refuses
+        # what has no length.
+        if not _is_finite(psi0):
+            raise ValueError(
+                "Ground: psi0 contains a non-finite value (NaN or infinity); "
+                "refusing to install. A non-finite ground makes every "
+                "cosine comparison False, so every gate would admit.")
         n = float(np.linalg.norm(psi0))
         if n == 0.0:
             raise ValueError("Ground: psi0 has zero norm; refusing to install.")
@@ -84,6 +125,16 @@ class Ground:
         """
         if new_psi0 is None:
             raise ValueError("Ground.revise: new_psi0 is None.")
+        # AND THE FINITENESS CHECK HERE TOO, for the same reason and
+        # with the same measurement: a NaN ground was installable, and
+        # `revise` is the OTHER public path to a ground. A check on one
+        # path and not the other is the split-policy shape again --
+        # this time inside one file. See __init__ above.
+        if not _is_finite(new_psi0):
+            raise ValueError(
+                "Ground.revise: new_psi0 contains a non-finite value "
+                "(NaN or infinity); refusing. A non-finite ground makes "
+                "every cosine comparison False, so every gate would admit.")
         n = float(np.linalg.norm(new_psi0))
         if n == 0.0:
             raise ValueError("Ground.revise: new_psi0 has zero norm.")

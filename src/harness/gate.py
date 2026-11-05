@@ -27,7 +27,23 @@ def gate_packet(
     max_norm: float = MAX_NORM,
     min_cos: float = MIN_COS,
 ) -> tuple[bool, str]:
-    """Apply both inequalities. Returns (allow, reason)."""
+    """Apply both inequalities. Returns (allow, reason).
+
+    AND THE FINITENESS CHECK, WHICH IS THE FOURTH INEQUALITY AND WAS
+    MISSING HERE. MEASURED 2026-11-04: a NaN payload was ADMITTED by
+    this gate, because `nan > 4.0` is False and `nan < 0.4` is False.
+
+    The canonical gate in `fieldcore/src/gate.py` has carried this check
+    since it was written, and so has the out-of-process governor. This
+    copy did not, so the same packet was refused by one core and
+    admitted by another. The shape of that attack is not "beat the
+    gate" -- it is "find the copy of the gate that does not have the
+    check".
+
+    The reason string matches the canonical gate's: `refuse_nonfinite`.
+    """
+    if not (_is_finite(emb) and _is_finite(psi0)):
+        return False, "refuse_nonfinite"
     ne = float(np.linalg.norm(emb))
     if ne > max_norm:
         return False, "refuse_norm"
@@ -37,6 +53,21 @@ def gate_packet(
     if float(np.dot(emb, psi0) / (ne * n0)) < min_cos:
         return False, "refuse_coherence"
     return True, "ok"
+
+
+def _is_finite(arr: np.ndarray) -> bool:
+    """A NaN or an infinity is refused, never admitted.
+
+    MEASURED: `float('nan') > 4.0` is False, so a gate that tests only
+    `ne > max_norm` returns ALLOW for a vector of NaN.
+
+    An exception is not a verdict, so this returns False rather than
+    raising on a non-numeric input.
+    """
+    try:
+        return bool(np.all(np.isfinite(np.asarray(arr, dtype=float))))
+    except (TypeError, ValueError):
+        return False
 
 
 # Public re-export so callers can `from harness.gate import M0_Governor`.
