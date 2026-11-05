@@ -633,6 +633,32 @@ def scan_live(token: Optional[str] = None,
     calls = 0
     windows = 0
     topics_done = 0
+    #: THE TOPICS THAT ACTUALLY ANSWERED, and this list exists because
+    #: the count was LYING.
+    #:
+    #: MEASURED 2026-11-05, from the day's own run records: the run at
+    #: 18:09:58 reported `topics_queried 96` of 96 -- and its errors
+    #: carried `RemoteDisconnected for topic 'sheaf'`. So a topic that
+    #: FAILED was counted as QUERIED, because `topics_done += 1` ran
+    #: BEFORE the error was checked:
+    #:
+    #:     items, err = _search(topic, token, per_page)
+    #:     calls += 1
+    #:     topics_done += 1     <- counted before the error check
+    #:     if err:
+    #:         errors.append(err)
+    #:         continue
+    #:
+    #: And the score said the day queried every topic it asked for, and
+    #: the loop's judge said DONE. **The coverage was short and the
+    #: score said it was complete.** That is the same defect class as
+    #: the whole of 2026-11-05: a missing thing read as a present one.
+    #:
+    #: SO THE TOPICS ARE COLLECTED, NOT COUNTED. `topics_queried` is
+    #: then the topics that ANSWERED -- and it is a list of the actual
+    #: topics, so the slice is right too: counting only the successes
+    #: while slicing the first N would report the wrong topics.
+    topics_ok: List[str] = []
 
     for topic in topics:
         # THE PACING, BEFORE the query. If the window is spent, wait
@@ -650,10 +676,15 @@ def scan_live(token: Optional[str] = None,
 
         items, err = _search(topic, token, per_page)
         calls += 1
-        topics_done += 1
         if err:
             errors.append(err)
+            # AND THE FAILED TOPIC IS NOT COUNTED AS QUERIED. MEASURED:
+            # the count used to be incremented before this branch, so a
+            # topic that raised RemoteDisconnected was reported as
+            # queried and the day's coverage was over-stated.
             continue
+        topics_done += 1
+        topics_ok.append(topic)
         for it in items:
             name = it.get("full_name")
             if not name:
@@ -672,7 +703,11 @@ def scan_live(token: Optional[str] = None,
         return ScanOutcome(
             manifest=scan_from_cache(CANONICAL_REPOS),
             mode="fallback",
-            topics_queried=tuple(topics[:topics_done]),
+            # AND THE TOPICS THAT ANSWERED, not a slice of the first N.
+            # MEASURED: `topics[:topics_done]` named the first N topics,
+            # which -- once the count counted only the SUCCESSES -- would
+            # be the wrong topics entirely. The list is the truth.
+            topics_queried=tuple(topics_ok),
             api_calls=calls,
             errors=errors + ["every topic query failed: fell back to the "
                              "canonical list"],
@@ -727,7 +762,12 @@ def scan_live(token: Optional[str] = None,
         manifest=manifest,
         hits=hits,
         mode="live",
-        topics_queried=tuple(topics[:topics_done]),
+        # THE TOPICS THAT ANSWERED. MEASURED: this was
+        # `topics[:topics_done]`, which named the first N topics
+        # rather than the ones that worked -- so a day where one topic
+        # raised RemoteDisconnected reported 96 of 96 topics queried
+        # and the loop's judge said DONE.
+        topics_queried=tuple(topics_ok),
         api_calls=calls,
         errors=errors,
         token_found=True,
