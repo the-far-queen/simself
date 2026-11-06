@@ -8,13 +8,31 @@ The previous version of this file carried 37 primitives and case slots and
 called it a hypothesis. Per Grok (segment 02, applied 2026-09-16): coverage
 on real sentences is the test. This file exposes 6 primitives and a coverage()
 function that measures it against a fixed sentence list.
+
+THE PSB SCHEMA LIVES HERE TOO, and that is a decision with a measurement
+behind it. The formal specification is
+`vault/10-minimax/20-writing/far-writing-canon/2026-11-06-the-psb-schema.md`.
+This module is the IMPLEMENTATION of that specification -- it was not
+replaced, and the schema was written to describe what this module already
+does. Where the schema needs fields this module did not carry (provenance,
+revision, retirement state, layer), they were ADDED HERE rather than in a
+second, competing module, because this is the module `mte.py` imports and
+two PSB modules would mean two schemas.
+
+AND THE PRIMITIVES ARE UNTOUCHED BY THAT WORK. MEASURED before and after:
+6 primitive slots, 31 trigger words, 7 UnitType members, and
+classify_span("The officer did not smile") -> REFUSE. The PSB registry
+below is a SEPARATE registry, exactly like LITERARY_FORMS, and for the
+same reason: putting new vocabulary into PRIMITIVES changed
+classify_span() and silently weakened the confabulation filter.
 """
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Callable, Dict, List, Optional
+from typing import Callable, Dict, List, Optional, Sequence, Set, Tuple
 
 import numpy as np
 
