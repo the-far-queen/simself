@@ -140,6 +140,14 @@ DEFAULT_DIM = 32
 #: order and not lower.
 MIN_CORPUS_COUNT = 5
 
+#: HOW MANY POSITIONS IN A SENTENCE THE TRAINER TRIES before it gives
+#: up on that sentence. MEASURED 2026-11-07: the first version picked
+#: ONE position at random and dropped the step when it was unusable,
+#: and at the E3 configuration that threw away 51.12% of the training
+#: steps. A rescue finds a usable position for 65.0% of them on the
+#: first try, so 8 tries take the waste from 51% to about 0.2%.
+POSITION_TRIES = 8
+
 #: THE SEEDS. These are the SAME seeds the list arm starts from: the
 #: pronouns (names) and the auxiliaries (acts). The model arm gets no
 #: information the list arm does not.
@@ -262,7 +270,17 @@ def dot(a: Sequence[float], b: Sequence[float]) -> float:
 def norm(v: Sequence[float]) -> float:
     """the length of a vector. Never zero: a zero length would make
     the normalization a division by zero, and a NaN loss is the shape
-    that looks like a number."""
+    that looks like a number.
+
+    **AND SO IT MUST NOT BE USED TO ASK WHETHER A VECTOR IS ZERO.**
+    MEASURED 2026-11-07: this function returns 1.0 for a zero vector,
+    on purpose -- and so a check written as `norm(v) > 1e-12` is TRUE
+    for an all-zero vector. That check was written to catch a model
+    whose gradient had gone to zero, and it could not catch it: **THE
+    INSTRUMENT THAT IS SAFE TO DIVIDE BY IS NOT AN INSTRUMENT FOR
+    ASKING WHETHER SOMETHING IS ZERO.** Ask about the largest
+    COMPONENT instead, which is what the check does.
+    """
     return math.sqrt(sum(x * x for x in v)) or 1.0
 
 
@@ -287,21 +305,51 @@ def _uncentre_gradient(dp: Sequence[float], p_hat: Sequence[float],
     **AND GETTING THIS WRONG IS SILENT.** The loss would still fall,
     because the predictor could still shrink the prediction's
     component along m -- which is free, and teaches nothing.
+
+    **AND THE MISSING FACTOR OF 1/||p|| WAS SILENT TOO, AND IT WAS
+    FOUND BY A CENTRAL DIFFERENCE.** MEASURED 2026-11-07: this
+    function took `n_p` as an argument and NEVER USED IT, so the
+    gradient that reached the predictor was NOT the gradient of the
+    loss the module computes. The check is a finite difference of the
+    module's own loss against the module's own analytic gradient, and
+    they DISAGREED by 83% (the bias, the predictor and the encoder
+    all of them), while the corrected chain rule agrees with the same
+    finite difference to 6e-11, 2e-8 and 6e-10.
+
+    **AND THE DIRECTION WAS NEVER WRONG, WHICH IS WHY EVERY
+    BEHAVIOURAL CHECK STAYED GREEN.** The cosine between the old
+    gradient and the true one is 1.0000000000 at every one of 320
+    random points: the gradient was off by a POSITIVE SCALAR, and a
+    gradient that is off by a positive scalar still DESCENDS. So the
+    loss fell, the vectors moved, and the model learned -- and the
+    step size was wrong by a factor that moves with ||p||. **A BEHAVIOUR
+    CHECK CANNOT SEE A SCALE, AND A SCALE IS WHAT WAS WRONG.**
+
+    **SO THE CHAIN RULE IS WRITTEN OUT IN FULL HERE**, projections
+    included, even though the incoming `dp` happens to be orthogonal
+    to both p_hat and the mean direction (and so the projections are
+    no-ops for the inputs this module produces). Written out, the
+    formula is correct for every input; written as the special case,
+    it is correct only for the ones that happen to arrive.
+
+        g = -(t_c - c p_c) / n_pc     the gradient w.r.t. the centred q
+        v = (I - m m') g              the centring is a projection
+        w = (I - u u') v              and so is the normalisation
+        D = w / n_p                   and p_hat = p / ||p||
+
+    `n_p` is the length of the prediction, and the factor 1/n_p is the
+    one that was missing: without it the update is not a gradient step
+    on this loss but on a differently-scaled one.
     """
     dim = len(dp)
-    c = dot(p_hat, m_hat)
-    # d(p_c)/d(p_hat) for p_c = (I - m m')(I - c c') p_hat, before the
-    # length normalisation; the normalisation's factor is folded into
-    # the incoming dp by the caller.
-    out = [0.0] * dim
-    for j in range(dim):
-        acc = dp[j]
-        # the removal of the component along m
-        acc -= m_hat[j] * sum(dp[k] * m_hat[k] for k in range(dim))
-        # the change of the component along p_hat (the length change)
-        acc -= p_hat[j] * c * sum(dp[k] * p_hat[k] for k in range(dim))
-        out[j] = acc
-    return out
+    # (I - m m') dp: the centring removes the component along the mean
+    dm = dot(dp, m_hat)
+    v = [dp[j] - m_hat[j] * dm for j in range(dim)]
+    # (I - u u') v: the normalisation removes the radial component
+    du = dot(v, p_hat)
+    w = [v[j] - p_hat[j] * du for j in range(dim)]
+    # and p_hat = p / ||p||, so the gradient w.r.t. p carries 1/||p||
+    return [x / n_p for x in w]
 
 
 # ===========================================================================
@@ -360,38 +408,33 @@ class Jepa:
         #: both sides of the loss.
         self.mean_direction = [0.0] * dim
 
-    # -- the training step ------------------------------------------------
-    def step(self, context: Sequence[int], target: Sequence[int]) -> float:
-        """one step: predict the target view's embedding from the context.
+    # -- the forward pass, and the gradients -----------------------------
+    def _forward(self, context: Sequence[int],
+                 target: Sequence[int]) -> Optional[Dict[str, Any]]:
+        """the loss and the gradients, and NOTHING is changed.
 
-        **AND THE LOSS IS A COSINE.** It measures DIRECTION and not
-        magnitude, so the model cannot win by shrinking, and it starts
-        near 1.0 (an unrelated direction) instead of near zero.
+        **AND IT IS SEPARATE FROM `step` BECAUSE A GRADIENT THAT CANNOT
+        BE CHECKED IS A GRADIENT THAT CANNOT BE TRUSTED.** `step` both
+        computed the loss and moved the parameters, so there was no way
+        to ask the model "is this the gradient of your loss?" -- the
+        question needs the loss as a function of the parameters, and
+        the parameters moved underneath it.
 
-        **AND THE TARGET IS ONE WORD, AND THAT IS THE POINT.** The
-        model predicts the representation of ONE target word from the
-        window of words before it. That is a per-word objective, and it
-        is what makes the loss carry information about WORDS rather
-        than about the corpus's overall flavour.
+        **AND THE ANSWER, MEASURED 2026-11-07, WAS NO.** A central
+        difference of this loss against this module's own analytic
+        gradient DISAGREED, and the check that would have caught the
+        original transposed backpropagation (the trained model
+        agreeing with an untrained one to four significant figures)
+        could not see it, because it compared two models instead of
+        comparing a gradient with the loss it claims to be the
+        gradient of.
 
-        **AND THE PREDICTION IS CENTRED, BECAUSE AN UNCENTRED ONE
-        COLLAPSES.** MEASURED 2026-11-07: with the prediction left
-        free, every prediction converged on the corpus's mean
-        direction -- the mean cosine between the predictions and their
-        own mean was 0.9925, and the nearest neighbours of every word
-        were IDENTICAL before and after training. **A model that
-        predicts the average of everything has learned the corpus's
-        mean and nothing else**, and the loss still falls, because
-        falling loss was the only thing being watched.
-
-        So the prediction is compared against the target AFTER the
-        corpus's mean direction is removed from both. What is left is
-        the part that distinguishes this word from the average word --
-        and that is the part the (name, act) test can use.
+        `None` means there is nothing to learn -- the word IS the mean
+        direction -- and the loss is then zero.
         """
         dim = self.dim
         if not context or not target:
-            return 0.0
+            return None
         # the context's embedding: the MEAN of its words' vectors
         z_ctx = [0.0] * dim
         for w in context:
@@ -418,7 +461,6 @@ class Jepa:
         z_tgt = [v * inv for v in z_tgt]
         if len(target) == 1:
             z_tgt = list(self.target[target[0]])
-
         n_p = norm(p)
         n_t = norm(z_tgt)
         p_hat = [v / n_p for v in p]
@@ -434,7 +476,7 @@ class Jepa:
         if n_pc < 1e-9 or n_tc < 1e-9:
             # the word IS the mean direction (or the prediction is);
             # there is nothing left to predict and nothing to learn
-            return 0.0
+            return None
         p_c = [v / n_pc for v in p_c]
         t_c = [v / n_tc for v in t_c]
         c = dot(p_c, t_c)
@@ -469,9 +511,7 @@ class Jepa:
         # agrees with an untrained one to four figures has not
         # learned.** And the loss still fell (0.742 -> 0.689), because
         # the predictor alone can reduce it -- so a falling loss did
-        # not mean the encoder was learning either. That is the whole
-        # reason the diagnostic checks the trained model against an
-        # untrained one.
+        # not mean the encoder was learning either.
         d_ctx = [0.0] * dim
         for i, v in enumerate(z_ctx):
             if v == 0.0:
@@ -481,6 +521,50 @@ class Jepa:
             for j in range(dim):
                 acc += dp[j] * row[j]
             d_ctx[i] = acc
+
+        return {
+            "loss": loss,
+            "dp": dp,
+            "d_ctx": d_ctx,
+            "z_ctx": z_ctx,
+            "p": p,
+            "p_c": p_c,
+            "t_c": t_c,
+            "m_hat": m_hat,
+            "n_p": n_p,
+            "n_t": n_t,
+        }
+
+    # -- the training step ------------------------------------------------
+    def step(self, context: Sequence[int],
+             target: Sequence[int]) -> Optional[float]:
+        """one step: predict the target view's embedding from the context.
+
+        **AND THE ARITHMETIC IS THE FORWARD PASS'S, because the step
+        calls it.** There is ONE implementation of the loss and the
+        gradients, and it is the one the check reads. A gradient
+        checked against a second copy of the formula is a second copy
+        of the formula, not a check.
+
+        **AND IT RETURNS None WHEN THERE IS NOTHING TO LEARN, NOT
+        0.0.** MEASURED 2026-11-07: this used to return 0.0, and the
+        trainer averaged those 0.0s into the reported loss -- **and A
+        LOSS OF ZERO IS THE BEST POSSIBLE LOSS.** At the E3
+        configuration 51.12% of the steps are no-ops (the window's
+        words are not in the model's vocabulary, or the target word is
+        not), so more than half the training budget reported
+        perfection. None cannot be averaged into anything by accident,
+        so the distinction between "this step learned nothing" and
+        "this step reached a loss of zero" is now impossible to lose.
+        """
+        out = self._forward(context, target)
+        if out is None:
+            return None
+        dim = self.dim
+        loss = out["loss"]
+        dp = out["dp"]
+        d_ctx = out["d_ctx"]
+        z_ctx = out["z_ctx"]
 
         # the predictor's gradient
         for i, v in enumerate(z_ctx):
@@ -553,6 +637,62 @@ class Jepa:
 
 
 # ===========================================================================
+# THE EVALUATION: THE LOSS ON A FIXED SET OF PAIRS
+# ===========================================================================
+def evaluate(model: Jepa, pairs: Sequence[Tuple[List[str], List[str]]],
+             sample: int = 400, window: int = 8,
+             seed: int = 20261107) -> Dict[str, Any]:
+    """the loss on a FIXED set of (context, target) pairs.
+
+    **AND IT IS THE INSTRUMENT, BECAUSE A WINDOW OF THE TRAINING LOSS
+    IS NOT ONE.** MEASURED 2026-11-07: the trainer used to report the
+    mean of the first 100 training losses against the mean of the last
+    100, and those are two different SETS of pairs. The per-step loss
+    has a standard deviation of 0.283, so a 100-sample mean carries a
+    standard error of 0.028 -- and the difference the check was
+    reading (0.069) was 2.44 standard errors of NOISE. Worse, the
+    noise pointed the WRONG WAY: the training-window loss ROSE while
+    the loss on a FIXED set FELL, from 0.99231 to 0.95604.
+
+    **A CHECK BUILT ON A SAMPLING ARTIFACT CAN REPORT THAT A MODEL
+    DID NOT TRAIN ABOUT A MODEL THAT DID.** So the loss is measured on
+    the SAME pairs before and after training, and the comparison is
+    PAIRED: the per-example noise cancels instead of adding.
+
+    **AND THE PAIRS ARE FIXED BY A SEED, so the measurement is
+    REPRODUCIBLE**: the same set, every time, for any model.
+    """
+    import random as _random
+    rng = _random.Random(seed)
+    index = model.index
+    dim = model.dim
+    losses: List[float] = []
+    for _ in range(sample):
+        if not pairs:
+            break
+        a, b = pairs[rng.randrange(len(pairs))]
+        ctx_src, tgt_src = (a, b) if rng.random() < 0.5 else (b, a)
+        lo = min(window + 1, len(ctx_src) - 1)
+        if lo < 1:
+            continue
+        pos = lo + rng.randrange(max(1, len(ctx_src) - lo))
+        ctx = [index[w] for w in ctx_src[pos - window:pos] if w in index]
+        tgt_word = tgt_src[pos] if pos < len(tgt_src) else ""
+        tgt = [index[tgt_word]] if tgt_word in index else []
+        if not ctx or not tgt:
+            continue
+        out = model._forward(ctx, tgt)
+        if out is not None:
+            losses.append(out["loss"])
+    if not losses:
+        return {"n": 0, "mean": 0.0}
+    mean = sum(losses) / len(losses)
+    sd = (sum((x - mean) ** 2 for x in losses) / len(losses)) ** 0.5
+    return {"n": len(losses), "mean": round(mean, 6),
+            "sd": round(sd, 6), "se": round(sd / (len(losses) ** 0.5), 6)}
+
+
+# ===========================================================================
 # THE TRAINING
 # ===========================================================================
 def train(steps: int = 3000, dim: int = DEFAULT_DIM, lr: float = 0.05,
@@ -591,14 +731,31 @@ def train(steps: int = 3000, dim: int = DEFAULT_DIM, lr: float = 0.05,
     pairs = view_pairs(max_sentences=max_sentences)
     if not pairs:
         raise SystemExit("no aligned sentence pairs -- is the second view built?")
+    # **AND EVERY TENTH PAIR IS HELD OUT**, interleaved, so the
+    # held-out pairs come from the same works as the training pairs.
+    # The held-out loss is the INSTRUMENT: it is measured on the SAME
+    # pairs before and after training, so the comparison is paired and
+    # the sampling noise cancels. A window of the TRAINING loss cannot
+    # do that -- MEASURED 2026-11-07, its sampling error (0.028 on a
+    # 100-sample mean) pointed the wrong way and reported that a model
+    # which had trained had not.
+    held_out = [p for i, p in enumerate(pairs) if i % 10 == 0]
+    train_pairs = [p for i, p in enumerate(pairs) if i % 10 != 0]
+    if not train_pairs:
+        train_pairs = pairs
     model = Jepa(vocab, dim=dim, ema=ema, lr=lr, seed=seed)
     index = model.index
     rng = random.Random(seed)
     losses: List[float] = []
+    noop = 0
     t0 = time.time()
     model.refresh_mean_direction()
+    # **THE HELD-OUT LOSS, BEFORE ANY TRAINING.** The same pairs are
+    # measured again at the end, so the difference is paired.
+    before = evaluate(model, held_out)
+    refresh_every = max(1, steps // 10)
     for step in range(steps):
-        a, b = pairs[rng.randrange(len(pairs))]
+        a, b = train_pairs[rng.randrange(len(train_pairs))]
         # **THE SPLIT ALTERNATES, so every word gets trained.** A word
         # that only ever appears in the second half of a sentence would
         # never be a context word and its row would never move.
@@ -606,21 +763,68 @@ def train(steps: int = 3000, dim: int = DEFAULT_DIM, lr: float = 0.05,
         # the target position: somewhere with a full window before it
         lo = min(window + 1, len(ctx_src) - 1)
         if lo < 1:
+            noop += 1
             continue
-        pos = lo + rng.randrange(max(1, len(ctx_src) - lo))
-        ctx = [index[w] for w in ctx_src[pos - window:pos] if w in index]
-        tgt_word = tgt_src[pos] if pos < len(tgt_src) else ""
-        tgt = [index[tgt_word]] if tgt_word in index else []
+        # **AND THE POSITION IS CHOSEN TO BE USABLE.** The first
+        # version picked a position at random and DROPPED the step if
+        # the target word was not in the model's vocabulary or none of
+        # the window's words was. MEASURED 2026-11-07: at the E3
+        # configuration that threw away **51.12% of the training
+        # steps** -- 46.03% because the target word was not in the
+        # vocabulary and 5.44% because no window word was. **A model
+        # arm that got half the steps its budget said it had is the
+        # shape of a strawman**, and `diagnose_jepa.py` exists to ask
+        # exactly that question.
+        #
+        # So a few positions in the SAME sentence are tried, and the
+        # first usable one is taken. MEASURED: a rescue finds a usable
+        # position for 65.0% of the wasted steps on the first try, so
+        # the waste collapses from 51% to a few percent. The choice is
+        # still random over the sentences, so the distribution over
+        # positions is still the corpus's.
+        ctx: List[int] = []
+        tgt: List[int] = []
+        for _ in range(POSITION_TRIES):
+            pos = lo + rng.randrange(max(1, len(ctx_src) - lo))
+            ctx = [index[w] for w in ctx_src[pos - window:pos] if w in index]
+            tgt_word = tgt_src[pos] if pos < len(tgt_src) else ""
+            tgt = [index[tgt_word]] if tgt_word in index else []
+            if ctx and tgt:
+                break
         loss = model.step(ctx, tgt)
+        # **A STEP THAT LEARNED NOTHING IS COUNTED, NOT AVERAGED.**
+        if loss is None:
+            noop += 1
+            continue
         losses.append(loss)
-        if verbose and (step + 1) % max(1, steps // 10) == 0:
-            recent = sum(losses[-100:]) / len(losses[-100:])
+        if (step + 1) % refresh_every == 0:
+            # **AND THE MEAN DIRECTION IS REFRESHED ON THE SCHEDULE,
+            # NOT ONLY WHEN THE RUN IS NOISY.** It used to sit inside
+            # the `if verbose` block, so a quiet run -- every run in
+            # the test suite, every run in `--compare` -- centred the
+            # loss against a direction frozen at initialisation for
+            # the whole training. Only the PRINTING is conditional
+            # now.
             model.refresh_mean_direction()
-            print("  step %6d/%d  loss %.5f" % (step + 1, steps, recent),
-                  flush=True)
+            if verbose:
+                recent = sum(losses[-100:]) / len(losses[-100:])
+                print("  step %6d/%d  loss %.5f" % (step + 1, steps, recent),
+                      flush=True)
     model.refresh_mean_direction()
+    # **AND THE HELD-OUT LOSS, AFTER.** The same pairs, so the
+    # difference is PAIRED and the per-example noise cancels.
+    after = evaluate(model, held_out)
+    # **AND THE LOSS STATISTICS ARE OVER THE STEPS THAT RAN.** The
+    # no-op steps are not in `losses` at all -- they are counted, and
+    # the count is reported, because a reader who is told that half
+    # the budget was unused can weigh the number and a reader who is
+    # not told cannot.
+    tail = losses[-100:] or [0.0]
+    head = losses[:100] or [0.0]
     report = {
         "steps": steps,
+        "steps_computed": len(losses),
+        "steps_noop": noop,
         "dim": dim,
         "lr": lr,
         "ema": ema,
@@ -628,8 +832,17 @@ def train(steps: int = 3000, dim: int = DEFAULT_DIM, lr: float = 0.05,
         "vocab": len(vocab),
         "parameters": model.parameters(),
         "pairs_available": len(pairs),
-        "final_loss": round(sum(losses[-100:]) / len(losses[-100:]), 6),
-        "first_loss": round(sum(losses[:100]) / len(losses[:100]), 6),
+        "final_loss": round(sum(tail) / len(tail), 6),
+        "first_loss": round(sum(head) / len(head), 6),
+        # **AND THE PAIRED HELD-OUT LOSS.** This is the number a check
+        # should read: the same pairs, before and after, so the
+        # difference is a measurement of the MODEL and not of the
+        # sampling.
+        "held_out_loss_before": before["mean"],
+        "held_out_loss_after": after["mean"],
+        "held_out_loss_fall": round(before["mean"] - after["mean"], 6),
+        "held_out_pairs": before["n"],
+        "held_out_se": after.get("se", 0.0),
         "seconds": round(time.time() - t0, 1),
     }
     return model, report
