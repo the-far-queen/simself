@@ -299,15 +299,45 @@ FLOOR_DEMANDS: Dict[str, Dict[str, Any]] = {
 #: "needs"; they are the substrate the demands build ON, so a repo that
 #: serves them is a candidate for the CORE rather than for a letter.
 CORE_DEMANDS: Dict[str, Dict[str, Any]] = {
+    # AND THE TWO STUBS, and they are STUBS AND NOT SMALL SHEAVES.
+    #
+    # Bobby, 2026-11-07: *"nah skip godot too just stub lets get fc
+    # working just self coding scavenge integrate and simself so just
+    # two sheafs and two stubs"*.
+    #
+    # **AND A STUB THAT SCANS GITHUB FOR ITSELF IS NOT A STUB.** A
+    # stub's topics are EMPTY, so the scanner does not spend the query
+    # budget looking for what the substrate does not do -- and the
+    # day's artifact shows the topics_requested drop, which is the
+    # honest measure of what was given up.
+    #
+    # **AND THE STUB DECLARES WHAT IT IS NOT.** The fc's rule: a stub
+    # that claims to be more than it is is the sin this project is
+    # built to refuse. So each one names the three things it is not and
+    # the measurement that would make it real.
     "sheaf_topology": {
         "letter": "TOPOLOGY",
         "what": "the geometric substrate: manifold, Hodge, gradient flow",
-        "topics": ("manifold", "hodge-decomposition", "hodge", "sheaf",
-                   "sheaf-neural-networks", "geometric-deep-learning",
-                   "topological-deep-learning", "gradient-flow",
-                   "differential-geometry", "algebraic-topology",
-                   "computational-geometry", "manifold-decomposition",
-                   "egg-toroid", "stochastic-dynamics"),
+        "status": "stub",
+        "not_yet": (
+            "the stalk substrate's geometry is RELATIONAL -- every stalk "
+            "is defined by what it attaches to, and there is NO absolute "
+            "frame: MEASURED 2026-11-07, zero mentions of origin, base, "
+            "home, anchor or centre across stalk_topology.py, locus.py, "
+            "wound_core.py and radial.py, and the locus's own docstring "
+            "says the scale is arbitrary and what carries the "
+            "information is the RELATIVE amplitude",
+            "the locus's PHYSICS is the substrate's and the coupling "
+            "between the locus interface and the stalk substrate is "
+            "the next build -- locus.py says so in its own words",
+            "the robot's body was measured in Godot on 2026-11-07 and "
+            "then PARKED by bobby's instruction, so the simulation "
+            "exists and is not wired"),
+        "would_be_real_when": (
+            "the stalk substrate carries an absolute frame AND the "
+            "locus's coordinate is READABLE from it, and the read is "
+            "a measurement rather than a convention"),
+        "topics": (),
     },
     "sheaf_mltr": {
         "letter": "MLTR",
@@ -319,8 +349,23 @@ CORE_DEMANDS: Dict[str, Dict[str, Any]] = {
     "sheaf_mte": {
         "letter": "MTE",
         "what": "the edge: English and 193 other tongues",
-        "topics": ("translation", "multilingual", "language-detection",
-                   "cross-lingual", "localization"),
+        "status": "stub",
+        "not_yet": (
+            "the MTE is a SLOT-PATTERN COMPILER, not a sentence reader: "
+            "MEASURED 2026-11-07, compile_span(span, pattern) needs a "
+            "PATTERN and the token count must EQUAL the slot count",
+            "the English-deciphering role is PLAYED BY THE AGENT for "
+            "now -- bobby: 'you minimax llm are mte for now' -- and "
+            "coding it into the MTE is a task bobby deferred",
+            "the learned vocabulary is 3,075 verbs and 8,231 nouns in "
+            "its own registry, and there is NO map from a learned "
+            "surface form to a primitive, so the composition path "
+            "cannot be found for an arbitrary English sentence"),
+        "would_be_real_when": (
+            "a slot pattern exists for the sentence shapes the "
+            "substrate must read, and the learned vocabulary resolves "
+            "into one, and the round trip compiles and restores"),
+        "topics": (),
     },
     "sheaf_coding": {
         "letter": "CODING",

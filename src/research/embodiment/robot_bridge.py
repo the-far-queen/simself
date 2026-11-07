@@ -89,6 +89,13 @@ class Reading:
     #: NOT SPENT, because a cost nobody was told about is a cost
     #: somebody will find on a statement.**
     would_spend: bool = False
+    #: WHO read it. Bobby, 2026-11-07: *"you minimax llm are mte for
+    #: now"*. So the decipherer is NAMED and it is one of: "exact" (the
+    #: registry read it), "minimax-llm" (the API was called), or
+    #: "the-agent" (the agent read the English and handed the command
+    #: over -- which is what happens in a live conversation, because
+    #: the agent IS the MTE for now).
+    decipherer: str = ""
 
     @property
     def ok(self) -> bool:
@@ -97,7 +104,26 @@ class Reading:
     def to_json(self) -> Dict[str, Any]:
         return {"span": self.span, "verb": self.verb, "args": self.args,
                 "how": self.how, "reason": self.reason,
-                "would_spend": self.would_spend}
+                "would_spend": self.would_spend,
+                "decipherer": self.decipherer}
+
+
+def to_godot(reading: Reading) -> Dict[str, Any]:
+    # The command as the GODOT SIDE consumes it.
+    #
+    # AND THE TRANSLATION IS THE SUBSTRATE'S, NOT THE MODEL'S. The
+    # model reads the English; the registry says what the verb means
+    # and what the Godot operation is. SO THE MODEL NEVER NAMES A GODOT
+    # OPERATION -- it names a verb, and the verb's registry entry names
+    # the operation.
+    if not reading.ok:
+        return {"ok": False, "reason": reading.reason}
+    cmd = RV.lookup(reading.verb)
+    if cmd is None:
+        return {"ok": False, "reason": "no such verb: %r" % reading.verb}
+    return {"ok": True, "verb": cmd.verb, "op": cmd.godot_op,
+            "args": dict(reading.args), "unit": cmd.unit.value,
+            "about": cmd.about}
 
 
 # ---------------------------------------------------------------------------
