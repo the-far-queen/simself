@@ -291,6 +291,55 @@ def test_the_diff_of_two_identical_scans_is_empty():
     assert diff.empty
     assert diff.new_repos == []
     assert diff.grown == []
+    assert diff.disappeared == []
+
+
+def test_a_repo_that_left_the_manifest_is_counted():
+    """THE DISAPPEARANCE, and the loss the arithmetic could not see.
+
+    MEASURED 2026-11-07, live: the topic `manifold` failed with a
+    URLError, the manifest came back with 169 repos against the
+    baseline's 199, and the day's score said `accounted 169 of 169
+    BALANCED`. The 30 repos `manifold` alone could find had vanished,
+    and the count over the repos that are PRESENT could not see it.
+
+    **A REPO THAT LEFT THE MANIFEST IS NOT A SHRUNK REPO** -- a
+    shrunk repo is still there with fewer stars -- and it is not a
+    new repo either. It is GONE.
+    """
+    old = L.scan_from_cache([
+        {"full_name": "a/b", "stargazers_count": 10, "language": "Python",
+         "description": "d", "topics": ["manifold"]},
+        {"full_name": "c/d", "stargazers_count": 5, "language": "Rust",
+         "description": "d", "topics": ["manifold"]},
+    ])
+    new = L.scan_from_cache([
+        {"full_name": "a/b", "stargazers_count": 10, "language": "Python",
+         "description": "d", "topics": ["manifold"]},
+    ])
+    diff = L.diff_manifests(old, new)
+    assert diff.disappeared == ["c/d"], diff.disappeared
+    # AND THE ARITHMETIC STILL BALANCES -- which is the whole point.
+    # The loss is invisible to the present-repo count, so it needs its
+    # own count.
+    assert diff.new_repos == []
+    assert diff.grown == []
+    assert diff.shrunk == []
+    assert diff.unchanged == 1
+    assert diff.describe()["disappeared"] == ["c/d"]
+
+
+def test_a_repo_that_grew_did_not_disappear():
+    """and the two are not confused."""
+    old = L.scan_from_cache([{"full_name": "a/b", "stargazers_count": 10,
+                               "language": "Python", "description": "d",
+                               "topics": ["manifold"]}])
+    new = L.scan_from_cache([{"full_name": "a/b", "stargazers_count": 99,
+                              "language": "Python", "description": "d",
+                              "topics": ["manifold"]}])
+    diff = L.diff_manifests(old, new)
+    assert diff.disappeared == []
+    assert diff.grown == [("a/b", 10, 99)]
 
 
 # ===========================================================================

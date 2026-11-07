@@ -812,6 +812,31 @@ class ManifestDiff:
     shrunk: List[Tuple[str, int, int]] = field(default_factory=list)
     changed_topics: List[str] = field(default_factory=list)
     unchanged: int = 0
+    #: THE REPOS THAT DISAPPEARED, and the field is NEW.
+    #:
+    #: MEASURED 2026-11-07: the diff iterates over the NEW manifest's
+    #: repos, so it counts what is PRESENT -- new, grown, shrunk,
+    #: unchanged -- and a repo that is GONE is not counted at all.
+    #: **AND THE LOSS IS SILENT, WHICH IS THE WORST KIND.**
+    #:
+    #: The symptom, measured live on 2026-11-07: the scan queried the
+    #: reduced topic set, the topic `manifold` failed with a
+    #: `URLError`, and the manifest came back with 169 repos against
+    #: the baseline's 199. The 30 repos that `manifold` was the only
+    #: topic to find had VANISHED -- and the day's score said
+    #: `accounted 169 of 169 BALANCED`, because the arithmetic only
+    #: counts the repos that are present.
+    #:
+    #: **A DAY THAT LOSES 30 REPOS AND REPORTS ITS ARITHMETIC AS
+    #: BALANCED IS A DAY THAT LOOKS PERFECT AND IS NOT.** And the
+    #: loop's own judge has an obligation -- "every repo found is
+    #: accounted for" -- that the loss walks straight past, because
+    #: the repos that vanished are not among the repos found.
+    #:
+    #: So the disappearance is its own count, and it is its own
+    #: obligation. A repo that leaves the manifest is a FINDING, and
+    #: it is the finding that says the scan was short.
+    disappeared: List[str] = field(default_factory=list)
 
     def describe(self) -> Dict[str, Any]:
         return {
@@ -820,6 +845,7 @@ class ManifestDiff:
             "shrunk": ["%s: %d -> %d" % s for s in self.shrunk],
             "changed_topics": list(self.changed_topics),
             "unchanged": self.unchanged,
+            "disappeared": list(self.disappeared),
         }
 
     @property
@@ -835,6 +861,14 @@ def diff_manifests(old: Any, new: Any) -> ManifestDiff:
     is becoming load-bearing. The topic change is the other signal: a
     repo that gained a topic we scan for has become relevant even if
     its stars did not move.
+
+    **AND THE REPOS THAT DISAPPEARED ARE COUNTED, because the
+    arithmetic alone cannot see them.** MEASURED 2026-11-07: the
+    count is over the repos that are PRESENT, so a repo that left the
+    manifest -- because the only topic that could find it FAILED --
+    was counted nowhere. The day's score said `169 of 169 BALANCED`
+    with 30 repos gone. So the disappearance is its own count, and it
+    is the count that says the scan was short.
     """
     old_by = {r.full_name: r for r in (old.repos if old else [])}
     new_by = {r.full_name: r for r in (new.repos if new else [])}
@@ -853,6 +887,13 @@ def diff_manifests(old: Any, new: Any) -> ManifestDiff:
             out.unchanged += 1
         if set(repo.topics) != set(prev.topics):
             out.changed_topics.append(name)
+
+    #: AND THE ONES THAT WENT. A repo in the old manifest and not in
+    #: the new one. **IT IS NOT A SHRUNK REPO** -- a shrunk repo is
+    #: still there with fewer stars -- and it is not a "new" repo
+    #: either. It is GONE, and the reason is almost always a topic
+    #: that failed to answer, which is the finding the day needs.
+    out.disappeared = sorted(set(old_by) - set(new_by))
     return out
 
 
