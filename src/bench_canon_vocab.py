@@ -59,14 +59,27 @@ import os
 import random
 import re
 import sys
-from typing import Dict, List, Optional, Sequence, Tuple
+from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 _SRC = os.path.dirname(_HERE)
 if _SRC not in sys.path:
     sys.path.insert(0, _SRC)
 
-from constitutional import learned_vocab as lv
+from vocab_loader import load_learned_vocab
+
+#: THE VOCABULARY LEARNER, loaded WITHOUT the package.
+#:
+#: MEASURED 2026-11-07: `from constitutional import learned_vocab` runs
+#: `constitutional/__init__.py`, which imports `constitution.py`, which
+#: imports numpy -- so this bench could not run on an interpreter
+#: without numpy, even though `learned_vocab.py` itself uses only
+#: hashlib, json, os, re and dataclasses. The measurement that decides
+#: the vocabulary's quality was hostage to a library it does not use,
+#: and a measurement that only runs on one interpreter is one the next
+#: session cannot reproduce. The loader tries the ordinary import
+#: first, so module identity is unchanged wherever that works.
+lv: Any = load_learned_vocab()
 
 _HERMES = os.path.abspath(os.path.join(_SRC, "..", ".."))
 _CANON = os.path.join(_HERMES, "work_repos", "sacred-library", "corpus",
