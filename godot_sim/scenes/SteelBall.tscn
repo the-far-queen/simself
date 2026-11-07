@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bsteelball01"]
+
+[ext_resource type="Script" path="res://scripts/steel_ball.gd" id="1_ball"]
+
+[node name="SteelBall" type="Node2D"]
+script = ExtResource("1_ball")

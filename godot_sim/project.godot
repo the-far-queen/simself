@@ -1,0 +1,32 @@
+; Engine configuration file for the SIMSELF ROBOT SIM.
+;
+; THE PROJECT IS HEADLESS-FIRST, because the thing that has to work is
+; the SEEK, and a seek is measured by where the robot ends up -- not by
+; what it looks like. MEASURED 2026-11-07: Godot 4.4.1 was on this
+; machine (its editor settings and three projects were in the roaming
+; dir) but the BINARY was gone; the 69 MB zip was in Downloads, and it
+; was extracted to `hermes/tools/godot/`. So the sim runs headless and
+; prints a trace, and the window is optional.
+;
+; THE BOUNDS: Bobby, 2026-11-07 -- "2d seek from bounds 10,10, -10,-10",
+; so the world is x in [-10, 10] and y in [-10, 10], and the red dot is
+; at (0, 0), the middle of it.
+
+config_version=5
+
+[application]
+
+config/name="SimSelf Robot Sim"
+config/description="The robot sheaf's 2D seek: a red dot at the origin, inside bounds of -10..10 on both axes."
+run/main_scene="res://scenes/Seek.tscn"
+config/features=PackedStringArray("4.4", "GL Compatibility")
+
+[display]
+
+window/size/viewport_width=640
+window/size/viewport_height=640
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+environment/defaults/default_clear_color=Color(0.09, 0.1, 0.13, 1)
