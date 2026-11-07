@@ -42,6 +42,22 @@ class ScannedRepo:
     topics: Tuple[str, ...]
     scan_ts: str
     matched: str           # "fieldcore" | "simself" | "both"
+    #: THE TOPICS THAT FOUND THIS REPO, and the field is NEW.
+    #:
+    #: MEASURED 2026-11-07: the scanner knows which query topic produced
+    #: each hit -- the topic is the loop variable -- and the hit was
+    #: stored WITHOUT it. So the day's records said "96 topics queried,
+    #: 199 repos found" and nothing said which topic found which repo.
+    #:
+    #: AND THAT IS THE MISSING LINK FOR THE HIERARCHY'S SECOND HALF: the
+    #: slow level cannot decide which topics are worth querying if it
+    #: cannot see which topics produced the repos that CHANGED. **A LEVEL
+    #: THAT CANNOT SEE THE CAUSE CANNOT DROP THE CAUSE.**
+    #:
+    #: AND IT IS NOT IN THE DIGEST, because the digest is PROVENANCE --
+    #: it says "this repo as observed at THIS scan" -- and the found-by
+    #: set is a property of the QUERY, not of the observation.
+    found_by: Tuple[str, ...] = ()
 
     def digest(self) -> str:
         canonical = f"{self.full_name}|{self.stars}|{self.scan_ts}"
@@ -89,6 +105,10 @@ class ScanManifest:
                     "language": r.language, "description": r.description,
                     "topics": list(r.topics), "matched": r.matched,
                     "digest": r.digest(),
+                    # AND THE TOPICS THAT FOUND IT, so the manifest says
+                    # which QUERY produced each repo and not only that
+                    # the repo exists.
+                    "found_by": list(r.found_by),
                 } for r in self.repos
             ],
         }
@@ -117,6 +137,9 @@ def scan_from_cache(repos: List[Dict[str, Any]]) -> ScanManifest:
             language=r.get("language", ""),
             description=(r.get("description") or "")[:200],
             topics=topics,
+            # AND THE TOPICS THAT FOUND IT, carried through from the
+            # scanner's own loop.
+            found_by=tuple(r.get("found_by") or ()),
             # same deprecation fix as ScanManifest.scan_ts above
             scan_ts=datetime.datetime.now(datetime.timezone.utc)
             .strftime("%Y-%m-%dT%H:%M:%S.%fZ"),

@@ -692,12 +692,37 @@ def scan_live(token: Optional[str] = None,
             prev = raw.get(name)
             if prev is None:
                 raw[name] = it
+                # AND THE TOPIC THAT FOUND IT IS RECORDED, and it was
+                # NOT recorded at all before this. MEASURED 2026-11-07:
+                # the scanner's own loop knows which topic produced each
+                # hit -- the topic is the loop variable -- and the hit
+                # was stored without it. So the day's records said
+                # "96 topics queried, 199 repos found" and NOTHING said
+                # which topic found which repo.
+                #
+                # AND THAT IS THE MISSING LINK FOR THE HIERARCHY'S SECOND
+                # HALF. The slow level cannot decide which topics are
+                # worth querying if it cannot see which topics produced
+                # the repos that CHANGED. **A LEVEL THAT CANNOT SEE THE
+                # CAUSE CANNOT DROP THE CAUSE.**
+                #
+                # AND A REPO FOUND BY SEVERAL TOPICS CARRIES ALL OF THEM,
+                # because a repo that two topics both find is a repo both
+                # topics would have to keep.
+                _found = list(it.get("found_by") or [])
+                if topic not in _found:
+                    _found.append(topic)
+                it["found_by"] = _found
             else:
                 extra = list(prev.get("topics") or [])
                 for t in (it.get("topics") or []):
                     if t not in extra:
                         extra.append(t)
                 prev["topics"] = extra
+                _found = list(prev.get("found_by") or [])
+                if topic not in _found:
+                    _found.append(topic)
+                prev["found_by"] = _found
 
     if not raw and errors:
         return ScanOutcome(
@@ -852,6 +877,8 @@ def latest_manifest(dirname: str = "~/.simself/scans") -> Optional[Any]:
             topics=tuple(r.get("topics") or ()),
             scan_ts=data.get("scan_ts", ""),
             matched=r.get("matched", ""),
+            # AND THE TOPICS THAT FOUND IT, restored from the manifest.
+            found_by=tuple(r.get("found_by") or ()),
         )
         for r in (data.get("repos") or []))
     return ScanManifest(scanner_version=data.get("scanner_version", "1.0"),
