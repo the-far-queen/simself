@@ -473,9 +473,19 @@ MAX_WINDOWS = 4
 
 #: The topics the scanner QUERIES, in PRIORITY order, capped at the
 #: measured ceiling.
-QUERY_TOPICS: Tuple[str, ...] = tuple(
+#:
+#: AND THE LIST IS DEDUPLICATED, AND IT WAS NOT BEFORE.
+#: MEASURED 2026-11-07: two demands share the topic `code-generation`,
+#: so the comprehension produced it TWICE, and the scanner's loop
+#: queries each entry -- so the scan spent TWO GitHub search calls on
+#: ONE topic, and `api_calls` counted both. **A DUPLICATE IN THE
+#: QUERY LIST IS A DUPLICATE API CALL AND A WASTED RATE-LIMIT SLOT.**
+#:
+#: And the dedupe keeps the FIRST occurrence, so the priority order
+#: -- the order the scanner spends its window in -- is unchanged.
+QUERY_TOPICS: Tuple[str, ...] = tuple(dict.fromkeys(
     t for d in DEMAND_PRIORITY for t in ALL_DEMANDS[d]["topics"]
-)[:SEARCH_BUDGET * MAX_WINDOWS]
+))[:SEARCH_BUDGET * MAX_WINDOWS]
 
 
 def demands_for(topics: Sequence[str]) -> List[str]:
