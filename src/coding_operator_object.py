@@ -75,6 +75,36 @@ def _resolve_psi0():
     return Ground(Constitution().psi_0.copy()).psi_0
 
 
+def _resolve_cycle():
+    """The self-coding cycle, and the SAME DUAL FORM as the gate above.
+
+    AND WHY IT NEEDS IT: this module lives at `src/` top level and is
+    consumed two ways -- as a package member (`from src.coding_operator
+    _object import ...`) and as a bare module (`sys.path.insert(0,
+    "src"); import coding_operator_object`). Every test in this repo
+    uses the second form, and the cycle lives one level down in
+    `src/autocode/`, so the bare form's path is `autocode.self_coding
+    _cycle`. MEASURED: the first version of this used the relative form
+    only, and it raised ImportError on every call in the bare form --
+    the same defect the gate import above documents, one level down.
+    """
+    try:  # form 1: imported as src.coding_operator_object
+        from .autocode.self_coding_cycle import GoalContract, run_cycle
+        return GoalContract, run_cycle
+    except ImportError:
+        pass
+    try:  # form 2: imported as a bare module with src/ on sys.path
+        from autocode.self_coding_cycle import GoalContract, run_cycle
+        return GoalContract, run_cycle
+    except ImportError as exc:
+        raise RuntimeError(
+            "coding_operator_object: the self-coding cycle is not "
+            "importable, so a candidate change cannot be tried in a "
+            "sandbox, compared, or rolled back. Underlying error: %r"
+            % (exc,)
+        )
+
+
 class CodingOperatorObject:
     """The model's I/O surface. Gated by the harness."""
 
@@ -107,6 +137,57 @@ class CodingOperatorObject:
     def is_allowed(self, span: str) -> bool:
         verdict = self.propose_span(span)
         return bool(verdict.get("allow"))
+
+    def propose_change(self, diff_text: str, repo_root: str, *,
+                       goal=None, tasks=None, max_rounds: int = 3,
+                       checkpoint_dir: Optional[str] = None,
+                       auto_commit: bool = True) -> dict:
+        """Try a candidate CHANGE in the self-coding cycle, and land it
+        only if it holds.
+
+        **AND THIS IS THE MISSING HALF OF THE GATE.** The gate decides
+        whether a candidate span may become a unit -- it does not run
+        the candidate against the current system, and it cannot undo
+        one. So the four shapes live in
+        `autocode.self_coding_cycle`, and this method is the route
+        INTO them.
+
+        AND THE ORDER IS THE ORDER THE ATLAS EXAM'S AREA 18 STATES:
+        "self-coding must run in a sandbox, compare against the current
+        version, and roll back on invariant violation". So a candidate
+        change is tried in a SANDBOX, COMPARED against the current
+        version's own measurement, and ROLLED BACK if the verification
+        fails -- and the goal's STOP RULE says when the loop ends.
+
+        AND THE GATE STILL RUNS FIRST. A span that the gate refuses
+        never reaches the cycle, so the cycle is a second line and not
+        a replacement.
+        """
+        GoalContract, run_cycle = _resolve_cycle()
+
+        if goal is None:
+            goal = GoalContract(
+                end_state="the change is landed",
+                proof="the cycle's verification",
+                boundaries=("the ground does not move",),
+                loop="one round per candidate",
+                stop_rule="adopted >= 1",
+            )
+        if tasks is None:
+            tasks = ()
+        history = []
+
+        def candidate(round_no: int) -> str:
+            history.append(diff_text)
+            return diff_text
+
+        result = run_cycle(goal, candidate, repo_root, tasks=tasks,
+                           max_rounds=max_rounds,
+                           checkpoint_dir=checkpoint_dir,
+                           auto_commit=auto_commit)
+        described = result.describe()
+        described["candidate"] = diff_text
+        return described
 
     def refuse_log(self) -> list:
         """Return the spans that were refused by the gate."""
