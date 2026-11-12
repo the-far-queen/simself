@@ -75,6 +75,35 @@ from typing import Dict, List, Optional, Tuple
 import os as _os
 import sys as _sys
 
+#: THE INTERPRETER IS CHOSEN BEFORE THE PSB IS IMPORTED, and it has to
+#: be here -- at the TOP of the module -- because the PSB imports numpy
+#: at module level, and a numpy-less interpreter cannot reach the
+#: `__main__` block below. MEASURED 2026-11-12: running this registry
+#: under the hermes venv (python 3.11, no numpy) raised
+#: `ModuleNotFoundError: No module named 'psb_primitives'` -- which
+#: was the FALLBACK's error, and the fallback pointed at the wrong
+#: directory, so it named a module that was never missing. **THE REAL
+#: ERROR WAS THE NUMPY ONE UNDERNEATH IT.**
+#:
+#: **SO THE RE-RUN HAPPENS FIRST, AND ONLY WHEN THIS FILE IS THE
+#: SCRIPT BEING RUN.** A module that is imported does not re-exec: that
+#: would replace the importing process, and an import is not a run.
+if __name__ == "__main__":
+    import importlib.util as _ilu
+    _here = _os.path.dirname(_os.path.abspath(__file__))
+    for _up in range(1, 6):
+        _pp = _os.path.join(_here, *([_os.pardir] * _up), "tools",
+                            "_project_python.py")
+        if _os.path.isfile(_pp):
+            _spec = _ilu.spec_from_file_location("fc_project_python", _pp)
+            if _spec is not None and _spec.loader is not None:
+                _mod = _ilu.module_from_spec(_spec)
+                _spec.loader.exec_module(_mod)
+                _rc = _mod.reexec_under_project_python()
+                if _rc is not None:
+                    raise SystemExit(_rc)
+            break
+
 #: `src/research/embodiment/robot_vocabulary.py` -> up three directories
 #: from the FILE (not its dir) lands on `src/`.
 #: `src/research/embodiment/robot_vocabulary.py` -- up TWO directories
@@ -96,6 +125,18 @@ if _SRC is None:
                       % __file__)
 if _SRC not in _sys.path:
     _sys.path.insert(0, _SRC)
+
+#: THE PSB'S OWN DIRECTORY, and it is a SEPARATE path entry because the
+#: fallback below needs it. **AND THE FALLBACK WAS BROKEN.** MEASURED
+#: 2026-11-12: the fallback was `from psb_primitives import UnitType`,
+#: but `_SRC` is `src/` and `psb_primitives.py` lives in
+#: `src/constitutional/` -- so the fallback could never have worked, and
+#: the second error it raised was "No module named 'psb_primitives'"
+#: rather than the numpy error that actually caused the first. **A
+#: FALLBACK THAT CANNOT WORK IS NOT A FALLBACK.**
+_PSB_DIR = _os.path.join(_SRC, "constitutional")
+if _PSB_DIR not in _sys.path:
+    _sys.path.insert(0, _PSB_DIR)
 
 try:
     from constitutional.psb_primitives import UnitType
@@ -420,4 +461,8 @@ def main(argv: List[str]) -> int:
 
 
 if __name__ == "__main__":
+    # **AND THE INTERPRETER WAS ALREADY CHOSEN, AT THE TOP OF THIS
+    # MODULE** -- before the PSB was imported, because the PSB imports
+    # numpy and a numpy-less interpreter cannot reach this block. See
+    # the note beside the import.
     raise SystemExit(main(sys.argv[1:]))

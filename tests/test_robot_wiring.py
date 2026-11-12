@@ -102,6 +102,70 @@ def test_the_psb_is_untouched():
             % (v, PSB.classify_span(v).value))
 
 
+def test_the_groups_partition_the_fifty():
+    """THE GROUPS MUST PARTITION THE FIFTY, and the counts are DERIVED.
+
+    **AND THIS IS THE CHECK FOR THE WRONG HEADER COUNTS.** MEASURED
+    2026-11-12: the section headers claimed LOCOMOTION fourteen,
+    SENSING thirteen and SEEKING eight, and the true counts are
+    eleven, eleven and seven -- and the registry's own `check()` never
+    looked at the grouping, so three wrong numbers read as true.
+    """
+    problems = RV.group_problems()
+    assert not problems, ("the registry's groups do not partition the "
+                           "fifty: %s" % "; ".join(problems))
+    total = sum(len(v) for v in RV.GROUPS.values())
+    assert total == len(RV.COMMANDS), (
+        "the groups hold %d verbs and the registry holds %d commands"
+        % (total, len(RV.COMMANDS)))
+    # AND EVERY GROUP IS NAMED BY THE ORDER, so a group that exists but
+    # is not in the order is a group the plan would never issue.
+    assert set(RV.GROUPS) == set(RV.GROUP_ORDER)
+
+
+def test_the_registry_runs_under_the_crons_interpreter():
+    """THE REGISTRY'S OWN `--check` MUST RUN UNDER BARE `python`.
+
+    **AND THAT IS THE INTERPRETER THE CRON NAMES.** MEASURED
+    2026-11-12: the registry raised `ModuleNotFoundError: No module
+    named 'psb_primitives'` -- and that was the BROKEN FALLBACK's
+    error, naming a module that was never missing, with the real
+    numpy error underneath it. **A FALLBACK THAT POINTS AT THE WRONG
+    DIRECTORY HIDES THE REAL FAULT.**
+
+    So the registry re-runs itself under the project venv, and this
+    test drives it with the numpy-less interpreter -- the one the cron
+    uses -- and requires the check to come back CLEAN.
+    """
+    import importlib.util
+    import subprocess
+
+    numpy_less = pathlib.Path.home() / "AppData" / "Local" / "hermes" / \
+        "hermes-agent" / "venv" / "Scripts" / "python.exe"
+    if not numpy_less.exists():
+        pytest.skip("the numpy-less interpreter is not at %s" % numpy_less)
+    # AND IT MUST BE NUMPY-LESS, or this test measures nothing.
+    probe = subprocess.run([str(numpy_less), "-c", "import numpy"],
+                           capture_output=True, text=True, timeout=120)
+    assert probe.returncode != 0, (
+        "the interpreter at %s has numpy, so it is not the cron's"
+        % numpy_less)
+    script = REPO / "src" / "research" / "embodiment" / "robot_vocabulary.py"
+    proc = subprocess.run([str(numpy_less), str(script), "--check"],
+                          capture_output=True, text=True, timeout=300,
+                          cwd=str(REPO))
+    out = (proc.stdout or "") + (proc.stderr or "")
+    assert proc.returncode == 0, (
+        "the registry's own check did not run under the numpy-less "
+        "interpreter:\n%s" % out[-3000:])
+    assert "CLEAN" in out, ("the registry's check said nothing:\n%s"
+                            % out[-2000:])
+    # AND THE COUNTS ARE IN THE OUTPUT, so the number is visible and
+    # not only inside the code.
+    for name in RV.GROUP_ORDER:
+        assert name in out, ("the check did not report the group %r" % name)
+
+
 @requires_godot
 def test_the_wiring_check_goes_red_on_a_broken_wiring():
     """THE MUTATIONS, and every one must go RED.
