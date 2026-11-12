@@ -47,6 +47,7 @@ import pathlib
 import re
 import subprocess
 import sys
+import tempfile
 from typing import Dict, List, Tuple
 
 HERE = pathlib.Path(__file__).resolve().parent
@@ -64,17 +65,36 @@ GODOT_SIM = REPO / "godot_sim"
 
 
 def run_godot(commands: List[Dict]) -> Tuple[int, str]:
-    """The body, fed the commands, and what it says."""
+    """The body, fed the commands, and what it says.
+
+    **AND THE COMMANDS GO IN A FILE, NOT ON STDIN.** MEASURED: Godot 4
+    has no `OS.get_stdin()`, and `OS.read_string_from_stdin(true)`
+    returns ONE CHARACTER per call and swallows the newline -- so a
+    line-oriented protocol over stdin cannot be read at all. The body
+    reads the file named by `FC_COMMANDS`.
+    """
     if not GODOT.exists():
         return 0, ""
-    payload = "\n".join(json.dumps(c) for c in commands) + "\n"
+    with tempfile.NamedTemporaryFile("w", suffix=".jsonl", delete=False,
+                                     encoding="utf-8") as fh:
+        for c in commands:
+            fh.write(json.dumps(c) + "\n")
+        path = fh.name
+    env = dict(os.environ)
+    env["FC_COMMANDS"] = path
     try:
         out = subprocess.run(
             [str(GODOT), "--headless", "--path", str(GODOT_SIM),
              "res://scenes/RobotControl.tscn"],
-            input=payload, capture_output=True, text=True, timeout=300).stdout
+            capture_output=True, text=True, timeout=300,
+            env=env).stdout
     except Exception as exc:                        # noqa: BLE001
         return 1, "the godot run raised: %r" % (exc,)
+    finally:
+        try:
+            os.unlink(path)
+        except OSError:
+            pass
     return 0, out
 
 
@@ -129,22 +149,55 @@ def main() -> int:
         problems.append("godot is not available, so the body did not run")
     else:
         cmds = []
-        for span in ("move up 1cm", "move left 1cm", "move up 1cm"):
+        # **AND THE SESSION IS STARTED FIRST, AND IT IS STARTED FROM
+        # ENGLISH.** MEASURED 2026-11-12: the body now has a SESSION
+        # GATE -- a command before `sim.start` is refused with "the
+        # session has not started" -- and this check issued only the
+        # moves. So every move was refused and the check reported "the
+        # ball did not move" for a reason that had nothing to do with
+        # the ball. **A CHECK THAT MEASURES THE WRONG REFUSAL IS NOT A
+        # CHECK**, and the refusal is the substrate's own, so the
+        # session is opened the way a user opens it: in English.
+        for span in ("start", "move up 1cm", "move left 1cm", "move up 1cm"):
             rd = RB.decipher(span, prefer_model=False)
             if rd.ok:
                 cmds.append(RB.to_godot(rd))
+            else:
+                problems.append("the span %r did not read: %s"
+                                % (span, rd.reason))
         rc, out = run_godot(cmds)
         for line in out.splitlines():
             print("    ", line[:112])
+        # **AND THE RECEIPT IS READ AS THE JSON IT IS.** MEASURED
+        # 2026-11-12: the body's receipt used to be a prose line
+        # ("before (x, y) after (x, y)") and it is now a `TRACE` JSON
+        # line -- so the old regex matched NOTHING, and the check's
+        # "did it move" test was a test that could never pass and
+        # never ran. **A REGEX THAT MATCHES NOTHING IS NOT A CHECK.**
         moved = False
-        for m in re.finditer(r"before \((-?[\d.]+), (-?[\d.]+)\) "
-                             r"after \((-?[\d.]+), (-?[\d.]+)\)", out):
-            if m.group(1) != m.group(3) or m.group(2) != m.group(4):
+        receipts = 0
+        for line in out.splitlines():
+            if not line.startswith("TRACE "):
+                continue
+            try:
+                t = json.loads(line[6:])
+            except ValueError:
+                continue
+            receipts += 1
+            pre = t.get("pre", {}).get("pos")
+            post = t.get("post", {}).get("pos")
+            if not pre or not post:
+                continue
+            if abs(float(post[0]) - float(pre[0])) > 1e-9 \
+                    or abs(float(post[1]) - float(pre[1])) > 1e-9:
                 moved = True
-        if not moved:
+        if receipts == 0:
+            problems.append("the body printed no receipt, so the movement "
+                            "was never measured")
+        elif not moved:
             problems.append("the ball did not move")
         else:
-            print("    GREEN -- the ball moved")
+            print("    GREEN -- the ball moved (%d receipts)" % receipts)
 
         # -- 5. AND THE OUT-OF-BOUNDS MOVE IS REFUSED BY THE BODY -----
         print()
@@ -152,15 +205,35 @@ def main() -> int:
         bad = RB.to_godot(RB.Reading(span="move up 9999cm",
                                      verb="move_up",
                                      args={"cm": 9999.0}, how="exact"))
-        rc2, out2 = run_godot([bad])
-        refused = "REFUSED" in out2
+        # **AND THE SESSION IS STARTED BEFORE THE BAD MOVE, AND THE
+        # REFUSAL MUST BE THE BOUNDS REFUSAL.** MEASURED 2026-11-12:
+        # this step sent ONLY the bad move, so the body refused it with
+        # "the session has not started" -- and the check's test was
+        # `if "REFUSED" in out2`, so it read that refusal as the
+        # out-of-bounds refusal and printed GREEN. **THE CHECK WAS
+        # GREEN BECAUSE OF THE WRONG REFUSAL.** So the session is
+        # started first, and the reason must NAME THE BOUND.
+        start = RB.to_godot(RB.decipher("start", prefer_model=False))
+        rc2, out2 = run_godot([start, bad])
+        reasons = []
         for line in out2.splitlines():
-            if "REFUSED" in line:
+            if line.startswith("REFUSED "):
+                try:
+                    reasons.append(json.loads(line[8:]).get("reason", ""))
+                except ValueError:
+                    pass
+            elif "REFUSED" in line:
                 print("    ", line.strip()[:112])
-        if not refused:
-            problems.append("the body accepted an out-of-bounds move")
+        bounded = [r for r in reasons if "outside the fc's ball" in r]
+        if not reasons:
+            problems.append("the body did not refuse the out-of-bounds "
+                            "move at all")
+        elif not bounded:
+            problems.append("the body refused the out-of-bounds move for "
+                            "the wrong reason: %s" % "; ".join(reasons))
         else:
-            print("    GREEN -- the body refused it")
+            print("    GREEN -- the body refused it for the bound: %s"
+                  % bounded[0][:96])
 
     print()
     print("=" * 74)
@@ -174,4 +247,14 @@ def main() -> int:
 
 
 if __name__ == "__main__":
+    # **AND THE INTERPRETER IS CHOSEN BEFORE THE MEASUREMENT.** The
+    # bridge reaches the PSB, and the PSB imports numpy -- so under the
+    # hermes venv this check cannot even read a verb. MEASURED
+    # 2026-11-12: `ModuleNotFoundError: No module named 'numpy'`. So
+    # the check re-runs itself under the project venv, the same rule
+    # `check_robot_wiring.py` follows.
+    import _project_python as PP
+    rc = PP.reexec_under_project_python()
+    if rc is not None:
+        raise SystemExit(rc)
     raise SystemExit(main())

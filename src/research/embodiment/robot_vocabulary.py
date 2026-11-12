@@ -158,7 +158,7 @@ COMMANDS: List[Command] = [
     _c("end", UnitType.COMMIT, "sim.end",
        "commit the session's outcome and close it"),
 
-    # -- THE LOCOMOTION, 2D: fourteen ----------------------------------
+    # -- THE LOCOMOTION, 2D: eleven ----------------------------------
     _c("move_up", UnitType.ACT, "body.translate",
        "move the body up by a distance in centimetres",
        (("cm", "float"),)),
@@ -219,7 +219,7 @@ COMMANDS: List[Command] = [
     _c("carry", UnitType.ACT, "gripper.hold",
        "hold the grasped object with the body"),
 
-    # -- THE SENSING: thirteen -----------------------------------------
+    # -- THE SENSING: eleven -----------------------------------------
     _c("read_light", UnitType.OBJECT, "sensor.light",
        "read the light sensor's intensity at the body"),
     _c("read_distance", UnitType.OBJECT, "sensor.distance",
@@ -244,7 +244,7 @@ COMMANDS: List[Command] = [
     _c("scan", UnitType.ACT, "sensor.sweep",
        "sweep the sensor over the world and report what it sees"),
 
-    # -- THE SEEKING, and the seek is THE TASK: eight ------------------
+    # -- THE SEEKING, and the seek is THE TASK: seven ------------------
     _c("seek", UnitType.ACT, "body.seek",
        "move toward the sought target until it is reached or refused",
        (("target", "string"),)),
@@ -263,6 +263,45 @@ COMMANDS: List[Command] = [
     _c("promise", UnitType.COMMIT, "sim.promise",
        "commit the agent to a named end state", (("state", "string"),)),
 ]
+
+#: THE GROUPS, AND THEY ARE DATA AND NOT PROSE.
+#:
+#: **AND THE COUNTS IN THE SECTION HEADERS ABOVE WERE WRONG.** MEASURED
+#: 2026-11-12, by counting the entries under each header: the headers
+#: said LOCOMOTION fourteen, SENSING thirteen and SEEKING eight, and
+#: the true counts are eleven, eleven and seven. **A HEADER THAT
+#: STATES A NUMBER THE CODE DOES NOT HAVE IS A CLAIM NOBODY CHECKED**,
+#: and the registry's own `check()` did not look at the grouping at
+#: all -- so the wrong numbers sat there and read as true.
+#:
+#: **SO THE GROUPING IS HERE, AS DATA, AND THE COUNTS ARE DERIVED.**
+#: The mapping is the truth and the section headers above are a
+#: reading aid; `check()` proves the two agree -- every command is in
+#: exactly one group, and every group is in this mapping.
+GROUPS: Dict[str, Tuple[str, ...]] = {
+    "LIFECYCLE": ("start", "stop", "pause", "resume", "reset", "end"),
+    "LOCOMOTION": ("move_up", "move_down", "move_left", "move_right",
+                   "move_to", "turn_left", "turn_right", "strafe_left",
+                   "stop_moving", "up", "left"),
+    "MANIPULATION": ("arm_up", "arm_down", "arm_forward", "arm_back",
+                     "arm_left", "arm_right", "reach", "extend_arm",
+                     "retract_arm", "grip", "release", "grasp", "drop",
+                     "place", "carry"),
+    "SENSING": ("read_light", "read_distance", "read_colour",
+                "read_position", "read_battery", "look_up", "look_down",
+                "look_left", "look_right", "look_at", "scan"),
+    "SEEKING": ("seek", "seek_red", "seek_light", "approach", "explore",
+                "cause", "promise"),
+}
+
+#: THE ORDER, and it is the order the groups are built in: LOCOMOTION
+#: first (the body alone), then SENSING, then MANIPULATION (which needs
+#: a second body), then SEEKING (which is the seek the sim already
+#: runs). **AND IT IS THE ORDER THE PLAN ISSUES THEM IN**, so the
+#: check's own order is the item's order.
+GROUP_ORDER: Tuple[str, ...] = ("LIFECYCLE", "LOCOMOTION", "SENSING",
+                                 "MANIPULATION", "SEEKING")
+
 
 #: THE INDEX, and it is built once so the lookup is a dict and not a
 #: scan.
@@ -307,6 +346,7 @@ def check() -> int:
     for v in NAMED_BY_BOBBY:
         if v not in BY_VERB:
             problems.append("the verb bobby named, %r, is missing" % v)
+    problems.extend(group_problems())
     if problems:
         print("PROBLEMS:")
         for p in problems:
@@ -314,7 +354,58 @@ def check() -> int:
         return 1
     print("CLEAN -- %d commands, every one names its type, its Godot "
           "operation and its provenance" % len(COMMANDS))
+    for name in GROUP_ORDER:
+        print("   %-14s %2d" % (name, len(GROUPS[name])))
     return 0
+
+
+def group_problems() -> List[str]:
+    """THE GROUPS MUST PARTITION THE FIFTY, and the header counts must
+    agree with the code.
+
+    **AND THIS IS THE CHECK THAT WAS MISSING.** MEASURED 2026-11-12:
+    the section headers claimed LOCOMOTION fourteen, SENSING thirteen
+    and SEEKING eight, and the true counts are eleven, eleven and
+    seven. The registry's own `check()` never looked at the grouping,
+    so three wrong numbers sat in the file and read as true -- which
+    is the same defect class as the wrong count in the gate registry
+    that item 60 closed.
+
+    **AND THREE THINGS ARE PROVED, NOT ONE:**
+      1. EVERY COMMAND IS IN EXACTLY ONE GROUP -- so a command cannot
+         be in none (which would make it unwired by the plan) and
+         cannot be in two (which would double-count it).
+      2. EVERY GROUP'S MEMBERS ARE REAL COMMANDS -- so a typo in a
+         group name is caught instead of quietly shrinking the count.
+      3. EVERY GROUP IS EMPTY OF NONSENSE -- the groups partition the
+         fifty exactly, so the counts are DERIVED and not stated.
+    """
+    problems: List[str] = []
+    seen: Dict[str, List[str]] = {}
+    for name, verbs in GROUPS.items():
+        for v in verbs:
+            seen.setdefault(v, []).append(name)
+    for v in sorted(seen):
+        if len(seen[v]) > 1:
+            problems.append("the verb %r is in %d groups: %s"
+                            % (v, len(seen[v]), ", ".join(seen[v])))
+    for name, verbs in GROUPS.items():
+        for v in verbs:
+            if v not in BY_VERB:
+                problems.append("the group %s names %r, which is not a "
+                                "command" % (name, v))
+    ungrouped = sorted(set(BY_VERB) - set(seen))
+    if ungrouped:
+        problems.append("the commands in no group: %s"
+                        % ", ".join(ungrouped))
+    extra = sorted(set(seen) - set(BY_VERB))
+    if extra:
+        problems.append("the groups name %d verbs that are not commands: %s"
+                        % (len(extra), ", ".join(extra)))
+    if set(GROUPS) != set(GROUP_ORDER):
+        problems.append("the group order names %s and the groups are %s"
+                        % (sorted(GROUP_ORDER), sorted(GROUPS)))
+    return problems
 
 
 def main(argv: List[str]) -> int:

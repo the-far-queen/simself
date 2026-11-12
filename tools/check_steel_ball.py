@@ -314,4 +314,15 @@ def run_godot() -> Optional[Dict]:
 
 
 if __name__ == "__main__":
+    # **AND THE INTERPRETER IS CHOSEN BEFORE THE MEASUREMENT.** The fc's
+    # own kernel imports numpy, so under the hermes venv (python 3.11,
+    # no numpy) this check cannot even load the module it measures
+    # against. MEASURED 2026-11-12:
+    # `ModuleNotFoundError: No module named 'numpy'`. So the check
+    # re-runs itself under the project venv -- the same rule
+    # `check_robot_wiring.py` and `check_robot_loop.py` follow.
+    import _project_python as PP
+    rc = PP.reexec_under_project_python()
+    if rc is not None:
+        raise SystemExit(rc)
     raise SystemExit(main())
